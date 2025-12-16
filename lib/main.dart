@@ -14,8 +14,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uploadBlocProvider = BlocProvider(create: (_) => getIt<UploadBloc>());
+
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => getIt<UploadBloc>())],
+      providers: [uploadBlocProvider],
       child: MaterialApp.router(title: 'SteMix', routerConfig: appRouter),
     );
   }

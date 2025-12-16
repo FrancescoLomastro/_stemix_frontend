@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:stemix_frontend/features/library/library_page.dart';
 import 'package:stemix_frontend/features/player/player_page.dart';
 import 'package:stemix_frontend/features/playlists/playlists_page.dart';
+import 'package:stemix_frontend/features/settings/settings_page.dart';
 import 'package:stemix_frontend/features/upload/upload_page.dart';
+import 'package:stemix_frontend/router/shell_scaffold.dart';
 
 /// The navigator key for the root navigator.
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -19,7 +21,7 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>(
 final ShellRoute shellRoute = ShellRoute(
   navigatorKey: shellNavigatorKey,
   builder: (context, state, child) {
-    return Scaffold(body: child);
+    return ShellScaffold(child: child);
   },
   routes: [
     GoRoute(
@@ -36,6 +38,11 @@ final ShellRoute shellRoute = ShellRoute(
       path: '/playlists',
       pageBuilder: (context, state) =>
           NoTransitionPage(child: const PlaylistsPage()),
+    ),
+    GoRoute(
+      path: '/settings',
+      pageBuilder: (context, state) =>
+          NoTransitionPage(child: const SettingsPage()),
     ),
   ],
 );
