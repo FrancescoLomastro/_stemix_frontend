@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stemix_frontend/deps_injection/injection.dart';
 import 'package:stemix_frontend/features/upload/bloc/upload_bloc.dart';
 import 'package:stemix_frontend/router/app_router.dart';
+import 'package:stemix_frontend/theme/app_theme.dart';
 
 void main() {
   configureDependencies();
@@ -18,7 +19,13 @@ class App extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [uploadBlocProvider],
-      child: MaterialApp.router(title: 'SteMix', routerConfig: appRouter),
+      child: MaterialApp.router(
+        title: 'SteMix',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.dark,
+        routerConfig: appRouter,
+      ),
     );
   }
 }

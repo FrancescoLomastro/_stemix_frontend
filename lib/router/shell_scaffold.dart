@@ -22,6 +22,14 @@ class ShellScaffold extends StatelessWidget {
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).colorScheme.outline,
+            width: 1.5,
+          ),
+        ),
+      ),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
@@ -69,6 +77,8 @@ class ShellScaffold extends StatelessWidget {
         context.go('/${label.toLowerCase()}');
       },
       borderRadius: BorderRadius.circular(12),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
@@ -77,17 +87,17 @@ class ShellScaffold extends StatelessWidget {
             Icon(
               icon,
               size: 26,
-              /* color: isSelected
-                  ? AppTheme.navBarItemSelectedColor
-                  : AppTheme.navBarItemColor, */
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurface,
             ),
             SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                /* color: isSelected
-                    ? AppTheme.navBarItemSelectedColor
-                    : AppTheme.navBarItemColor, */
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface,
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),

@@ -5,6 +5,6 @@ class UploadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Upload Page");
+    return Center(child: Text("Upload Page"));
   }
 }

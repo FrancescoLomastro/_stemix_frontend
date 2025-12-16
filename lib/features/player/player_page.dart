@@ -5,6 +5,6 @@ class PlayerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Player Page");
+    return Center(child: Text("Player Page"));
   }
 }
