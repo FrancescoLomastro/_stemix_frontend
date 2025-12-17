@@ -1,0 +1,92 @@
+import 'dart:io';
+
+import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
+import 'package:injectable/injectable.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:stemix_frontend/data/local/list_converter.dart';
+
+part 'database.g.dart';
+
+/// Defines the Songs table in the local database
+class Songs extends Table {
+  // Auto-incremented ID
+  IntColumn get id => integer().autoIncrement()();
+  // Song Title
+  TextColumn get title => text()();
+  // Song Artist
+  TextColumn get artist => text()();
+  // Song Duration in seconds
+  IntColumn get duration => integer()();
+  // Date and Time when the song was added
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  // Local path to the cover image
+  TextColumn get coverPath => text().nullable()();
+  // BPM of the song
+  RealColumn get musicBpm => real().nullable()();
+  // Musical Key of the song
+  TextColumn get musicKey => text().nullable()();
+  // Positions of the beats in the song, stored as a JSON-encoded list
+  TextColumn get musicBeatsPositions => text().map(const ListConverter())();
+
+  // Paths to the stems
+  TextColumn get pathVocals => text().nullable()();
+  TextColumn get pathGuitar => text().nullable()();
+  TextColumn get pathDrums => text().nullable()();
+  TextColumn get pathBass => text().nullable()();
+  TextColumn get pathPiano => text().nullable()();
+  TextColumn get pathOther => text().nullable()();
+
+  // Volume levels for each stem, defaulting to 1.0
+  RealColumn get volMetronome => real().withDefault(const Constant(1.0))();
+  RealColumn get volVocals => real().withDefault(const Constant(1.0))();
+  RealColumn get volGuitar => real().withDefault(const Constant(1.0))();
+  RealColumn get volDrums => real().withDefault(const Constant(1.0))();
+  RealColumn get volBass => real().withDefault(const Constant(1.0))();
+  RealColumn get volPiano => real().withDefault(const Constant(1.0))();
+  RealColumn get volOther => real().withDefault(const Constant(1.0))();
+}
+
+/*
+PER IL FUTURO, PER LA GESTIONE DELLE PLAYLIST
+
+// Tabella Playlist (Nome e ID)
+class Playlists extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 50)();
+}
+
+// Tabella di Giunzione (Collega Songs <-> Playlists)
+class PlaylistEntries extends Table {
+  IntColumn get playlistId => integer().references(Playlists, #id)();
+  IntColumn get songId => integer().references(Songs, #id)();
+  
+  // Utile per ordinare le canzoni nella playlist
+  IntColumn get trackOrder => integer()(); 
+
+  @override
+  Set<Column> get primaryKey => {playlistId, songId};
+}
+
+ */
+
+/// This is the main database class which manages the connection and provides
+/// access to the tables.
+@LazySingleton()
+@DriftDatabase(tables: [Songs])
+class AppDatabase extends _$AppDatabase {
+  AppDatabase() : super(_openConnection());
+
+  @override
+  int get schemaVersion => 1;
+}
+
+/// Opens the connection to the local SQLite database file
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'stemix.sqlite'));
+    return NativeDatabase.createInBackground(file);
+  });
+}

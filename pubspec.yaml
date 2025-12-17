@@ -31,10 +31,23 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+
+  # For state management
   flutter_bloc: ^9.1.1
+
+  # For routing
   go_router: ^17.0.1
+
+  # For code generation of injectable
   get_it: ^9.2.0
   injectable: ^2.7.1
+
+  # For local database
+  drift: ^2.30.0
+
+  # Gestione dei path e le cartelle dell'applicazione
+  path: ^1.9.1
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +63,9 @@ dev_dependencies:
   # For code generation of injectable
   build_runner: ^2.10.4
   injectable_generator: ^2.11.1
+
+  # For code generation of drift
+  drift_dev: ^2.30.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
