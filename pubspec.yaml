@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
 
+  # For LOGs
+  logger: ^2.6.2
+
   # For state management
   flutter_bloc: ^9.1.1
 
@@ -44,6 +47,7 @@ dependencies:
 
   # For local database
   drift: ^2.30.0
+  sqlite3_flutter_libs: ^0.5.41
 
   # Gestione dei path e le cartelle dell'applicazione
   path: ^1.9.1
