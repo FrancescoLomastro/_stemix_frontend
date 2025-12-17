@@ -5,7 +5,7 @@ import 'package:drift/native.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:stemix_frontend/data/local/list_converter.dart';
+import 'package:stemix_frontend/data/local/drift/list_converter.dart';
 
 part 'database.g.dart';
 

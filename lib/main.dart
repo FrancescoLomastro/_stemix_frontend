@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:drift/drift.dart' as drift; // Alias per evitare conflitti
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:stemix_frontend/deps_injection/injection.dart';
-import 'package:stemix_frontend/data/local/database.dart';
+import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/upload/bloc/upload_bloc.dart';
 import 'package:stemix_frontend/router/app_router.dart';
 import 'package:stemix_frontend/theme/app_theme.dart';
@@ -32,14 +37,18 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  /* await debugCreateSong("Canzone di Test", "Artista di Test", 240, [
-    0.0,
-    1.5,
-    3.0,
-    4.5,
-    6.0,
-  ]); */
-  await debugLogAllSongs();
+  /* await debugDeleteAllSongs(); */
+  /*
+  for (int i = 0; i < 30; i++) {
+    await debugCreateSong(
+      title: "Canzone di Test #$i",
+      artist: "Artista di Test",
+      duration: 180 + i * 30,
+      musicBeatsPositions: [0.0, 1.0 + i, 2.0 + i],
+      hasImage: i % 2 == 0,
+    );
+  } */
+  /* await debugLogAllSongs(); */
   // =================================================================
 
   runApp(const MyApp());
@@ -69,6 +78,17 @@ class MyApp extends StatelessWidget {
 // 👇 FUNZIONI DI DEBUG PER IL DATABASE (DA COPIARE NEL MAIN) 👇
 // =================================================================
 
+Future<void> debugDeleteAllSongs() async {
+  final db = getIt<AppDatabase>();
+
+  //get all songs
+  final songs = await db.select(db.songs).get();
+
+  for (var song in songs) {
+    await debugDeleteSong(song.id);
+  }
+}
+
 /// 🔍 LEGGI: Stampa log formattati di tutte le canzoni
 Future<void> debugLogAllSongs() async {
   final db = getIt<AppDatabase>();
@@ -85,13 +105,39 @@ Future<void> debugLogAllSongs() async {
 }
 
 /// ➕ CREA: Inserisce una canzone mock nel DB
-Future<void> debugCreateSong(
-  String title,
-  String artist,
-  int duration,
-  List<double> musicBeatsPositions,
-) async {
+Future<void> debugCreateSong({
+  required String title,
+  required String artist,
+  required int duration,
+  required List<double> musicBeatsPositions,
+  bool hasImage = false,
+}) async {
   final db = getIt<AppDatabase>();
+
+  String? coverPath;
+  if (hasImage) {
+    try {
+      final random1o2 = (DateTime.now().millisecondsSinceEpoch % 2) + 1;
+      String assetPath = "assets/images/sample_image${random1o2}.jpg";
+      final songId = await db
+          .select(db.songs)
+          .get()
+          .then((value) => value.length + 1);
+      final documentFolder = (await getApplicationDocumentsDirectory()).path;
+      final songFolder =
+          "song_assets/$songId"; // ✅ Percorso RELATIVO, non assoluto
+      final fullSongFolderPath = p.join(documentFolder, songFolder);
+      await Directory(fullSongFolderPath).create(recursive: true);
+      final coverFilePath = p.join(fullSongFolderPath, "cover.png");
+      final byteData = await rootBundle.load(assetPath);
+      final file = File(coverFilePath);
+      await file.writeAsBytes(byteData.buffer.asUint8List());
+      coverPath = coverFilePath;
+      logger.d("🖼️ Immagine salvata in: $coverPath");
+    } catch (e) {
+      logger.e("❌ Errore nel salvare l'immagine: $e");
+    }
+  }
 
   // Utilizziamo i Companion per inserire i dati
   final newSong = SongsCompanion.insert(
@@ -99,6 +145,9 @@ Future<void> debugCreateSong(
     artist: artist,
     duration: duration,
     musicBeatsPositions: musicBeatsPositions,
+    coverPath: coverPath != null
+        ? drift.Value(coverPath)
+        : const drift.Value.absent(),
   );
 
   final id = await db.into(db.songs).insert(newSong);
@@ -128,12 +177,25 @@ Future<void> debugUpdateSong(int id) async {
 Future<void> debugDeleteSong(int id) async {
   final db = getIt<AppDatabase>();
 
+  // before deleting the song, we want to delete associated files.
+  // Fetch the song first, then get the coverPath and delete the file and the parent folder.
+  final songToDelete = await (db.select(
+    db.songs,
+  )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  if (songToDelete != null && songToDelete.coverPath != null) {
+    final coverFile = File(songToDelete.coverPath!);
+    if (await coverFile.exists()) {
+      final parentDir = coverFile.parent;
+      await parentDir.delete(recursive: true);
+    }
+  }
+
   final result = await (db.delete(
     db.songs,
   )..where((tbl) => tbl.id.equals(id))).go();
 
   if (result > 0) {
-    logger.w("🗑️ Canzone #$id eliminata per sempre.");
+    logger.i("🗑️ Canzone #$id eliminata correttamente.");
   } else {
     logger.e("❌ Impossibile eliminare: Canzone #$id non trovata.");
   }
