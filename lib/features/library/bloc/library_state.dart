@@ -10,9 +10,36 @@ class LibraryLoading extends LibraryState {}
 
 class LibraryLoaded extends LibraryState {
   final List<Song> songs;
-  const LibraryLoaded({required this.songs});
+  final bool isSelectionMode;
+  final Set<int> selectedSongIds;
+
+  const LibraryLoaded({
+    required this.songs,
+    this.isSelectionMode = false,
+    this.selectedSongIds = const {},
+  });
+
+  LibraryLoaded copyWith({
+    List<Song>? songs,
+    bool? isSelectionMode,
+    Set<int>? selectedSongIds,
+  }) {
+    return LibraryLoaded(
+      songs: songs ?? this.songs,
+      isSelectionMode: isSelectionMode ?? this.isSelectionMode,
+      selectedSongIds: selectedSongIds ?? this.selectedSongIds,
+    );
+  }
+
   @override
-  List<Object?> get props => [songs];
+  List<Object?> get props => [songs, isSelectionMode, selectedSongIds];
+}
+
+class LibraryDeleting extends LibraryState {
+  final bool completed;
+  const LibraryDeleting({this.completed = false});
+  @override
+  List<Object?> get props => [completed];
 }
 
 class LibraryError extends LibraryState {

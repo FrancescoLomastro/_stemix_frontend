@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/deps_injection/injection.dart';
 import 'package:stemix_frontend/features/library/bloc/library_bloc.dart';
-import 'package:stemix_frontend/features/library/widgets/list_tile.dart';
+import 'package:stemix_frontend/features/library/widgets/library_list_tile.dart';
 import 'package:stemix_frontend/main.dart';
 
 class LibraryPage extends StatelessWidget {
@@ -23,26 +22,43 @@ class _LibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LibraryBloc, LibraryState>(
-      builder: (context, state) {
-        Widget bodyContent;
+    return BlocListener<LibraryBloc, LibraryState>(
+      listenWhen: (previous, current) =>
+          current is LibraryError ||
+          (current is LibraryDeleting && current.completed),
+      listener: (context, state) {
+        //Close the deleting dialog
         switch (state) {
-          case LibraryLoading():
-            bodyContent = _buildLibraryLoading();
+          case LibraryDeleting(:final completed) when completed:
+            Navigator.of(context, rootNavigator: true).pop();
           case LibraryError(:final message):
-            bodyContent = _buildLibraryError(message);
-          case LibraryLoaded(:final songs):
-            bodyContent = _buildLibraryLoaded(songs);
-          default:
-            logger.e("LibraryPage - Unknown state: $state");
-            bodyContent = const Center(child: Text("Unknown state"));
+            // Show error snackbar
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(message)));
         }
-
-        return Scaffold(
-          appBar: AppBar(title: const Text('Library')),
-          body: bodyContent,
-        );
       },
+      child: BlocBuilder<LibraryBloc, LibraryState>(
+        builder: (context, state) {
+          Widget bodyContent;
+          switch (state) {
+            case LibraryDeleting():
+            case LibraryLoading():
+              bodyContent = _buildLibraryLoading();
+            case LibraryError(:final message):
+              bodyContent = _buildLibraryError(message);
+            case LibraryLoaded():
+              bodyContent = _buildLibraryLoaded(context, state);
+            default:
+              logger.e("LibraryPage - Unknown state: $state");
+              bodyContent = const Center(child: Text("Unknown state"));
+          }
+          return Scaffold(
+            appBar: _buildAppBar(context, state),
+            body: bodyContent,
+          );
+        },
+      ),
     );
   }
 
@@ -54,13 +70,97 @@ class _LibraryView extends StatelessWidget {
     return Center(child: Text(message));
   }
 
-  Widget _buildLibraryLoaded(List<Song> songs) {
+  Widget _buildLibraryLoaded(BuildContext context, LibraryLoaded state) {
     return ListView.builder(
-      itemCount: songs.length,
+      itemCount: state.songs.length,
       itemBuilder: (context, index) {
-        final song = songs[index];
-        return SongListTile(song: song);
+        final song = state.songs[index];
+        final isSelected = state.selectedSongIds.contains(song.id);
+        return SongListTile(
+          song: song,
+          isSelectionMode: state.isSelectionMode,
+          isSelected: isSelected,
+        );
       },
     );
   }
+}
+
+PreferredSizeWidget _buildAppBar(BuildContext context, LibraryState state) {
+  final bool isSelectionMode = state is LibraryLoaded && state.isSelectionMode;
+  final int selectedCount = state is LibraryLoaded
+      ? state.selectedSongIds.length
+      : 0;
+
+  return AppBar(
+    title: isSelectionMode
+        ? Text('$selectedCount selected')
+        : const Text('Library'),
+    leading: isSelectionMode
+        ? IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () =>
+                context.read<LibraryBloc>().add(ToggleSelectionModeEvent()),
+          )
+        : null,
+    actions: [
+      if (isSelectionMode) ...[
+        IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: selectedCount > 0
+              ? () => _showDeleteDialog(context, state)
+              : null,
+        ),
+      ] else if (state is LibraryLoaded)
+        ...[
+      ]
+    ],
+  );
+}
+
+void _showDeleteDialog(BuildContext context, LibraryState state) {
+  final int count = state is LibraryLoaded ? state.selectedSongIds.length : 0;
+
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (ctx) => AlertDialog(
+      title: const Text("Delete songs"),
+      content: Text(
+        "Are you sure you want to delete $count songs from the device?",
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx),
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(ctx);
+            context.read<LibraryBloc>().add(DeleteSelectedSongsEvent());
+            _showDeletingDialog(context);
+          },
+          child: const Text("Delete"),
+        ),
+      ],
+    ),
+  );
+}
+
+void _showDeletingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => AlertDialog(
+      title: const Text("Deleting songs"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          CircularProgressIndicator(),
+          SizedBox(height: 8),
+          Text("Deleting..."),
+        ],
+      ),
+    ),
+  );
 }
