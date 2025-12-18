@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/library/library_page.dart';
 import 'package:stemix_frontend/features/player/player_page.dart';
 import 'package:stemix_frontend/features/playlists/playlists_page.dart';
@@ -52,8 +53,8 @@ final GoRoute playerRoute = GoRoute(
   path: '/player',
   parentNavigatorKey: rootNavigatorKey,
   builder: (context, state) {
-    //final song = state.extra as Song;
-    return PlayerPage(/*song: song*/);
+    final song = state.extra as Song;
+    return PlayerPage(song: song);
   },
 );
 

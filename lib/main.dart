@@ -39,15 +39,16 @@ void main() async {
 
   /* await debugDeleteAllSongs(); */
 
-  for (int i = 0; i < 30; i++) {
+  /* for (int i = 0; i < 10; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
       duration: 180 + i * 30,
       musicBeatsPositions: [0.0, 1.0 + i, 2.0 + i],
       hasImage: i % 2 == 0,
+      hasAudio: true,
     );
-  }
+  } */
   /* await debugLogAllSongs(); */
   // =================================================================
 
@@ -111,23 +112,33 @@ Future<void> debugCreateSong({
   required int duration,
   required List<double> musicBeatsPositions,
   bool hasImage = false,
+  bool hasAudio = false,
 }) async {
   final db = getIt<AppDatabase>();
 
   String? coverPath;
+  String? vocalPath;
+  String? pianoPath;
+  String? drumsPath;
+  String? bassPath;
+  String? otherPath;
+  String? guitarPath;
+
+  final songId = await db
+      .select(db.songs)
+      .get()
+      .then((value) => value.length + 1);
+  final documentFolder = (await getApplicationDocumentsDirectory()).path;
+  final songFolder = "song_assets/$songId";
+
+  final fullSongFolderPath = p.join(documentFolder, songFolder);
+  await Directory(fullSongFolderPath).create(recursive: true);
+
   if (hasImage) {
     try {
       final random1o2 = (DateTime.now().millisecondsSinceEpoch % 2) + 1;
       String assetPath = "assets/images/sample_image${random1o2}.jpg";
-      final songId = await db
-          .select(db.songs)
-          .get()
-          .then((value) => value.length + 1);
-      final documentFolder = (await getApplicationDocumentsDirectory()).path;
-      final songFolder =
-          "song_assets/$songId"; // ✅ Percorso RELATIVO, non assoluto
-      final fullSongFolderPath = p.join(documentFolder, songFolder);
-      await Directory(fullSongFolderPath).create(recursive: true);
+
       final coverFilePath = p.join(fullSongFolderPath, "cover.png");
       final byteData = await rootBundle.load(assetPath);
       final file = File(coverFilePath);
@@ -138,6 +149,48 @@ Future<void> debugCreateSong({
       logger.e("❌ Errore nel salvare l'immagine: $e");
     }
   }
+  if (hasAudio) {
+    String vocalAssetPath = "assets/audio/vocals.wav";
+    String pianoAssetPath = "assets/audio/piano.wav";
+    String drumsAssetPath = "assets/audio/drums.wav";
+    String bassAssetPath = "assets/audio/bass.wav";
+    String otherAssetPath = "assets/audio/other.wav";
+    String guitarAssetPath = "assets/audio/guitar.wav";
+
+    vocalPath = p.join(fullSongFolderPath, "vocals.wav");
+    pianoPath = p.join(fullSongFolderPath, "piano.wav");
+    drumsPath = p.join(fullSongFolderPath, "drums.wav");
+    bassPath = p.join(fullSongFolderPath, "bass.wav");
+    otherPath = p.join(fullSongFolderPath, "other.wav");
+    guitarPath = p.join(fullSongFolderPath, "guitar.wav");
+
+    // Copy the files to the song folder
+    final vocalFile = File(vocalPath);
+    final pianoFile = File(pianoPath);
+    final drumsFile = File(drumsPath);
+    final bassFile = File(bassPath);
+    final otherFile = File(otherPath);
+    final guitarFile = File(guitarPath);
+
+    await vocalFile.writeAsBytes(
+      (await rootBundle.load(vocalAssetPath)).buffer.asUint8List(),
+    );
+    await pianoFile.writeAsBytes(
+      (await rootBundle.load(pianoAssetPath)).buffer.asUint8List(),
+    );
+    await drumsFile.writeAsBytes(
+      (await rootBundle.load(drumsAssetPath)).buffer.asUint8List(),
+    );
+    await bassFile.writeAsBytes(
+      (await rootBundle.load(bassAssetPath)).buffer.asUint8List(),
+    );
+    await otherFile.writeAsBytes(
+      (await rootBundle.load(otherAssetPath)).buffer.asUint8List(),
+    );
+    await guitarFile.writeAsBytes(
+      (await rootBundle.load(guitarAssetPath)).buffer.asUint8List(),
+    );
+  }
 
   // Utilizziamo i Companion per inserire i dati
   final newSong = SongsCompanion.insert(
@@ -147,6 +200,24 @@ Future<void> debugCreateSong({
     musicBeatsPositions: musicBeatsPositions,
     coverPath: coverPath != null
         ? drift.Value(coverPath)
+        : const drift.Value.absent(),
+    pathVocals: vocalPath != null
+        ? drift.Value(vocalPath)
+        : const drift.Value.absent(),
+    pathPiano: pianoPath != null
+        ? drift.Value(pianoPath)
+        : const drift.Value.absent(),
+    pathDrums: drumsPath != null
+        ? drift.Value(drumsPath)
+        : const drift.Value.absent(),
+    pathBass: bassPath != null
+        ? drift.Value(bassPath)
+        : const drift.Value.absent(),
+    pathOther: otherPath != null
+        ? drift.Value(otherPath)
+        : const drift.Value.absent(),
+    pathGuitar: guitarPath != null
+        ? drift.Value(guitarPath)
         : const drift.Value.absent(),
   );
 

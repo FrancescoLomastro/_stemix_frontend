@@ -87,6 +87,14 @@ flutter:
   assets:
     - assets/images/sample_image1.jpg
     - assets/images/sample_image2.jpg
+    
+    - assets/audio/vocals.wav
+    - assets/audio/piano.wav
+    - assets/audio/drums.wav
+    - assets/audio/bass.wav
+    - assets/audio/other.wav
+    - assets/audio/guitar.wav
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:stemix_frontend/data/local/drift/database.dart';
 
 class PlayerPage extends StatelessWidget {
-  const PlayerPage({super.key});
+  final Song song;
+  const PlayerPage({super.key, required this.song});
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +13,14 @@ class PlayerPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Player Functionality Coming Soon!'),
-            const Text('Enjoy your music!'),
+            Text('CoverPath: ${song.coverPath}'),
+            Text('VocalStemPath: ${song.pathVocals}'),
+            Text('BassStemPath: ${song.pathBass}'),
+            Text('DrumsStemPath: ${song.pathDrums}'),
+            Text('OtherStemPath: ${song.pathOther}'),
+            Text('PianoStemPath: ${song.pathPiano}'),
+            Text('GuitarStemPath: ${song.pathGuitar}'),
+
             TextButton(onPressed: () {}, child: const Text('Play')),
           ],
         ),
