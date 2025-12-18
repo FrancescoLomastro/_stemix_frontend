@@ -39,7 +39,7 @@ void main() async {
 
   /* await debugDeleteAllSongs(); */
 
-  /* for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < 30; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
@@ -47,7 +47,7 @@ void main() async {
       musicBeatsPositions: [0.0, 1.0 + i, 2.0 + i],
       hasImage: i % 2 == 0,
     );
-  } */
+  }
   /* await debugLogAllSongs(); */
   // =================================================================
 
