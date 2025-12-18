@@ -71,17 +71,48 @@ class _LibraryView extends StatelessWidget {
   }
 
   Widget _buildLibraryLoaded(BuildContext context, LibraryLoaded state) {
-    return ListView.builder(
-      itemCount: state.songs.length,
-      itemBuilder: (context, index) {
-        final song = state.songs[index];
-        final isSelected = state.selectedSongIds.contains(song.id);
-        return SongListTile(
-          song: song,
-          isSelectionMode: state.isSelectionMode,
-          isSelected: isSelected,
-        );
-      },
+    final allSelected =
+        state.selectedSongIds.length == state.songs.length &&
+        state.songs.isNotEmpty;
+
+    return Column(
+      children: [
+        if (state.isSelectionMode) ...[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: allSelected,
+                  onChanged: (isSelect) {
+                    context.read<LibraryBloc>().add(
+                      SelectAllEvent(isSelect ?? false),
+                    );
+                  },
+                ),
+                Text(
+                  "Select All",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+          ),
+        ],
+        Expanded(
+          child: ListView.builder(
+            itemCount: state.songs.length,
+            itemBuilder: (context, index) {
+              final song = state.songs[index];
+              final isSelected = state.selectedSongIds.contains(song.id);
+              return SongListTile(
+                song: song,
+                isSelectionMode: state.isSelectionMode,
+                isSelected: isSelected,
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

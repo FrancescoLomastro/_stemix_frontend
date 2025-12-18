@@ -17,6 +17,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     on<ToggleSelectionModeEvent>(_onToggleSelectionMode);
     on<ToggleSongSelectionEvent>(_onToggleSongSelection);
     on<DeleteSelectedSongsEvent>(_onDeleteSelected);
+    on<SelectAllEvent>(_onSelectAll);
   }
 
   void _onToggleSongSelection(
@@ -85,6 +86,18 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       } finally {
         emit(LibraryDeleting(completed: true));
         add(LoadSongsEvent());
+      }
+    }
+  }
+
+  void _onSelectAll(SelectAllEvent event, Emitter<LibraryState> emit) {
+    if (state is LibraryLoaded) {
+      final currentState = state as LibraryLoaded;
+      if (event.isSelect) {
+        final allIds = currentState.songs.map((s) => s.id).toSet();
+        emit(currentState.copyWith(selectedSongIds: allIds));
+      } else {
+        emit(currentState.copyWith(selectedSongIds: {}));
       }
     }
   }

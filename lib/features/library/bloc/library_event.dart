@@ -18,4 +18,13 @@ class ToggleSongSelectionEvent extends LibraryEvent {
   List<Object> get props => [songId];
 }
 
+class SelectAllEvent extends LibraryEvent {
+  // Could be used to select or deselect all
+  final bool isSelect;
+  const SelectAllEvent(this.isSelect);
+
+  @override
+  List<Object> get props => [isSelect];
+}
+
 class DeleteSelectedSongsEvent extends LibraryEvent {}
