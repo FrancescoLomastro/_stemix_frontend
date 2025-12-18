@@ -27,7 +27,6 @@ class _LibraryView extends StatelessWidget {
           current is LibraryError ||
           (current is LibraryDeleting && current.completed),
       listener: (context, state) {
-        //Close the deleting dialog
         switch (state) {
           case LibraryDeleting(:final completed) when completed:
             Navigator.of(context, rootNavigator: true).pop();
@@ -45,10 +44,9 @@ class _LibraryView extends StatelessWidget {
             case LibraryDeleting():
             case LibraryLoading():
               bodyContent = _buildLibraryLoading();
-            case LibraryError(:final message):
-              bodyContent = _buildLibraryError(message);
             case LibraryLoaded():
               bodyContent = _buildLibraryLoaded(context, state);
+            case LibraryError():
             default:
               logger.e("LibraryPage - Unknown state: $state");
               bodyContent = const Center(child: Text("Unknown state"));
@@ -62,14 +60,12 @@ class _LibraryView extends StatelessWidget {
     );
   }
 
+  // Build library loading view
   Widget _buildLibraryLoading() {
     return const Center(child: CircularProgressIndicator());
   }
 
-  Widget _buildLibraryError(String message) {
-    return Center(child: Text(message));
-  }
-
+  // Build library loaded view
   Widget _buildLibraryLoaded(BuildContext context, LibraryLoaded state) {
     final allSelected =
         state.selectedSongIds.length == state.songs.length &&
@@ -78,25 +74,7 @@ class _LibraryView extends StatelessWidget {
     return Column(
       children: [
         if (state.isSelectionMode) ...[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Checkbox(
-                  value: allSelected,
-                  onChanged: (isSelect) {
-                    context.read<LibraryBloc>().add(
-                      SelectAllEvent(isSelect ?? false),
-                    );
-                  },
-                ),
-                Text(
-                  "Select All",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-          ),
+          _buildSelectAllCheckbox(context, allSelected),
         ],
         Expanded(
           child: ListView.builder(
@@ -117,6 +95,7 @@ class _LibraryView extends StatelessWidget {
   }
 }
 
+// Build AppBar based on current state
 PreferredSizeWidget _buildAppBar(BuildContext context, LibraryState state) {
   final bool isSelectionMode = state is LibraryLoaded && state.isSelectionMode;
   final int selectedCount = state is LibraryLoaded
@@ -149,6 +128,25 @@ PreferredSizeWidget _buildAppBar(BuildContext context, LibraryState state) {
   );
 }
 
+// Build "Select All" checkbox widget
+Widget _buildSelectAllCheckbox(BuildContext context, bool allSelected) {
+  return Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: Row(
+      children: [
+        Checkbox(
+          value: allSelected,
+          onChanged: (isSelect) {
+            context.read<LibraryBloc>().add(SelectAllEvent(isSelect ?? false));
+          },
+        ),
+        Text("Select All", style: Theme.of(context).textTheme.titleMedium),
+      ],
+    ),
+  );
+}
+
+// Show confirmation dialog before deleting songs
 void _showDeleteDialog(BuildContext context, LibraryState state) {
   final int count = state is LibraryLoaded ? state.selectedSongIds.length : 0;
 
@@ -178,6 +176,7 @@ void _showDeleteDialog(BuildContext context, LibraryState state) {
   );
 }
 
+// Show deleting progress dialog
 void _showDeletingDialog(BuildContext context) {
   showDialog(
     context: context,
