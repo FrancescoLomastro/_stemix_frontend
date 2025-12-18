@@ -39,7 +39,7 @@ void main() async {
 
   /* await debugDeleteAllSongs(); */
 
-  /* for (int i = 0; i < 10; i++) {
+  /* for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
@@ -150,13 +150,12 @@ Future<void> debugCreateSong({
     }
   }
   if (hasAudio) {
-    String vocalAssetPath = "assets/audio/vocals.wav";
-    String pianoAssetPath = "assets/audio/piano.wav";
-    String drumsAssetPath = "assets/audio/drums.wav";
-    String bassAssetPath = "assets/audio/bass.wav";
-    String otherAssetPath = "assets/audio/other.wav";
-    String guitarAssetPath = "assets/audio/guitar.wav";
-
+    String vocalAssetPath = "assets/audio_ogg/vocals.ogg";
+    String pianoAssetPath = "assets/audio_ogg/piano.ogg";
+    String drumsAssetPath = "assets/audio_ogg/drums.ogg";
+    String bassAssetPath = "assets/audio_ogg/bass.ogg";
+    String otherAssetPath = "assets/audio_ogg/other.ogg";
+    String guitarAssetPath = "assets/audio_ogg/guitar.ogg";
     vocalPath = p.join(fullSongFolderPath, "vocals.wav");
     pianoPath = p.join(fullSongFolderPath, "piano.wav");
     drumsPath = p.join(fullSongFolderPath, "drums.wav");

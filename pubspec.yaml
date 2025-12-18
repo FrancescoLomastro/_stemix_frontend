@@ -54,6 +54,10 @@ dependencies:
   path: ^1.9.1
   path_provider: ^2.1.5
 
+  # Audio tracks
+  flutter_soloud: ^3.4.7
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -94,6 +98,20 @@ flutter:
     - assets/audio/bass.wav
     - assets/audio/other.wav
     - assets/audio/guitar.wav
+
+    - assets/audio_long/vocals.wav
+    - assets/audio_long/piano.wav
+    - assets/audio_long/drums.wav
+    - assets/audio_long/bass.wav
+    - assets/audio_long/other.wav
+    - assets/audio_long/guitar.wav
+
+    - assets/audio_ogg/vocals.ogg
+    - assets/audio_ogg/piano.ogg
+    - assets/audio_ogg/drums.ogg
+    - assets/audio_ogg/bass.ogg
+    - assets/audio_ogg/other.ogg
+    - assets/audio_ogg/guitar.ogg
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
