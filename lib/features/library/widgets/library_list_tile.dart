@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/library/bloc/library_bloc.dart';
 import 'package:stemix_frontend/theme/widgets/default_image_placeholder.dart';
@@ -43,11 +44,8 @@ class SongListTile extends StatelessWidget {
     if (isSelectionMode) {
       context.read<LibraryBloc>().add(ToggleSongSelectionEvent(song.id));
     } else {
-      /* final bool? shouldRefresh = await context.push<bool>(
-        '/player',
-        extra: song,
-      );
-
+      await context.push<bool>('/player', extra: song);
+      /*
       if (shouldRefresh == true && context.mounted) {
         context.read<LibraryBloc>().add(LoadSongsEvent());
       } */
