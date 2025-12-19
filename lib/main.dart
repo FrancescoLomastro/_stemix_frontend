@@ -37,9 +37,9 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  await debugDeleteAllSongs();
+  /* await debugDeleteAllSongs(); */
 
-  for (int i = 0; i < 2; i++) {
+  /* for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
@@ -48,7 +48,7 @@ void main() async {
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
-  }
+  } */
   /* await debugLogAllSongs(); */
   // =================================================================
 

@@ -1,7 +1,20 @@
-class PlayerEvent {}
+import 'package:equatable/equatable.dart';
 
-class LoadPlayer extends PlayerEvent {}
+class PlayerEvent extends Equatable {
+  const PlayerEvent();
 
-class Play extends PlayerEvent {}
+  @override
+  List<Object?> get props => [];
+}
 
-class Pause extends PlayerEvent {}
+class LoadPlayerEvent extends PlayerEvent {}
+
+class PlayEvent extends PlayerEvent {}
+
+class PauseEvent extends PlayerEvent {}
+
+class SkipDurationEvent extends PlayerEvent {
+  final bool absolute;
+  final int amount;
+  const SkipDurationEvent({this.absolute = false, this.amount = 10});
+}

@@ -117,4 +117,8 @@ class AppTheme {
     255,
     255,
   );
+
+  static Color defaultWhite = const Color.fromARGB(255, 255, 255, 255);
+
+  static Color defaultBlack = const Color.fromARGB(255, 0, 0, 0);
 }

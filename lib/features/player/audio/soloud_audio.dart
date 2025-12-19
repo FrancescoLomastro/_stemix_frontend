@@ -14,6 +14,9 @@ class SoloudImplementation implements PlayerInterface {
   }
 
   @override
+  Duration get currentPosition => SoLoud.instance.getPosition(handles[0]);
+
+  @override
   Future<void> ensureInitialized() async {
     if (SoLoud.instance.isInitialized) {
       return;
@@ -47,16 +50,6 @@ class SoloudImplementation implements PlayerInterface {
   }
 
   @override
-  Future<void> dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement duration
-  Duration get duration => throw UnimplementedError();
-
-  @override
   void pause() async {
     for (var handle in handles) {
       SoLoud.instance.setPause(handle, true);
@@ -71,18 +64,25 @@ class SoloudImplementation implements PlayerInterface {
   }
 
   @override
+  void seek(Duration position) {
+    for (var handle in handles) {
+      SoLoud.instance.seek(handle, position);
+    }
+  }
+
+  @override
+  Future<void> dispose() {
+    // TODO: implement dispose
+    throw UnimplementedError();
+  }
+
+  @override
   // TODO: implement playingStream
   Stream<bool> get playingStream => throw UnimplementedError();
 
   @override
   // TODO: implement positionStream
   Stream<Duration> get positionStream => throw UnimplementedError();
-
-  @override
-  Future<void> seek(Duration position) {
-    // TODO: implement seek
-    throw UnimplementedError();
-  }
 
   @override
   void setMetronomeMultiplier(double multiplier) {
@@ -114,3 +114,7 @@ class SoloudImplementation implements PlayerInterface {
     }
   }
 }
+
+class SoloudImplementationException implements Exception {}
+
+class NeedToStopException implements Exception {}
