@@ -6,6 +6,7 @@ import 'package:stemix_frontend/data/local/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/soloud_audio.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
+import 'package:stemix_frontend/main.dart';
 
 @injectable
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
@@ -45,6 +46,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         ),
       );
     } catch (e) {
+      logger.e("Error loading player: $e");
       emit(PlayerError(e.toString()));
     }
   }
@@ -64,6 +66,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         }
       }
     } catch (e) {
+      logger.e("Error in PlayEvent: $e");
       emit(PlayerError(e.toString()));
     }
   }
@@ -86,6 +89,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         }
       }
     } catch (e) {
+      logger.e("Error in PauseEvent: $e");
       emit(PlayerError(e.toString()));
     }
   }
@@ -123,6 +127,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         }
       }
     } catch (e) {
+      logger.e("Error in SkipDurationEvent: $e");
       emit(PlayerError(e.toString()));
     }
   }
@@ -140,6 +145,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         emit(currentState.copyWith(stemVolumes: newVolumes, isSaved: false));
       }
     } catch (e) {
+      logger.e("Error in SetVolumeEvent: $e");
       emit(PlayerError(e.toString()));
     }
   }
@@ -152,6 +158,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         emit(currentState.copyWith(isSaved: true));
       }
     } catch (e) {
+      logger.e("Error in SaveEvent: $e");
       emit(PlayerError(e.toString()));
     }
   }
