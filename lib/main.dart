@@ -49,7 +49,7 @@ void main() async {
       hasAudio: true,
     );
   } */
-  /* await debugLogAllSongs(); */
+  await debugLogAllSongs();
   // =================================================================
 
   runApp(const MyApp());
@@ -200,22 +200,22 @@ Future<void> debugCreateSong({
     coverPath: coverPath != null
         ? drift.Value(coverPath)
         : const drift.Value.absent(),
-    pathVocals: vocalPath != null
+    vocalsPath: vocalPath != null
         ? drift.Value(vocalPath)
         : const drift.Value.absent(),
-    pathPiano: pianoPath != null
+    pianoPath: pianoPath != null
         ? drift.Value(pianoPath)
         : const drift.Value.absent(),
-    pathDrums: drumsPath != null
+    drumsPath: drumsPath != null
         ? drift.Value(drumsPath)
         : const drift.Value.absent(),
-    pathBass: bassPath != null
+    bassPath: bassPath != null
         ? drift.Value(bassPath)
         : const drift.Value.absent(),
-    pathOther: otherPath != null
+    otherPath: otherPath != null
         ? drift.Value(otherPath)
         : const drift.Value.absent(),
-    pathGuitar: guitarPath != null
+    guitarPath: guitarPath != null
         ? drift.Value(guitarPath)
         : const drift.Value.absent(),
   );

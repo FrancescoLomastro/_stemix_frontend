@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
+import 'package:drift/drift.dart' as drift;
+import 'package:stemix_frontend/data/local/stem_names.dart';
 import 'package:stemix_frontend/main.dart';
 
 @lazySingleton
@@ -80,5 +82,19 @@ class SongRepository {
     if (await thisSongDir.exists()) {
       await thisSongDir.delete(recursive: true);
     }
+  }
+
+  Future<void> updateSong(int songId, Map<StemName, double> stemVolumes) async {
+    final companion = SongsCompanion(
+      vocalsVol: drift.Value(stemVolumes[StemName.vocals]!),
+      drumsVol: drift.Value(stemVolumes[StemName.drums]!),
+      bassVol: drift.Value(stemVolumes[StemName.bass]!),
+      otherVol: drift.Value(stemVolumes[StemName.other]!),
+      pianoVol: drift.Value(stemVolumes[StemName.piano]!),
+      guitarVol: drift.Value(stemVolumes[StemName.guitar]!),
+    );
+    await (_db.update(
+      _db.songs,
+    )..where((s) => s.id.equals(songId))).write(companion);
   }
 }

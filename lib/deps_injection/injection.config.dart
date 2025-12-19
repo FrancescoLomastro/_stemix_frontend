@@ -31,11 +31,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i448.SoloudImplementation>(
       () => _i448.SoloudImplementation(),
     );
-    gh.factoryParam<_i441.PlayerBloc, _i34.Song, dynamic>(
-      (song, _) => _i441.PlayerBloc(gh<_i448.SoloudImplementation>(), song),
-    );
     gh.lazySingleton<_i992.SongRepository>(
       () => _i992.SongRepository(gh<_i34.AppDatabase>()),
+    );
+    gh.factoryParam<_i441.PlayerBloc, _i34.Song, dynamic>(
+      (song, _) => _i441.PlayerBloc(
+        gh<_i448.SoloudImplementation>(),
+        gh<_i992.SongRepository>(),
+        song,
+      ),
     );
     gh.factory<_i62.LibraryBloc>(
       () => _i62.LibraryBloc(gh<_i992.SongRepository>()),

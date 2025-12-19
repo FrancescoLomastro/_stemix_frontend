@@ -104,67 +104,67 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   ).withConverter<List<double>>($SongsTable.$convertermusicBeatsPositions);
-  static const VerificationMeta _pathVocalsMeta = const VerificationMeta(
-    'pathVocals',
+  static const VerificationMeta _vocalsPathMeta = const VerificationMeta(
+    'vocalsPath',
   );
   @override
-  late final GeneratedColumn<String> pathVocals = GeneratedColumn<String>(
-    'path_vocals',
+  late final GeneratedColumn<String> vocalsPath = GeneratedColumn<String>(
+    'vocals_path',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _pathGuitarMeta = const VerificationMeta(
-    'pathGuitar',
+  static const VerificationMeta _guitarPathMeta = const VerificationMeta(
+    'guitarPath',
   );
   @override
-  late final GeneratedColumn<String> pathGuitar = GeneratedColumn<String>(
-    'path_guitar',
+  late final GeneratedColumn<String> guitarPath = GeneratedColumn<String>(
+    'guitar_path',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _pathDrumsMeta = const VerificationMeta(
-    'pathDrums',
+  static const VerificationMeta _drumsPathMeta = const VerificationMeta(
+    'drumsPath',
   );
   @override
-  late final GeneratedColumn<String> pathDrums = GeneratedColumn<String>(
-    'path_drums',
+  late final GeneratedColumn<String> drumsPath = GeneratedColumn<String>(
+    'drums_path',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _pathBassMeta = const VerificationMeta(
-    'pathBass',
+  static const VerificationMeta _bassPathMeta = const VerificationMeta(
+    'bassPath',
   );
   @override
-  late final GeneratedColumn<String> pathBass = GeneratedColumn<String>(
-    'path_bass',
+  late final GeneratedColumn<String> bassPath = GeneratedColumn<String>(
+    'bass_path',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _pathPianoMeta = const VerificationMeta(
-    'pathPiano',
+  static const VerificationMeta _pianoPathMeta = const VerificationMeta(
+    'pianoPath',
   );
   @override
-  late final GeneratedColumn<String> pathPiano = GeneratedColumn<String>(
-    'path_piano',
+  late final GeneratedColumn<String> pianoPath = GeneratedColumn<String>(
+    'piano_path',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _pathOtherMeta = const VerificationMeta(
-    'pathOther',
+  static const VerificationMeta _otherPathMeta = const VerificationMeta(
+    'otherPath',
   );
   @override
-  late final GeneratedColumn<String> pathOther = GeneratedColumn<String>(
-    'path_other',
+  late final GeneratedColumn<String> otherPath = GeneratedColumn<String>(
+    'other_path',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -182,72 +182,72 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
-  static const VerificationMeta _volVocalsMeta = const VerificationMeta(
-    'volVocals',
+  static const VerificationMeta _vocalsVolMeta = const VerificationMeta(
+    'vocalsVol',
   );
   @override
-  late final GeneratedColumn<double> volVocals = GeneratedColumn<double>(
-    'vol_vocals',
+  late final GeneratedColumn<double> vocalsVol = GeneratedColumn<double>(
+    'vocals_vol',
     aliasedName,
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
-  static const VerificationMeta _volGuitarMeta = const VerificationMeta(
-    'volGuitar',
+  static const VerificationMeta _guitarVolMeta = const VerificationMeta(
+    'guitarVol',
   );
   @override
-  late final GeneratedColumn<double> volGuitar = GeneratedColumn<double>(
-    'vol_guitar',
+  late final GeneratedColumn<double> guitarVol = GeneratedColumn<double>(
+    'guitar_vol',
     aliasedName,
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
-  static const VerificationMeta _volDrumsMeta = const VerificationMeta(
-    'volDrums',
+  static const VerificationMeta _drumsVolMeta = const VerificationMeta(
+    'drumsVol',
   );
   @override
-  late final GeneratedColumn<double> volDrums = GeneratedColumn<double>(
-    'vol_drums',
+  late final GeneratedColumn<double> drumsVol = GeneratedColumn<double>(
+    'drums_vol',
     aliasedName,
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
-  static const VerificationMeta _volBassMeta = const VerificationMeta(
-    'volBass',
+  static const VerificationMeta _bassVolMeta = const VerificationMeta(
+    'bassVol',
   );
   @override
-  late final GeneratedColumn<double> volBass = GeneratedColumn<double>(
-    'vol_bass',
+  late final GeneratedColumn<double> bassVol = GeneratedColumn<double>(
+    'bass_vol',
     aliasedName,
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
-  static const VerificationMeta _volPianoMeta = const VerificationMeta(
-    'volPiano',
+  static const VerificationMeta _pianoVolMeta = const VerificationMeta(
+    'pianoVol',
   );
   @override
-  late final GeneratedColumn<double> volPiano = GeneratedColumn<double>(
-    'vol_piano',
+  late final GeneratedColumn<double> pianoVol = GeneratedColumn<double>(
+    'piano_vol',
     aliasedName,
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
-  static const VerificationMeta _volOtherMeta = const VerificationMeta(
-    'volOther',
+  static const VerificationMeta _otherVolMeta = const VerificationMeta(
+    'otherVol',
   );
   @override
-  late final GeneratedColumn<double> volOther = GeneratedColumn<double>(
-    'vol_other',
+  late final GeneratedColumn<double> otherVol = GeneratedColumn<double>(
+    'other_vol',
     aliasedName,
     false,
     type: DriftSqlType.double,
@@ -265,19 +265,19 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     musicBpm,
     musicKey,
     musicBeatsPositions,
-    pathVocals,
-    pathGuitar,
-    pathDrums,
-    pathBass,
-    pathPiano,
-    pathOther,
+    vocalsPath,
+    guitarPath,
+    drumsPath,
+    bassPath,
+    pianoPath,
+    otherPath,
     volMetronome,
-    volVocals,
-    volGuitar,
-    volDrums,
-    volBass,
-    volPiano,
-    volOther,
+    vocalsVol,
+    guitarVol,
+    drumsVol,
+    bassVol,
+    pianoVol,
+    otherVol,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -342,40 +342,40 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         musicKey.isAcceptableOrUnknown(data['music_key']!, _musicKeyMeta),
       );
     }
-    if (data.containsKey('path_vocals')) {
+    if (data.containsKey('vocals_path')) {
       context.handle(
-        _pathVocalsMeta,
-        pathVocals.isAcceptableOrUnknown(data['path_vocals']!, _pathVocalsMeta),
+        _vocalsPathMeta,
+        vocalsPath.isAcceptableOrUnknown(data['vocals_path']!, _vocalsPathMeta),
       );
     }
-    if (data.containsKey('path_guitar')) {
+    if (data.containsKey('guitar_path')) {
       context.handle(
-        _pathGuitarMeta,
-        pathGuitar.isAcceptableOrUnknown(data['path_guitar']!, _pathGuitarMeta),
+        _guitarPathMeta,
+        guitarPath.isAcceptableOrUnknown(data['guitar_path']!, _guitarPathMeta),
       );
     }
-    if (data.containsKey('path_drums')) {
+    if (data.containsKey('drums_path')) {
       context.handle(
-        _pathDrumsMeta,
-        pathDrums.isAcceptableOrUnknown(data['path_drums']!, _pathDrumsMeta),
+        _drumsPathMeta,
+        drumsPath.isAcceptableOrUnknown(data['drums_path']!, _drumsPathMeta),
       );
     }
-    if (data.containsKey('path_bass')) {
+    if (data.containsKey('bass_path')) {
       context.handle(
-        _pathBassMeta,
-        pathBass.isAcceptableOrUnknown(data['path_bass']!, _pathBassMeta),
+        _bassPathMeta,
+        bassPath.isAcceptableOrUnknown(data['bass_path']!, _bassPathMeta),
       );
     }
-    if (data.containsKey('path_piano')) {
+    if (data.containsKey('piano_path')) {
       context.handle(
-        _pathPianoMeta,
-        pathPiano.isAcceptableOrUnknown(data['path_piano']!, _pathPianoMeta),
+        _pianoPathMeta,
+        pianoPath.isAcceptableOrUnknown(data['piano_path']!, _pianoPathMeta),
       );
     }
-    if (data.containsKey('path_other')) {
+    if (data.containsKey('other_path')) {
       context.handle(
-        _pathOtherMeta,
-        pathOther.isAcceptableOrUnknown(data['path_other']!, _pathOtherMeta),
+        _otherPathMeta,
+        otherPath.isAcceptableOrUnknown(data['other_path']!, _otherPathMeta),
       );
     }
     if (data.containsKey('vol_metronome')) {
@@ -387,40 +387,40 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         ),
       );
     }
-    if (data.containsKey('vol_vocals')) {
+    if (data.containsKey('vocals_vol')) {
       context.handle(
-        _volVocalsMeta,
-        volVocals.isAcceptableOrUnknown(data['vol_vocals']!, _volVocalsMeta),
+        _vocalsVolMeta,
+        vocalsVol.isAcceptableOrUnknown(data['vocals_vol']!, _vocalsVolMeta),
       );
     }
-    if (data.containsKey('vol_guitar')) {
+    if (data.containsKey('guitar_vol')) {
       context.handle(
-        _volGuitarMeta,
-        volGuitar.isAcceptableOrUnknown(data['vol_guitar']!, _volGuitarMeta),
+        _guitarVolMeta,
+        guitarVol.isAcceptableOrUnknown(data['guitar_vol']!, _guitarVolMeta),
       );
     }
-    if (data.containsKey('vol_drums')) {
+    if (data.containsKey('drums_vol')) {
       context.handle(
-        _volDrumsMeta,
-        volDrums.isAcceptableOrUnknown(data['vol_drums']!, _volDrumsMeta),
+        _drumsVolMeta,
+        drumsVol.isAcceptableOrUnknown(data['drums_vol']!, _drumsVolMeta),
       );
     }
-    if (data.containsKey('vol_bass')) {
+    if (data.containsKey('bass_vol')) {
       context.handle(
-        _volBassMeta,
-        volBass.isAcceptableOrUnknown(data['vol_bass']!, _volBassMeta),
+        _bassVolMeta,
+        bassVol.isAcceptableOrUnknown(data['bass_vol']!, _bassVolMeta),
       );
     }
-    if (data.containsKey('vol_piano')) {
+    if (data.containsKey('piano_vol')) {
       context.handle(
-        _volPianoMeta,
-        volPiano.isAcceptableOrUnknown(data['vol_piano']!, _volPianoMeta),
+        _pianoVolMeta,
+        pianoVol.isAcceptableOrUnknown(data['piano_vol']!, _pianoVolMeta),
       );
     }
-    if (data.containsKey('vol_other')) {
+    if (data.containsKey('other_vol')) {
       context.handle(
-        _volOtherMeta,
-        volOther.isAcceptableOrUnknown(data['vol_other']!, _volOtherMeta),
+        _otherVolMeta,
+        otherVol.isAcceptableOrUnknown(data['other_vol']!, _otherVolMeta),
       );
     }
     return context;
@@ -470,57 +470,57 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
           data['${effectivePrefix}music_beats_positions'],
         )!,
       ),
-      pathVocals: attachedDatabase.typeMapping.read(
+      vocalsPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}path_vocals'],
+        data['${effectivePrefix}vocals_path'],
       ),
-      pathGuitar: attachedDatabase.typeMapping.read(
+      guitarPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}path_guitar'],
+        data['${effectivePrefix}guitar_path'],
       ),
-      pathDrums: attachedDatabase.typeMapping.read(
+      drumsPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}path_drums'],
+        data['${effectivePrefix}drums_path'],
       ),
-      pathBass: attachedDatabase.typeMapping.read(
+      bassPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}path_bass'],
+        data['${effectivePrefix}bass_path'],
       ),
-      pathPiano: attachedDatabase.typeMapping.read(
+      pianoPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}path_piano'],
+        data['${effectivePrefix}piano_path'],
       ),
-      pathOther: attachedDatabase.typeMapping.read(
+      otherPath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}path_other'],
+        data['${effectivePrefix}other_path'],
       ),
       volMetronome: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}vol_metronome'],
       )!,
-      volVocals: attachedDatabase.typeMapping.read(
+      vocalsVol: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}vol_vocals'],
+        data['${effectivePrefix}vocals_vol'],
       )!,
-      volGuitar: attachedDatabase.typeMapping.read(
+      guitarVol: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}vol_guitar'],
+        data['${effectivePrefix}guitar_vol'],
       )!,
-      volDrums: attachedDatabase.typeMapping.read(
+      drumsVol: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}vol_drums'],
+        data['${effectivePrefix}drums_vol'],
       )!,
-      volBass: attachedDatabase.typeMapping.read(
+      bassVol: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}vol_bass'],
+        data['${effectivePrefix}bass_vol'],
       )!,
-      volPiano: attachedDatabase.typeMapping.read(
+      pianoVol: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}vol_piano'],
+        data['${effectivePrefix}piano_vol'],
       )!,
-      volOther: attachedDatabase.typeMapping.read(
+      otherVol: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
-        data['${effectivePrefix}vol_other'],
+        data['${effectivePrefix}other_vol'],
       )!,
     );
   }
@@ -544,19 +544,19 @@ class Song extends DataClass implements Insertable<Song> {
   final double? musicBpm;
   final String? musicKey;
   final List<double> musicBeatsPositions;
-  final String? pathVocals;
-  final String? pathGuitar;
-  final String? pathDrums;
-  final String? pathBass;
-  final String? pathPiano;
-  final String? pathOther;
+  final String? vocalsPath;
+  final String? guitarPath;
+  final String? drumsPath;
+  final String? bassPath;
+  final String? pianoPath;
+  final String? otherPath;
   final double volMetronome;
-  final double volVocals;
-  final double volGuitar;
-  final double volDrums;
-  final double volBass;
-  final double volPiano;
-  final double volOther;
+  final double vocalsVol;
+  final double guitarVol;
+  final double drumsVol;
+  final double bassVol;
+  final double pianoVol;
+  final double otherVol;
   const Song({
     required this.id,
     required this.title,
@@ -567,19 +567,19 @@ class Song extends DataClass implements Insertable<Song> {
     this.musicBpm,
     this.musicKey,
     required this.musicBeatsPositions,
-    this.pathVocals,
-    this.pathGuitar,
-    this.pathDrums,
-    this.pathBass,
-    this.pathPiano,
-    this.pathOther,
+    this.vocalsPath,
+    this.guitarPath,
+    this.drumsPath,
+    this.bassPath,
+    this.pianoPath,
+    this.otherPath,
     required this.volMetronome,
-    required this.volVocals,
-    required this.volGuitar,
-    required this.volDrums,
-    required this.volBass,
-    required this.volPiano,
-    required this.volOther,
+    required this.vocalsVol,
+    required this.guitarVol,
+    required this.drumsVol,
+    required this.bassVol,
+    required this.pianoVol,
+    required this.otherVol,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -603,31 +603,31 @@ class Song extends DataClass implements Insertable<Song> {
         $SongsTable.$convertermusicBeatsPositions.toSql(musicBeatsPositions),
       );
     }
-    if (!nullToAbsent || pathVocals != null) {
-      map['path_vocals'] = Variable<String>(pathVocals);
+    if (!nullToAbsent || vocalsPath != null) {
+      map['vocals_path'] = Variable<String>(vocalsPath);
     }
-    if (!nullToAbsent || pathGuitar != null) {
-      map['path_guitar'] = Variable<String>(pathGuitar);
+    if (!nullToAbsent || guitarPath != null) {
+      map['guitar_path'] = Variable<String>(guitarPath);
     }
-    if (!nullToAbsent || pathDrums != null) {
-      map['path_drums'] = Variable<String>(pathDrums);
+    if (!nullToAbsent || drumsPath != null) {
+      map['drums_path'] = Variable<String>(drumsPath);
     }
-    if (!nullToAbsent || pathBass != null) {
-      map['path_bass'] = Variable<String>(pathBass);
+    if (!nullToAbsent || bassPath != null) {
+      map['bass_path'] = Variable<String>(bassPath);
     }
-    if (!nullToAbsent || pathPiano != null) {
-      map['path_piano'] = Variable<String>(pathPiano);
+    if (!nullToAbsent || pianoPath != null) {
+      map['piano_path'] = Variable<String>(pianoPath);
     }
-    if (!nullToAbsent || pathOther != null) {
-      map['path_other'] = Variable<String>(pathOther);
+    if (!nullToAbsent || otherPath != null) {
+      map['other_path'] = Variable<String>(otherPath);
     }
     map['vol_metronome'] = Variable<double>(volMetronome);
-    map['vol_vocals'] = Variable<double>(volVocals);
-    map['vol_guitar'] = Variable<double>(volGuitar);
-    map['vol_drums'] = Variable<double>(volDrums);
-    map['vol_bass'] = Variable<double>(volBass);
-    map['vol_piano'] = Variable<double>(volPiano);
-    map['vol_other'] = Variable<double>(volOther);
+    map['vocals_vol'] = Variable<double>(vocalsVol);
+    map['guitar_vol'] = Variable<double>(guitarVol);
+    map['drums_vol'] = Variable<double>(drumsVol);
+    map['bass_vol'] = Variable<double>(bassVol);
+    map['piano_vol'] = Variable<double>(pianoVol);
+    map['other_vol'] = Variable<double>(otherVol);
     return map;
   }
 
@@ -648,31 +648,31 @@ class Song extends DataClass implements Insertable<Song> {
           ? const Value.absent()
           : Value(musicKey),
       musicBeatsPositions: Value(musicBeatsPositions),
-      pathVocals: pathVocals == null && nullToAbsent
+      vocalsPath: vocalsPath == null && nullToAbsent
           ? const Value.absent()
-          : Value(pathVocals),
-      pathGuitar: pathGuitar == null && nullToAbsent
+          : Value(vocalsPath),
+      guitarPath: guitarPath == null && nullToAbsent
           ? const Value.absent()
-          : Value(pathGuitar),
-      pathDrums: pathDrums == null && nullToAbsent
+          : Value(guitarPath),
+      drumsPath: drumsPath == null && nullToAbsent
           ? const Value.absent()
-          : Value(pathDrums),
-      pathBass: pathBass == null && nullToAbsent
+          : Value(drumsPath),
+      bassPath: bassPath == null && nullToAbsent
           ? const Value.absent()
-          : Value(pathBass),
-      pathPiano: pathPiano == null && nullToAbsent
+          : Value(bassPath),
+      pianoPath: pianoPath == null && nullToAbsent
           ? const Value.absent()
-          : Value(pathPiano),
-      pathOther: pathOther == null && nullToAbsent
+          : Value(pianoPath),
+      otherPath: otherPath == null && nullToAbsent
           ? const Value.absent()
-          : Value(pathOther),
+          : Value(otherPath),
       volMetronome: Value(volMetronome),
-      volVocals: Value(volVocals),
-      volGuitar: Value(volGuitar),
-      volDrums: Value(volDrums),
-      volBass: Value(volBass),
-      volPiano: Value(volPiano),
-      volOther: Value(volOther),
+      vocalsVol: Value(vocalsVol),
+      guitarVol: Value(guitarVol),
+      drumsVol: Value(drumsVol),
+      bassVol: Value(bassVol),
+      pianoVol: Value(pianoVol),
+      otherVol: Value(otherVol),
     );
   }
 
@@ -693,19 +693,19 @@ class Song extends DataClass implements Insertable<Song> {
       musicBeatsPositions: serializer.fromJson<List<double>>(
         json['musicBeatsPositions'],
       ),
-      pathVocals: serializer.fromJson<String?>(json['pathVocals']),
-      pathGuitar: serializer.fromJson<String?>(json['pathGuitar']),
-      pathDrums: serializer.fromJson<String?>(json['pathDrums']),
-      pathBass: serializer.fromJson<String?>(json['pathBass']),
-      pathPiano: serializer.fromJson<String?>(json['pathPiano']),
-      pathOther: serializer.fromJson<String?>(json['pathOther']),
+      vocalsPath: serializer.fromJson<String?>(json['vocalsPath']),
+      guitarPath: serializer.fromJson<String?>(json['guitarPath']),
+      drumsPath: serializer.fromJson<String?>(json['drumsPath']),
+      bassPath: serializer.fromJson<String?>(json['bassPath']),
+      pianoPath: serializer.fromJson<String?>(json['pianoPath']),
+      otherPath: serializer.fromJson<String?>(json['otherPath']),
       volMetronome: serializer.fromJson<double>(json['volMetronome']),
-      volVocals: serializer.fromJson<double>(json['volVocals']),
-      volGuitar: serializer.fromJson<double>(json['volGuitar']),
-      volDrums: serializer.fromJson<double>(json['volDrums']),
-      volBass: serializer.fromJson<double>(json['volBass']),
-      volPiano: serializer.fromJson<double>(json['volPiano']),
-      volOther: serializer.fromJson<double>(json['volOther']),
+      vocalsVol: serializer.fromJson<double>(json['vocalsVol']),
+      guitarVol: serializer.fromJson<double>(json['guitarVol']),
+      drumsVol: serializer.fromJson<double>(json['drumsVol']),
+      bassVol: serializer.fromJson<double>(json['bassVol']),
+      pianoVol: serializer.fromJson<double>(json['pianoVol']),
+      otherVol: serializer.fromJson<double>(json['otherVol']),
     );
   }
   @override
@@ -723,19 +723,19 @@ class Song extends DataClass implements Insertable<Song> {
       'musicBeatsPositions': serializer.toJson<List<double>>(
         musicBeatsPositions,
       ),
-      'pathVocals': serializer.toJson<String?>(pathVocals),
-      'pathGuitar': serializer.toJson<String?>(pathGuitar),
-      'pathDrums': serializer.toJson<String?>(pathDrums),
-      'pathBass': serializer.toJson<String?>(pathBass),
-      'pathPiano': serializer.toJson<String?>(pathPiano),
-      'pathOther': serializer.toJson<String?>(pathOther),
+      'vocalsPath': serializer.toJson<String?>(vocalsPath),
+      'guitarPath': serializer.toJson<String?>(guitarPath),
+      'drumsPath': serializer.toJson<String?>(drumsPath),
+      'bassPath': serializer.toJson<String?>(bassPath),
+      'pianoPath': serializer.toJson<String?>(pianoPath),
+      'otherPath': serializer.toJson<String?>(otherPath),
       'volMetronome': serializer.toJson<double>(volMetronome),
-      'volVocals': serializer.toJson<double>(volVocals),
-      'volGuitar': serializer.toJson<double>(volGuitar),
-      'volDrums': serializer.toJson<double>(volDrums),
-      'volBass': serializer.toJson<double>(volBass),
-      'volPiano': serializer.toJson<double>(volPiano),
-      'volOther': serializer.toJson<double>(volOther),
+      'vocalsVol': serializer.toJson<double>(vocalsVol),
+      'guitarVol': serializer.toJson<double>(guitarVol),
+      'drumsVol': serializer.toJson<double>(drumsVol),
+      'bassVol': serializer.toJson<double>(bassVol),
+      'pianoVol': serializer.toJson<double>(pianoVol),
+      'otherVol': serializer.toJson<double>(otherVol),
     };
   }
 
@@ -749,19 +749,19 @@ class Song extends DataClass implements Insertable<Song> {
     Value<double?> musicBpm = const Value.absent(),
     Value<String?> musicKey = const Value.absent(),
     List<double>? musicBeatsPositions,
-    Value<String?> pathVocals = const Value.absent(),
-    Value<String?> pathGuitar = const Value.absent(),
-    Value<String?> pathDrums = const Value.absent(),
-    Value<String?> pathBass = const Value.absent(),
-    Value<String?> pathPiano = const Value.absent(),
-    Value<String?> pathOther = const Value.absent(),
+    Value<String?> vocalsPath = const Value.absent(),
+    Value<String?> guitarPath = const Value.absent(),
+    Value<String?> drumsPath = const Value.absent(),
+    Value<String?> bassPath = const Value.absent(),
+    Value<String?> pianoPath = const Value.absent(),
+    Value<String?> otherPath = const Value.absent(),
     double? volMetronome,
-    double? volVocals,
-    double? volGuitar,
-    double? volDrums,
-    double? volBass,
-    double? volPiano,
-    double? volOther,
+    double? vocalsVol,
+    double? guitarVol,
+    double? drumsVol,
+    double? bassVol,
+    double? pianoVol,
+    double? otherVol,
   }) => Song(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -772,19 +772,19 @@ class Song extends DataClass implements Insertable<Song> {
     musicBpm: musicBpm.present ? musicBpm.value : this.musicBpm,
     musicKey: musicKey.present ? musicKey.value : this.musicKey,
     musicBeatsPositions: musicBeatsPositions ?? this.musicBeatsPositions,
-    pathVocals: pathVocals.present ? pathVocals.value : this.pathVocals,
-    pathGuitar: pathGuitar.present ? pathGuitar.value : this.pathGuitar,
-    pathDrums: pathDrums.present ? pathDrums.value : this.pathDrums,
-    pathBass: pathBass.present ? pathBass.value : this.pathBass,
-    pathPiano: pathPiano.present ? pathPiano.value : this.pathPiano,
-    pathOther: pathOther.present ? pathOther.value : this.pathOther,
+    vocalsPath: vocalsPath.present ? vocalsPath.value : this.vocalsPath,
+    guitarPath: guitarPath.present ? guitarPath.value : this.guitarPath,
+    drumsPath: drumsPath.present ? drumsPath.value : this.drumsPath,
+    bassPath: bassPath.present ? bassPath.value : this.bassPath,
+    pianoPath: pianoPath.present ? pianoPath.value : this.pianoPath,
+    otherPath: otherPath.present ? otherPath.value : this.otherPath,
     volMetronome: volMetronome ?? this.volMetronome,
-    volVocals: volVocals ?? this.volVocals,
-    volGuitar: volGuitar ?? this.volGuitar,
-    volDrums: volDrums ?? this.volDrums,
-    volBass: volBass ?? this.volBass,
-    volPiano: volPiano ?? this.volPiano,
-    volOther: volOther ?? this.volOther,
+    vocalsVol: vocalsVol ?? this.vocalsVol,
+    guitarVol: guitarVol ?? this.guitarVol,
+    drumsVol: drumsVol ?? this.drumsVol,
+    bassVol: bassVol ?? this.bassVol,
+    pianoVol: pianoVol ?? this.pianoVol,
+    otherVol: otherVol ?? this.otherVol,
   );
   Song copyWithCompanion(SongsCompanion data) {
     return Song(
@@ -799,25 +799,25 @@ class Song extends DataClass implements Insertable<Song> {
       musicBeatsPositions: data.musicBeatsPositions.present
           ? data.musicBeatsPositions.value
           : this.musicBeatsPositions,
-      pathVocals: data.pathVocals.present
-          ? data.pathVocals.value
-          : this.pathVocals,
-      pathGuitar: data.pathGuitar.present
-          ? data.pathGuitar.value
-          : this.pathGuitar,
-      pathDrums: data.pathDrums.present ? data.pathDrums.value : this.pathDrums,
-      pathBass: data.pathBass.present ? data.pathBass.value : this.pathBass,
-      pathPiano: data.pathPiano.present ? data.pathPiano.value : this.pathPiano,
-      pathOther: data.pathOther.present ? data.pathOther.value : this.pathOther,
+      vocalsPath: data.vocalsPath.present
+          ? data.vocalsPath.value
+          : this.vocalsPath,
+      guitarPath: data.guitarPath.present
+          ? data.guitarPath.value
+          : this.guitarPath,
+      drumsPath: data.drumsPath.present ? data.drumsPath.value : this.drumsPath,
+      bassPath: data.bassPath.present ? data.bassPath.value : this.bassPath,
+      pianoPath: data.pianoPath.present ? data.pianoPath.value : this.pianoPath,
+      otherPath: data.otherPath.present ? data.otherPath.value : this.otherPath,
       volMetronome: data.volMetronome.present
           ? data.volMetronome.value
           : this.volMetronome,
-      volVocals: data.volVocals.present ? data.volVocals.value : this.volVocals,
-      volGuitar: data.volGuitar.present ? data.volGuitar.value : this.volGuitar,
-      volDrums: data.volDrums.present ? data.volDrums.value : this.volDrums,
-      volBass: data.volBass.present ? data.volBass.value : this.volBass,
-      volPiano: data.volPiano.present ? data.volPiano.value : this.volPiano,
-      volOther: data.volOther.present ? data.volOther.value : this.volOther,
+      vocalsVol: data.vocalsVol.present ? data.vocalsVol.value : this.vocalsVol,
+      guitarVol: data.guitarVol.present ? data.guitarVol.value : this.guitarVol,
+      drumsVol: data.drumsVol.present ? data.drumsVol.value : this.drumsVol,
+      bassVol: data.bassVol.present ? data.bassVol.value : this.bassVol,
+      pianoVol: data.pianoVol.present ? data.pianoVol.value : this.pianoVol,
+      otherVol: data.otherVol.present ? data.otherVol.value : this.otherVol,
     );
   }
 
@@ -833,19 +833,19 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('musicBpm: $musicBpm, ')
           ..write('musicKey: $musicKey, ')
           ..write('musicBeatsPositions: $musicBeatsPositions, ')
-          ..write('pathVocals: $pathVocals, ')
-          ..write('pathGuitar: $pathGuitar, ')
-          ..write('pathDrums: $pathDrums, ')
-          ..write('pathBass: $pathBass, ')
-          ..write('pathPiano: $pathPiano, ')
-          ..write('pathOther: $pathOther, ')
+          ..write('vocalsPath: $vocalsPath, ')
+          ..write('guitarPath: $guitarPath, ')
+          ..write('drumsPath: $drumsPath, ')
+          ..write('bassPath: $bassPath, ')
+          ..write('pianoPath: $pianoPath, ')
+          ..write('otherPath: $otherPath, ')
           ..write('volMetronome: $volMetronome, ')
-          ..write('volVocals: $volVocals, ')
-          ..write('volGuitar: $volGuitar, ')
-          ..write('volDrums: $volDrums, ')
-          ..write('volBass: $volBass, ')
-          ..write('volPiano: $volPiano, ')
-          ..write('volOther: $volOther')
+          ..write('vocalsVol: $vocalsVol, ')
+          ..write('guitarVol: $guitarVol, ')
+          ..write('drumsVol: $drumsVol, ')
+          ..write('bassVol: $bassVol, ')
+          ..write('pianoVol: $pianoVol, ')
+          ..write('otherVol: $otherVol')
           ..write(')'))
         .toString();
   }
@@ -861,19 +861,19 @@ class Song extends DataClass implements Insertable<Song> {
     musicBpm,
     musicKey,
     musicBeatsPositions,
-    pathVocals,
-    pathGuitar,
-    pathDrums,
-    pathBass,
-    pathPiano,
-    pathOther,
+    vocalsPath,
+    guitarPath,
+    drumsPath,
+    bassPath,
+    pianoPath,
+    otherPath,
     volMetronome,
-    volVocals,
-    volGuitar,
-    volDrums,
-    volBass,
-    volPiano,
-    volOther,
+    vocalsVol,
+    guitarVol,
+    drumsVol,
+    bassVol,
+    pianoVol,
+    otherVol,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -888,19 +888,19 @@ class Song extends DataClass implements Insertable<Song> {
           other.musicBpm == this.musicBpm &&
           other.musicKey == this.musicKey &&
           other.musicBeatsPositions == this.musicBeatsPositions &&
-          other.pathVocals == this.pathVocals &&
-          other.pathGuitar == this.pathGuitar &&
-          other.pathDrums == this.pathDrums &&
-          other.pathBass == this.pathBass &&
-          other.pathPiano == this.pathPiano &&
-          other.pathOther == this.pathOther &&
+          other.vocalsPath == this.vocalsPath &&
+          other.guitarPath == this.guitarPath &&
+          other.drumsPath == this.drumsPath &&
+          other.bassPath == this.bassPath &&
+          other.pianoPath == this.pianoPath &&
+          other.otherPath == this.otherPath &&
           other.volMetronome == this.volMetronome &&
-          other.volVocals == this.volVocals &&
-          other.volGuitar == this.volGuitar &&
-          other.volDrums == this.volDrums &&
-          other.volBass == this.volBass &&
-          other.volPiano == this.volPiano &&
-          other.volOther == this.volOther);
+          other.vocalsVol == this.vocalsVol &&
+          other.guitarVol == this.guitarVol &&
+          other.drumsVol == this.drumsVol &&
+          other.bassVol == this.bassVol &&
+          other.pianoVol == this.pianoVol &&
+          other.otherVol == this.otherVol);
 }
 
 class SongsCompanion extends UpdateCompanion<Song> {
@@ -913,19 +913,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<double?> musicBpm;
   final Value<String?> musicKey;
   final Value<List<double>> musicBeatsPositions;
-  final Value<String?> pathVocals;
-  final Value<String?> pathGuitar;
-  final Value<String?> pathDrums;
-  final Value<String?> pathBass;
-  final Value<String?> pathPiano;
-  final Value<String?> pathOther;
+  final Value<String?> vocalsPath;
+  final Value<String?> guitarPath;
+  final Value<String?> drumsPath;
+  final Value<String?> bassPath;
+  final Value<String?> pianoPath;
+  final Value<String?> otherPath;
   final Value<double> volMetronome;
-  final Value<double> volVocals;
-  final Value<double> volGuitar;
-  final Value<double> volDrums;
-  final Value<double> volBass;
-  final Value<double> volPiano;
-  final Value<double> volOther;
+  final Value<double> vocalsVol;
+  final Value<double> guitarVol;
+  final Value<double> drumsVol;
+  final Value<double> bassVol;
+  final Value<double> pianoVol;
+  final Value<double> otherVol;
   const SongsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -936,19 +936,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.musicBpm = const Value.absent(),
     this.musicKey = const Value.absent(),
     this.musicBeatsPositions = const Value.absent(),
-    this.pathVocals = const Value.absent(),
-    this.pathGuitar = const Value.absent(),
-    this.pathDrums = const Value.absent(),
-    this.pathBass = const Value.absent(),
-    this.pathPiano = const Value.absent(),
-    this.pathOther = const Value.absent(),
+    this.vocalsPath = const Value.absent(),
+    this.guitarPath = const Value.absent(),
+    this.drumsPath = const Value.absent(),
+    this.bassPath = const Value.absent(),
+    this.pianoPath = const Value.absent(),
+    this.otherPath = const Value.absent(),
     this.volMetronome = const Value.absent(),
-    this.volVocals = const Value.absent(),
-    this.volGuitar = const Value.absent(),
-    this.volDrums = const Value.absent(),
-    this.volBass = const Value.absent(),
-    this.volPiano = const Value.absent(),
-    this.volOther = const Value.absent(),
+    this.vocalsVol = const Value.absent(),
+    this.guitarVol = const Value.absent(),
+    this.drumsVol = const Value.absent(),
+    this.bassVol = const Value.absent(),
+    this.pianoVol = const Value.absent(),
+    this.otherVol = const Value.absent(),
   });
   SongsCompanion.insert({
     this.id = const Value.absent(),
@@ -960,19 +960,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.musicBpm = const Value.absent(),
     this.musicKey = const Value.absent(),
     required List<double> musicBeatsPositions,
-    this.pathVocals = const Value.absent(),
-    this.pathGuitar = const Value.absent(),
-    this.pathDrums = const Value.absent(),
-    this.pathBass = const Value.absent(),
-    this.pathPiano = const Value.absent(),
-    this.pathOther = const Value.absent(),
+    this.vocalsPath = const Value.absent(),
+    this.guitarPath = const Value.absent(),
+    this.drumsPath = const Value.absent(),
+    this.bassPath = const Value.absent(),
+    this.pianoPath = const Value.absent(),
+    this.otherPath = const Value.absent(),
     this.volMetronome = const Value.absent(),
-    this.volVocals = const Value.absent(),
-    this.volGuitar = const Value.absent(),
-    this.volDrums = const Value.absent(),
-    this.volBass = const Value.absent(),
-    this.volPiano = const Value.absent(),
-    this.volOther = const Value.absent(),
+    this.vocalsVol = const Value.absent(),
+    this.guitarVol = const Value.absent(),
+    this.drumsVol = const Value.absent(),
+    this.bassVol = const Value.absent(),
+    this.pianoVol = const Value.absent(),
+    this.otherVol = const Value.absent(),
   }) : title = Value(title),
        artist = Value(artist),
        duration = Value(duration),
@@ -987,19 +987,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<double>? musicBpm,
     Expression<String>? musicKey,
     Expression<String>? musicBeatsPositions,
-    Expression<String>? pathVocals,
-    Expression<String>? pathGuitar,
-    Expression<String>? pathDrums,
-    Expression<String>? pathBass,
-    Expression<String>? pathPiano,
-    Expression<String>? pathOther,
+    Expression<String>? vocalsPath,
+    Expression<String>? guitarPath,
+    Expression<String>? drumsPath,
+    Expression<String>? bassPath,
+    Expression<String>? pianoPath,
+    Expression<String>? otherPath,
     Expression<double>? volMetronome,
-    Expression<double>? volVocals,
-    Expression<double>? volGuitar,
-    Expression<double>? volDrums,
-    Expression<double>? volBass,
-    Expression<double>? volPiano,
-    Expression<double>? volOther,
+    Expression<double>? vocalsVol,
+    Expression<double>? guitarVol,
+    Expression<double>? drumsVol,
+    Expression<double>? bassVol,
+    Expression<double>? pianoVol,
+    Expression<double>? otherVol,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1012,19 +1012,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (musicKey != null) 'music_key': musicKey,
       if (musicBeatsPositions != null)
         'music_beats_positions': musicBeatsPositions,
-      if (pathVocals != null) 'path_vocals': pathVocals,
-      if (pathGuitar != null) 'path_guitar': pathGuitar,
-      if (pathDrums != null) 'path_drums': pathDrums,
-      if (pathBass != null) 'path_bass': pathBass,
-      if (pathPiano != null) 'path_piano': pathPiano,
-      if (pathOther != null) 'path_other': pathOther,
+      if (vocalsPath != null) 'vocals_path': vocalsPath,
+      if (guitarPath != null) 'guitar_path': guitarPath,
+      if (drumsPath != null) 'drums_path': drumsPath,
+      if (bassPath != null) 'bass_path': bassPath,
+      if (pianoPath != null) 'piano_path': pianoPath,
+      if (otherPath != null) 'other_path': otherPath,
       if (volMetronome != null) 'vol_metronome': volMetronome,
-      if (volVocals != null) 'vol_vocals': volVocals,
-      if (volGuitar != null) 'vol_guitar': volGuitar,
-      if (volDrums != null) 'vol_drums': volDrums,
-      if (volBass != null) 'vol_bass': volBass,
-      if (volPiano != null) 'vol_piano': volPiano,
-      if (volOther != null) 'vol_other': volOther,
+      if (vocalsVol != null) 'vocals_vol': vocalsVol,
+      if (guitarVol != null) 'guitar_vol': guitarVol,
+      if (drumsVol != null) 'drums_vol': drumsVol,
+      if (bassVol != null) 'bass_vol': bassVol,
+      if (pianoVol != null) 'piano_vol': pianoVol,
+      if (otherVol != null) 'other_vol': otherVol,
     });
   }
 
@@ -1038,19 +1038,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Value<double?>? musicBpm,
     Value<String?>? musicKey,
     Value<List<double>>? musicBeatsPositions,
-    Value<String?>? pathVocals,
-    Value<String?>? pathGuitar,
-    Value<String?>? pathDrums,
-    Value<String?>? pathBass,
-    Value<String?>? pathPiano,
-    Value<String?>? pathOther,
+    Value<String?>? vocalsPath,
+    Value<String?>? guitarPath,
+    Value<String?>? drumsPath,
+    Value<String?>? bassPath,
+    Value<String?>? pianoPath,
+    Value<String?>? otherPath,
     Value<double>? volMetronome,
-    Value<double>? volVocals,
-    Value<double>? volGuitar,
-    Value<double>? volDrums,
-    Value<double>? volBass,
-    Value<double>? volPiano,
-    Value<double>? volOther,
+    Value<double>? vocalsVol,
+    Value<double>? guitarVol,
+    Value<double>? drumsVol,
+    Value<double>? bassVol,
+    Value<double>? pianoVol,
+    Value<double>? otherVol,
   }) {
     return SongsCompanion(
       id: id ?? this.id,
@@ -1062,19 +1062,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
       musicBpm: musicBpm ?? this.musicBpm,
       musicKey: musicKey ?? this.musicKey,
       musicBeatsPositions: musicBeatsPositions ?? this.musicBeatsPositions,
-      pathVocals: pathVocals ?? this.pathVocals,
-      pathGuitar: pathGuitar ?? this.pathGuitar,
-      pathDrums: pathDrums ?? this.pathDrums,
-      pathBass: pathBass ?? this.pathBass,
-      pathPiano: pathPiano ?? this.pathPiano,
-      pathOther: pathOther ?? this.pathOther,
+      vocalsPath: vocalsPath ?? this.vocalsPath,
+      guitarPath: guitarPath ?? this.guitarPath,
+      drumsPath: drumsPath ?? this.drumsPath,
+      bassPath: bassPath ?? this.bassPath,
+      pianoPath: pianoPath ?? this.pianoPath,
+      otherPath: otherPath ?? this.otherPath,
       volMetronome: volMetronome ?? this.volMetronome,
-      volVocals: volVocals ?? this.volVocals,
-      volGuitar: volGuitar ?? this.volGuitar,
-      volDrums: volDrums ?? this.volDrums,
-      volBass: volBass ?? this.volBass,
-      volPiano: volPiano ?? this.volPiano,
-      volOther: volOther ?? this.volOther,
+      vocalsVol: vocalsVol ?? this.vocalsVol,
+      guitarVol: guitarVol ?? this.guitarVol,
+      drumsVol: drumsVol ?? this.drumsVol,
+      bassVol: bassVol ?? this.bassVol,
+      pianoVol: pianoVol ?? this.pianoVol,
+      otherVol: otherVol ?? this.otherVol,
     );
   }
 
@@ -1112,44 +1112,44 @@ class SongsCompanion extends UpdateCompanion<Song> {
         ),
       );
     }
-    if (pathVocals.present) {
-      map['path_vocals'] = Variable<String>(pathVocals.value);
+    if (vocalsPath.present) {
+      map['vocals_path'] = Variable<String>(vocalsPath.value);
     }
-    if (pathGuitar.present) {
-      map['path_guitar'] = Variable<String>(pathGuitar.value);
+    if (guitarPath.present) {
+      map['guitar_path'] = Variable<String>(guitarPath.value);
     }
-    if (pathDrums.present) {
-      map['path_drums'] = Variable<String>(pathDrums.value);
+    if (drumsPath.present) {
+      map['drums_path'] = Variable<String>(drumsPath.value);
     }
-    if (pathBass.present) {
-      map['path_bass'] = Variable<String>(pathBass.value);
+    if (bassPath.present) {
+      map['bass_path'] = Variable<String>(bassPath.value);
     }
-    if (pathPiano.present) {
-      map['path_piano'] = Variable<String>(pathPiano.value);
+    if (pianoPath.present) {
+      map['piano_path'] = Variable<String>(pianoPath.value);
     }
-    if (pathOther.present) {
-      map['path_other'] = Variable<String>(pathOther.value);
+    if (otherPath.present) {
+      map['other_path'] = Variable<String>(otherPath.value);
     }
     if (volMetronome.present) {
       map['vol_metronome'] = Variable<double>(volMetronome.value);
     }
-    if (volVocals.present) {
-      map['vol_vocals'] = Variable<double>(volVocals.value);
+    if (vocalsVol.present) {
+      map['vocals_vol'] = Variable<double>(vocalsVol.value);
     }
-    if (volGuitar.present) {
-      map['vol_guitar'] = Variable<double>(volGuitar.value);
+    if (guitarVol.present) {
+      map['guitar_vol'] = Variable<double>(guitarVol.value);
     }
-    if (volDrums.present) {
-      map['vol_drums'] = Variable<double>(volDrums.value);
+    if (drumsVol.present) {
+      map['drums_vol'] = Variable<double>(drumsVol.value);
     }
-    if (volBass.present) {
-      map['vol_bass'] = Variable<double>(volBass.value);
+    if (bassVol.present) {
+      map['bass_vol'] = Variable<double>(bassVol.value);
     }
-    if (volPiano.present) {
-      map['vol_piano'] = Variable<double>(volPiano.value);
+    if (pianoVol.present) {
+      map['piano_vol'] = Variable<double>(pianoVol.value);
     }
-    if (volOther.present) {
-      map['vol_other'] = Variable<double>(volOther.value);
+    if (otherVol.present) {
+      map['other_vol'] = Variable<double>(otherVol.value);
     }
     return map;
   }
@@ -1166,19 +1166,19 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('musicBpm: $musicBpm, ')
           ..write('musicKey: $musicKey, ')
           ..write('musicBeatsPositions: $musicBeatsPositions, ')
-          ..write('pathVocals: $pathVocals, ')
-          ..write('pathGuitar: $pathGuitar, ')
-          ..write('pathDrums: $pathDrums, ')
-          ..write('pathBass: $pathBass, ')
-          ..write('pathPiano: $pathPiano, ')
-          ..write('pathOther: $pathOther, ')
+          ..write('vocalsPath: $vocalsPath, ')
+          ..write('guitarPath: $guitarPath, ')
+          ..write('drumsPath: $drumsPath, ')
+          ..write('bassPath: $bassPath, ')
+          ..write('pianoPath: $pianoPath, ')
+          ..write('otherPath: $otherPath, ')
           ..write('volMetronome: $volMetronome, ')
-          ..write('volVocals: $volVocals, ')
-          ..write('volGuitar: $volGuitar, ')
-          ..write('volDrums: $volDrums, ')
-          ..write('volBass: $volBass, ')
-          ..write('volPiano: $volPiano, ')
-          ..write('volOther: $volOther')
+          ..write('vocalsVol: $vocalsVol, ')
+          ..write('guitarVol: $guitarVol, ')
+          ..write('drumsVol: $drumsVol, ')
+          ..write('bassVol: $bassVol, ')
+          ..write('pianoVol: $pianoVol, ')
+          ..write('otherVol: $otherVol')
           ..write(')'))
         .toString();
   }
@@ -1206,19 +1206,19 @@ typedef $$SongsTableCreateCompanionBuilder =
       Value<double?> musicBpm,
       Value<String?> musicKey,
       required List<double> musicBeatsPositions,
-      Value<String?> pathVocals,
-      Value<String?> pathGuitar,
-      Value<String?> pathDrums,
-      Value<String?> pathBass,
-      Value<String?> pathPiano,
-      Value<String?> pathOther,
+      Value<String?> vocalsPath,
+      Value<String?> guitarPath,
+      Value<String?> drumsPath,
+      Value<String?> bassPath,
+      Value<String?> pianoPath,
+      Value<String?> otherPath,
       Value<double> volMetronome,
-      Value<double> volVocals,
-      Value<double> volGuitar,
-      Value<double> volDrums,
-      Value<double> volBass,
-      Value<double> volPiano,
-      Value<double> volOther,
+      Value<double> vocalsVol,
+      Value<double> guitarVol,
+      Value<double> drumsVol,
+      Value<double> bassVol,
+      Value<double> pianoVol,
+      Value<double> otherVol,
     });
 typedef $$SongsTableUpdateCompanionBuilder =
     SongsCompanion Function({
@@ -1231,19 +1231,19 @@ typedef $$SongsTableUpdateCompanionBuilder =
       Value<double?> musicBpm,
       Value<String?> musicKey,
       Value<List<double>> musicBeatsPositions,
-      Value<String?> pathVocals,
-      Value<String?> pathGuitar,
-      Value<String?> pathDrums,
-      Value<String?> pathBass,
-      Value<String?> pathPiano,
-      Value<String?> pathOther,
+      Value<String?> vocalsPath,
+      Value<String?> guitarPath,
+      Value<String?> drumsPath,
+      Value<String?> bassPath,
+      Value<String?> pianoPath,
+      Value<String?> otherPath,
       Value<double> volMetronome,
-      Value<double> volVocals,
-      Value<double> volGuitar,
-      Value<double> volDrums,
-      Value<double> volBass,
-      Value<double> volPiano,
-      Value<double> volOther,
+      Value<double> vocalsVol,
+      Value<double> guitarVol,
+      Value<double> drumsVol,
+      Value<double> bassVol,
+      Value<double> pianoVol,
+      Value<double> otherVol,
     });
 
 class $$SongsTableFilterComposer extends Composer<_$AppDatabase, $SongsTable> {
@@ -1300,33 +1300,33 @@ class $$SongsTableFilterComposer extends Composer<_$AppDatabase, $SongsTable> {
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<String> get pathVocals => $composableBuilder(
-    column: $table.pathVocals,
+  ColumnFilters<String> get vocalsPath => $composableBuilder(
+    column: $table.vocalsPath,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get pathGuitar => $composableBuilder(
-    column: $table.pathGuitar,
+  ColumnFilters<String> get guitarPath => $composableBuilder(
+    column: $table.guitarPath,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get pathDrums => $composableBuilder(
-    column: $table.pathDrums,
+  ColumnFilters<String> get drumsPath => $composableBuilder(
+    column: $table.drumsPath,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get pathBass => $composableBuilder(
-    column: $table.pathBass,
+  ColumnFilters<String> get bassPath => $composableBuilder(
+    column: $table.bassPath,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get pathPiano => $composableBuilder(
-    column: $table.pathPiano,
+  ColumnFilters<String> get pianoPath => $composableBuilder(
+    column: $table.pianoPath,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get pathOther => $composableBuilder(
-    column: $table.pathOther,
+  ColumnFilters<String> get otherPath => $composableBuilder(
+    column: $table.otherPath,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1335,33 +1335,33 @@ class $$SongsTableFilterComposer extends Composer<_$AppDatabase, $SongsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get volVocals => $composableBuilder(
-    column: $table.volVocals,
+  ColumnFilters<double> get vocalsVol => $composableBuilder(
+    column: $table.vocalsVol,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get volGuitar => $composableBuilder(
-    column: $table.volGuitar,
+  ColumnFilters<double> get guitarVol => $composableBuilder(
+    column: $table.guitarVol,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get volDrums => $composableBuilder(
-    column: $table.volDrums,
+  ColumnFilters<double> get drumsVol => $composableBuilder(
+    column: $table.drumsVol,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get volBass => $composableBuilder(
-    column: $table.volBass,
+  ColumnFilters<double> get bassVol => $composableBuilder(
+    column: $table.bassVol,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get volPiano => $composableBuilder(
-    column: $table.volPiano,
+  ColumnFilters<double> get pianoVol => $composableBuilder(
+    column: $table.pianoVol,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get volOther => $composableBuilder(
-    column: $table.volOther,
+  ColumnFilters<double> get otherVol => $composableBuilder(
+    column: $table.otherVol,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1420,33 +1420,33 @@ class $$SongsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pathVocals => $composableBuilder(
-    column: $table.pathVocals,
+  ColumnOrderings<String> get vocalsPath => $composableBuilder(
+    column: $table.vocalsPath,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pathGuitar => $composableBuilder(
-    column: $table.pathGuitar,
+  ColumnOrderings<String> get guitarPath => $composableBuilder(
+    column: $table.guitarPath,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pathDrums => $composableBuilder(
-    column: $table.pathDrums,
+  ColumnOrderings<String> get drumsPath => $composableBuilder(
+    column: $table.drumsPath,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pathBass => $composableBuilder(
-    column: $table.pathBass,
+  ColumnOrderings<String> get bassPath => $composableBuilder(
+    column: $table.bassPath,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pathPiano => $composableBuilder(
-    column: $table.pathPiano,
+  ColumnOrderings<String> get pianoPath => $composableBuilder(
+    column: $table.pianoPath,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pathOther => $composableBuilder(
-    column: $table.pathOther,
+  ColumnOrderings<String> get otherPath => $composableBuilder(
+    column: $table.otherPath,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1455,33 +1455,33 @@ class $$SongsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get volVocals => $composableBuilder(
-    column: $table.volVocals,
+  ColumnOrderings<double> get vocalsVol => $composableBuilder(
+    column: $table.vocalsVol,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get volGuitar => $composableBuilder(
-    column: $table.volGuitar,
+  ColumnOrderings<double> get guitarVol => $composableBuilder(
+    column: $table.guitarVol,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get volDrums => $composableBuilder(
-    column: $table.volDrums,
+  ColumnOrderings<double> get drumsVol => $composableBuilder(
+    column: $table.drumsVol,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get volBass => $composableBuilder(
-    column: $table.volBass,
+  ColumnOrderings<double> get bassVol => $composableBuilder(
+    column: $table.bassVol,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get volPiano => $composableBuilder(
-    column: $table.volPiano,
+  ColumnOrderings<double> get pianoVol => $composableBuilder(
+    column: $table.pianoVol,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get volOther => $composableBuilder(
-    column: $table.volOther,
+  ColumnOrderings<double> get otherVol => $composableBuilder(
+    column: $table.otherVol,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -1525,50 +1525,50 @@ class $$SongsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get pathVocals => $composableBuilder(
-    column: $table.pathVocals,
+  GeneratedColumn<String> get vocalsPath => $composableBuilder(
+    column: $table.vocalsPath,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get pathGuitar => $composableBuilder(
-    column: $table.pathGuitar,
+  GeneratedColumn<String> get guitarPath => $composableBuilder(
+    column: $table.guitarPath,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get pathDrums =>
-      $composableBuilder(column: $table.pathDrums, builder: (column) => column);
+  GeneratedColumn<String> get drumsPath =>
+      $composableBuilder(column: $table.drumsPath, builder: (column) => column);
 
-  GeneratedColumn<String> get pathBass =>
-      $composableBuilder(column: $table.pathBass, builder: (column) => column);
+  GeneratedColumn<String> get bassPath =>
+      $composableBuilder(column: $table.bassPath, builder: (column) => column);
 
-  GeneratedColumn<String> get pathPiano =>
-      $composableBuilder(column: $table.pathPiano, builder: (column) => column);
+  GeneratedColumn<String> get pianoPath =>
+      $composableBuilder(column: $table.pianoPath, builder: (column) => column);
 
-  GeneratedColumn<String> get pathOther =>
-      $composableBuilder(column: $table.pathOther, builder: (column) => column);
+  GeneratedColumn<String> get otherPath =>
+      $composableBuilder(column: $table.otherPath, builder: (column) => column);
 
   GeneratedColumn<double> get volMetronome => $composableBuilder(
     column: $table.volMetronome,
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get volVocals =>
-      $composableBuilder(column: $table.volVocals, builder: (column) => column);
+  GeneratedColumn<double> get vocalsVol =>
+      $composableBuilder(column: $table.vocalsVol, builder: (column) => column);
 
-  GeneratedColumn<double> get volGuitar =>
-      $composableBuilder(column: $table.volGuitar, builder: (column) => column);
+  GeneratedColumn<double> get guitarVol =>
+      $composableBuilder(column: $table.guitarVol, builder: (column) => column);
 
-  GeneratedColumn<double> get volDrums =>
-      $composableBuilder(column: $table.volDrums, builder: (column) => column);
+  GeneratedColumn<double> get drumsVol =>
+      $composableBuilder(column: $table.drumsVol, builder: (column) => column);
 
-  GeneratedColumn<double> get volBass =>
-      $composableBuilder(column: $table.volBass, builder: (column) => column);
+  GeneratedColumn<double> get bassVol =>
+      $composableBuilder(column: $table.bassVol, builder: (column) => column);
 
-  GeneratedColumn<double> get volPiano =>
-      $composableBuilder(column: $table.volPiano, builder: (column) => column);
+  GeneratedColumn<double> get pianoVol =>
+      $composableBuilder(column: $table.pianoVol, builder: (column) => column);
 
-  GeneratedColumn<double> get volOther =>
-      $composableBuilder(column: $table.volOther, builder: (column) => column);
+  GeneratedColumn<double> get otherVol =>
+      $composableBuilder(column: $table.otherVol, builder: (column) => column);
 }
 
 class $$SongsTableTableManager
@@ -1608,19 +1608,19 @@ class $$SongsTableTableManager
                 Value<double?> musicBpm = const Value.absent(),
                 Value<String?> musicKey = const Value.absent(),
                 Value<List<double>> musicBeatsPositions = const Value.absent(),
-                Value<String?> pathVocals = const Value.absent(),
-                Value<String?> pathGuitar = const Value.absent(),
-                Value<String?> pathDrums = const Value.absent(),
-                Value<String?> pathBass = const Value.absent(),
-                Value<String?> pathPiano = const Value.absent(),
-                Value<String?> pathOther = const Value.absent(),
+                Value<String?> vocalsPath = const Value.absent(),
+                Value<String?> guitarPath = const Value.absent(),
+                Value<String?> drumsPath = const Value.absent(),
+                Value<String?> bassPath = const Value.absent(),
+                Value<String?> pianoPath = const Value.absent(),
+                Value<String?> otherPath = const Value.absent(),
                 Value<double> volMetronome = const Value.absent(),
-                Value<double> volVocals = const Value.absent(),
-                Value<double> volGuitar = const Value.absent(),
-                Value<double> volDrums = const Value.absent(),
-                Value<double> volBass = const Value.absent(),
-                Value<double> volPiano = const Value.absent(),
-                Value<double> volOther = const Value.absent(),
+                Value<double> vocalsVol = const Value.absent(),
+                Value<double> guitarVol = const Value.absent(),
+                Value<double> drumsVol = const Value.absent(),
+                Value<double> bassVol = const Value.absent(),
+                Value<double> pianoVol = const Value.absent(),
+                Value<double> otherVol = const Value.absent(),
               }) => SongsCompanion(
                 id: id,
                 title: title,
@@ -1631,19 +1631,19 @@ class $$SongsTableTableManager
                 musicBpm: musicBpm,
                 musicKey: musicKey,
                 musicBeatsPositions: musicBeatsPositions,
-                pathVocals: pathVocals,
-                pathGuitar: pathGuitar,
-                pathDrums: pathDrums,
-                pathBass: pathBass,
-                pathPiano: pathPiano,
-                pathOther: pathOther,
+                vocalsPath: vocalsPath,
+                guitarPath: guitarPath,
+                drumsPath: drumsPath,
+                bassPath: bassPath,
+                pianoPath: pianoPath,
+                otherPath: otherPath,
                 volMetronome: volMetronome,
-                volVocals: volVocals,
-                volGuitar: volGuitar,
-                volDrums: volDrums,
-                volBass: volBass,
-                volPiano: volPiano,
-                volOther: volOther,
+                vocalsVol: vocalsVol,
+                guitarVol: guitarVol,
+                drumsVol: drumsVol,
+                bassVol: bassVol,
+                pianoVol: pianoVol,
+                otherVol: otherVol,
               ),
           createCompanionCallback:
               ({
@@ -1656,19 +1656,19 @@ class $$SongsTableTableManager
                 Value<double?> musicBpm = const Value.absent(),
                 Value<String?> musicKey = const Value.absent(),
                 required List<double> musicBeatsPositions,
-                Value<String?> pathVocals = const Value.absent(),
-                Value<String?> pathGuitar = const Value.absent(),
-                Value<String?> pathDrums = const Value.absent(),
-                Value<String?> pathBass = const Value.absent(),
-                Value<String?> pathPiano = const Value.absent(),
-                Value<String?> pathOther = const Value.absent(),
+                Value<String?> vocalsPath = const Value.absent(),
+                Value<String?> guitarPath = const Value.absent(),
+                Value<String?> drumsPath = const Value.absent(),
+                Value<String?> bassPath = const Value.absent(),
+                Value<String?> pianoPath = const Value.absent(),
+                Value<String?> otherPath = const Value.absent(),
                 Value<double> volMetronome = const Value.absent(),
-                Value<double> volVocals = const Value.absent(),
-                Value<double> volGuitar = const Value.absent(),
-                Value<double> volDrums = const Value.absent(),
-                Value<double> volBass = const Value.absent(),
-                Value<double> volPiano = const Value.absent(),
-                Value<double> volOther = const Value.absent(),
+                Value<double> vocalsVol = const Value.absent(),
+                Value<double> guitarVol = const Value.absent(),
+                Value<double> drumsVol = const Value.absent(),
+                Value<double> bassVol = const Value.absent(),
+                Value<double> pianoVol = const Value.absent(),
+                Value<double> otherVol = const Value.absent(),
               }) => SongsCompanion.insert(
                 id: id,
                 title: title,
@@ -1679,19 +1679,19 @@ class $$SongsTableTableManager
                 musicBpm: musicBpm,
                 musicKey: musicKey,
                 musicBeatsPositions: musicBeatsPositions,
-                pathVocals: pathVocals,
-                pathGuitar: pathGuitar,
-                pathDrums: pathDrums,
-                pathBass: pathBass,
-                pathPiano: pathPiano,
-                pathOther: pathOther,
+                vocalsPath: vocalsPath,
+                guitarPath: guitarPath,
+                drumsPath: drumsPath,
+                bassPath: bassPath,
+                pianoPath: pianoPath,
+                otherPath: otherPath,
                 volMetronome: volMetronome,
-                volVocals: volVocals,
-                volGuitar: volGuitar,
-                volDrums: volDrums,
-                volBass: volBass,
-                volPiano: volPiano,
-                volOther: volOther,
+                vocalsVol: vocalsVol,
+                guitarVol: guitarVol,
+                drumsVol: drumsVol,
+                bassVol: bassVol,
+                pianoVol: pianoVol,
+                otherVol: otherVol,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

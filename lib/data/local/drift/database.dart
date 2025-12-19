@@ -31,21 +31,21 @@ class Songs extends Table {
   TextColumn get musicBeatsPositions => text().map(const ListConverter())();
 
   // Paths to the stems
-  TextColumn get pathVocals => text().nullable()();
-  TextColumn get pathGuitar => text().nullable()();
-  TextColumn get pathDrums => text().nullable()();
-  TextColumn get pathBass => text().nullable()();
-  TextColumn get pathPiano => text().nullable()();
-  TextColumn get pathOther => text().nullable()();
+  TextColumn get vocalsPath => text().nullable()();
+  TextColumn get guitarPath => text().nullable()();
+  TextColumn get drumsPath => text().nullable()();
+  TextColumn get bassPath => text().nullable()();
+  TextColumn get pianoPath => text().nullable()();
+  TextColumn get otherPath => text().nullable()();
 
   // Volume levels for each stem, defaulting to 1.0
   RealColumn get volMetronome => real().withDefault(const Constant(1.0))();
-  RealColumn get volVocals => real().withDefault(const Constant(1.0))();
-  RealColumn get volGuitar => real().withDefault(const Constant(1.0))();
-  RealColumn get volDrums => real().withDefault(const Constant(1.0))();
-  RealColumn get volBass => real().withDefault(const Constant(1.0))();
-  RealColumn get volPiano => real().withDefault(const Constant(1.0))();
-  RealColumn get volOther => real().withDefault(const Constant(1.0))();
+  RealColumn get vocalsVol => real().withDefault(const Constant(1.0))();
+  RealColumn get guitarVol => real().withDefault(const Constant(1.0))();
+  RealColumn get drumsVol => real().withDefault(const Constant(1.0))();
+  RealColumn get bassVol => real().withDefault(const Constant(1.0))();
+  RealColumn get pianoVol => real().withDefault(const Constant(1.0))();
+  RealColumn get otherVol => real().withDefault(const Constant(1.0))();
 }
 
 /*

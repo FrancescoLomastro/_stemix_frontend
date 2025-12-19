@@ -1,20 +1,22 @@
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
+import 'package:stemix_frontend/data/local/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/audio_interface.dart';
 import 'package:stemix_frontend/main.dart';
 
 @LazySingleton()
 class SoloudImplementation implements PlayerInterface {
-  final List<AudioSource> sources = [];
-  final List<SoundHandle> handles = [];
+  final Map<StemName, AudioSource> sources = {};
+  final Map<StemName, SoundHandle> handles = {};
 
   SoloudImplementation() {
     logger.f("SoloudImplementation created");
   }
 
   @override
-  Duration get currentPosition => SoLoud.instance.getPosition(handles[0]);
+  Duration get currentPosition =>
+      SoLoud.instance.getPosition(handles.values.first);
 
   @override
   Future<void> ensureInitialized() async {
@@ -41,32 +43,40 @@ class SoloudImplementation implements PlayerInterface {
 
   @override
   Future<void> loadTracks(Song song) async {
-    await _loadTrack("pathBass", song.pathBass);
-    await _loadTrack("pathDrums", song.pathDrums);
-    await _loadTrack("pathGuitar", song.pathGuitar);
-    await _loadTrack("pathOther", song.pathOther);
-    await _loadTrack("pathPiano", song.pathPiano);
-    await _loadTrack("pathVocals", song.pathVocals);
+    await _loadTrack(StemName.bass, song.bassPath, song.bassVol);
+    await _loadTrack(StemName.drums, song.drumsPath, song.drumsVol);
+    await _loadTrack(StemName.guitar, song.guitarPath, song.guitarVol);
+    await _loadTrack(StemName.other, song.otherPath, song.otherVol);
+    await _loadTrack(StemName.piano, song.pianoPath, song.pianoVol);
+    await _loadTrack(StemName.vocals, song.vocalsPath, song.vocalsVol);
   }
 
   @override
   void pause() async {
-    for (var handle in handles) {
-      SoLoud.instance.setPause(handle, true);
+    for (final key in handles.keys) {
+      SoLoud.instance.setPause(handles[key]!, true);
     }
   }
 
   @override
   void play() async {
-    for (var handle in handles) {
-      SoLoud.instance.setPause(handle, false);
+    for (final key in handles.keys) {
+      SoLoud.instance.setPause(handles[key]!, false);
     }
   }
 
   @override
   void seek(Duration position) {
-    for (var handle in handles) {
-      SoLoud.instance.seek(handle, position);
+    for (final key in handles.keys) {
+      SoLoud.instance.seek(handles[key]!, position);
+    }
+  }
+
+  @override
+  void setVolume(StemName StemName, double volume) {
+    final handle = handles[StemName];
+    if (handle != null) {
+      SoLoud.instance.setVolume(handle, volume);
     }
   }
 
@@ -95,22 +105,22 @@ class SoloudImplementation implements PlayerInterface {
   }
 
   @override
-  void setVolume(String stem, double volume) {
-    // TODO: implement setVolume
-  }
-
-  @override
   void toggleMetronome(bool enabled) {
     // TODO: implement toggleMetronome
   }
 
-  Future<void> _loadTrack(String stemName, String? path) async {
+  Future<void> _loadTrack(
+    StemName StemName,
+    String? path,
+    double volume,
+  ) async {
     if (path == null) {
-      logger.i("$stemName is null");
+      logger.i("$StemName is null");
     } else {
       final source = await SoLoud.instance.loadFile(path, mode: LoadMode.disk);
-      sources.add(source);
-      handles.add(await SoLoud.instance.play(source, paused: true));
+      sources[StemName] = source;
+      handles[StemName] = await SoLoud.instance.play(source, paused: true);
+      SoLoud.instance.setVolume(handles[StemName]!, volume);
     }
   }
 }

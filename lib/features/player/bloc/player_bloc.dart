@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
+import 'package:stemix_frontend/data/local/repository/song_repository.dart';
+import 'package:stemix_frontend/data/local/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/soloud_audio.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
@@ -9,37 +11,90 @@ import 'package:stemix_frontend/features/player/bloc/player_state.dart';
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final Song song;
   final SoloudImplementation player;
+  final SongRepository _songRepository;
 
-  PlayerBloc(this.player, @factoryParam this.song) : super(PlayerState()) {
-    on<LoadPlayerEvent>((event, emit) async {
+  PlayerBloc(this.player, this._songRepository, @factoryParam this.song)
+    : super(PlayerState()) {
+    on<LoadPlayerEvent>(_onLoadPlayerEvent);
+    on<PlayEvent>(_onPlayEvent);
+    on<PauseEvent>(_onPauseEvent);
+    on<SkipDurationEvent>(_onSkipDurationEvent);
+    on<SetVolumeEvent>(_onSetVolumeEvent);
+    on<SaveEvent>(_onSaveEvent);
+  }
+
+  Future<void> _onLoadPlayerEvent(
+    LoadPlayerEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    try {
       emit(PlayerLoading());
       await player.ensureInitialized();
       await player.ensureCleanedUp();
       await player.loadTracks(song);
-      emit(PlayerLoaded());
-    });
+      emit(
+        PlayerLoaded(
+          stemVolumes: {
+            StemName.vocals: song.vocalsVol,
+            StemName.bass: song.bassVol,
+            StemName.drums: song.drumsVol,
+            StemName.other: song.otherVol,
+            StemName.piano: song.pianoVol,
+            StemName.guitar: song.guitarVol,
+          },
+        ),
+      );
+    } catch (e) {
+      emit(PlayerError(e.toString()));
+    }
+  }
 
-    on<PlayEvent>((event, emit) {
+  Future<void> _onPlayEvent(PlayEvent event, Emitter<PlayerState> emit) async {
+    try {
       final currentState = state;
-      if (currentState is PlayerLoaded && currentState.isPlaying) {
-        return;
+      if (currentState is PlayerLoaded) {
+        if (!currentState.isPlaying) {
+          player.play();
+          emit(
+            PlayerLoaded(
+              isPlaying: true,
+              stemVolumes: currentState.stemVolumes,
+            ),
+          );
+        }
       }
+    } catch (e) {
+      emit(PlayerError(e.toString()));
+    }
+  }
 
-      player.play();
-      emit(PlayerLoaded(isPlaying: true));
-    });
-
-    on<PauseEvent>((event, emit) {
+  Future<void> _onPauseEvent(
+    PauseEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    try {
       final currentState = state;
-      if (currentState is PlayerLoaded && !currentState.isPlaying) {
-        return;
+      if (currentState is PlayerLoaded) {
+        if (currentState.isPlaying) {
+          player.pause();
+          emit(
+            PlayerLoaded(
+              isPlaying: false,
+              stemVolumes: currentState.stemVolumes,
+            ),
+          );
+        }
       }
+    } catch (e) {
+      emit(PlayerError(e.toString()));
+    }
+  }
 
-      player.pause();
-      emit(PlayerLoaded(isPlaying: false));
-    });
-
-    on<SkipDurationEvent>((event, emit) async {
+  Future<void> _onSkipDurationEvent(
+    SkipDurationEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    try {
       final songDuration = song.duration;
       if (event.absolute) {
         // Handles absolute seek
@@ -67,6 +122,37 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
           emit(PlayerLoaded(isPlaying: false));
         }
       }
-    });
+    } catch (e) {
+      emit(PlayerError(e.toString()));
+    }
+  }
+
+  Future<void> _onSetVolumeEvent(
+    SetVolumeEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    try {
+      final currentState = state;
+      if (currentState is PlayerLoaded) {
+        player.setVolume(event.stemName, event.volume);
+        final newVolumes = Map<StemName, double>.from(currentState.stemVolumes);
+        newVolumes[event.stemName] = event.volume;
+        emit(currentState.copyWith(stemVolumes: newVolumes, isSaved: false));
+      }
+    } catch (e) {
+      emit(PlayerError(e.toString()));
+    }
+  }
+
+  Future<void> _onSaveEvent(SaveEvent event, Emitter<PlayerState> emit) async {
+    try {
+      final currentState = state;
+      if (currentState is PlayerLoaded) {
+        await _songRepository.updateSong(song.id, event.stemVolumes);
+        emit(currentState.copyWith(isSaved: true));
+      }
+    } catch (e) {
+      emit(PlayerError(e.toString()));
+    }
   }
 }
