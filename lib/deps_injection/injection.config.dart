@@ -15,6 +15,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../data/local/drift/database.dart' as _i34;
 import '../data/local/repository/song_repository.dart' as _i992;
 import '../features/library/bloc/library_bloc.dart' as _i62;
+import '../features/player/audio/soloud_audio.dart' as _i448;
 import '../features/player/bloc/player_bloc.dart' as _i441;
 import '../features/upload/bloc/upload_bloc.dart' as _i530;
 
@@ -27,8 +28,11 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i530.UploadBloc>(() => _i530.UploadBloc());
     gh.lazySingleton<_i34.AppDatabase>(() => _i34.AppDatabase());
+    gh.lazySingleton<_i448.SoloudImplementation>(
+      () => _i448.SoloudImplementation(),
+    );
     gh.factoryParam<_i441.PlayerBloc, _i34.Song, dynamic>(
-      (song, _) => _i441.PlayerBloc(song),
+      (song, _) => _i441.PlayerBloc(gh<_i448.SoloudImplementation>(), song),
     );
     gh.lazySingleton<_i992.SongRepository>(
       () => _i992.SongRepository(gh<_i34.AppDatabase>()),

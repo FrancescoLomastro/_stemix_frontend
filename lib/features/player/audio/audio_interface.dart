@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 
 abstract class PlayerInterface {
-  // Streams per la UI
   Stream<Duration> get positionStream;
   Stream<bool> get playingStream;
   Duration get duration;
 
   // Metodi principali
-  Future<void> initialize();
+  Future<void> ensureInitialized();
+  Future<void> ensureCleanedUp();
   Future<void> loadTracks(Song song);
   void play();
   void pause();

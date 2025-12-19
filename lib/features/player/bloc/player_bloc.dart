@@ -8,12 +8,13 @@ import 'package:stemix_frontend/features/player/bloc/player_state.dart';
 @injectable
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final Song song;
-  PlayerBloc(@factoryParam this.song) : super(PlayerState()) {
-    SoloudImplementation player = SoloudImplementation();
-    player.initialize();
+  final SoloudImplementation player;
 
+  PlayerBloc(this.player, @factoryParam this.song) : super(PlayerState()) {
     on<LoadPlayer>((event, emit) async {
       emit(PlayerLoading());
+      await player.ensureInitialized();
+      await player.ensureCleanedUp();
       await player.loadTracks(song);
       emit(PlayerLoaded());
     });

@@ -1,13 +1,51 @@
 import 'package:flutter_soloud/flutter_soloud.dart';
+import 'package:injectable/injectable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/player/audio/audio_interface.dart';
+import 'package:stemix_frontend/main.dart';
 
+@LazySingleton()
 class SoloudImplementation implements PlayerInterface {
-  SoLoud? instance;
-
-  //create an array of audio sources
   final List<AudioSource> sources = [];
   final List<SoundHandle> handles = [];
+
+  SoloudImplementation() {
+    logger.f("SoloudImplementation created");
+  }
+
+  @override
+  Future<void> ensureInitialized() async {
+    if (SoLoud.instance.isInitialized) {
+      return;
+    }
+
+    logger.f("SoloudImplementation initialized");
+    return await SoLoud.instance.init();
+  }
+
+  @override
+  Future<void> ensureCleanedUp() async {
+    if (sources.isEmpty && handles.isEmpty) {
+      return;
+    }
+
+    logger.f("SoloudImplementation cleaned up");
+    final promise = SoLoud.instance.disposeAllSources();
+    sources.clear();
+    handles.clear();
+    return await promise;
+  }
+
+  @override
+  Future<void> loadTracks(Song song) async {
+    await _loadTrack("pathBass", song.pathBass);
+    await _loadTrack("pathDrums", song.pathDrums);
+    await _loadTrack("pathGuitar", song.pathGuitar);
+    await _loadTrack("pathOther", song.pathOther);
+    await _loadTrack("pathPiano", song.pathPiano);
+    await _loadTrack("pathVocals", song.pathVocals);
+  }
+
   @override
   Future<void> dispose() {
     // TODO: implement dispose
@@ -19,44 +57,16 @@ class SoloudImplementation implements PlayerInterface {
   Duration get duration => throw UnimplementedError();
 
   @override
-  Future<void> initialize() async {
-    instance = SoLoud.instance;
-    await instance!.init();
-  }
-
-  @override
-  Future<void> loadTracks(Song song) async {
-    sources.add(
-      await SoLoud.instance.loadFile(song.pathBass!, mode: LoadMode.disk),
-    );
-    sources.add(
-      await SoLoud.instance.loadFile(song.pathDrums!, mode: LoadMode.disk),
-    );
-    sources.add(
-      await SoLoud.instance.loadFile(song.pathGuitar!, mode: LoadMode.disk),
-    );
-    sources.add(
-      await SoLoud.instance.loadFile(song.pathOther!, mode: LoadMode.disk),
-    );
-    sources.add(
-      await SoLoud.instance.loadFile(song.pathPiano!, mode: LoadMode.disk),
-    );
-    sources.add(
-      await SoLoud.instance.loadFile(song.pathVocals!, mode: LoadMode.disk),
-    );
-  }
-
-  @override
   void pause() async {
     for (var handle in handles) {
-      await instance!.stop(handle);
+      SoLoud.instance.setPause(handle, true);
     }
   }
 
   @override
   void play() async {
-    for (var source in sources) {
-      handles.add(await instance!.play(source));
+    for (var handle in handles) {
+      SoLoud.instance.setPause(handle, false);
     }
   }
 
@@ -92,5 +102,15 @@ class SoloudImplementation implements PlayerInterface {
   @override
   void toggleMetronome(bool enabled) {
     // TODO: implement toggleMetronome
+  }
+
+  Future<void> _loadTrack(String stemName, String? path) async {
+    if (path == null) {
+      logger.i("$stemName is null");
+    } else {
+      final source = await SoLoud.instance.loadFile(path, mode: LoadMode.disk);
+      sources.add(source);
+      handles.add(await SoLoud.instance.play(source, paused: true));
+    }
   }
 }

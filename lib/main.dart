@@ -37,9 +37,9 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  /* await debugDeleteAllSongs(); */
+  await debugDeleteAllSongs();
 
-  /* for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
@@ -48,7 +48,7 @@ void main() async {
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
-  } */
+  }
   /* await debugLogAllSongs(); */
   // =================================================================
 
@@ -156,12 +156,12 @@ Future<void> debugCreateSong({
     String bassAssetPath = "assets/audio_ogg/bass.ogg";
     String otherAssetPath = "assets/audio_ogg/other.ogg";
     String guitarAssetPath = "assets/audio_ogg/guitar.ogg";
-    vocalPath = p.join(fullSongFolderPath, "vocals.wav");
-    pianoPath = p.join(fullSongFolderPath, "piano.wav");
-    drumsPath = p.join(fullSongFolderPath, "drums.wav");
-    bassPath = p.join(fullSongFolderPath, "bass.wav");
-    otherPath = p.join(fullSongFolderPath, "other.wav");
-    guitarPath = p.join(fullSongFolderPath, "guitar.wav");
+    vocalPath = p.join(fullSongFolderPath, "vocals.ogg");
+    pianoPath = p.join(fullSongFolderPath, "piano.ogg");
+    drumsPath = p.join(fullSongFolderPath, "drums.ogg");
+    bassPath = p.join(fullSongFolderPath, "bass.ogg");
+    otherPath = p.join(fullSongFolderPath, "other.ogg");
+    guitarPath = p.join(fullSongFolderPath, "guitar.ogg");
 
     // Copy the files to the song folder
     final vocalFile = File(vocalPath);
