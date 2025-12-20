@@ -40,7 +40,7 @@ class PlayerLoaded extends PlayerState {
   }
 
   @override
-  List<Object?> get props => [isPlaying, stemVolumes];
+  List<Object?> get props => [isPlaying, stemVolumes, isSaved];
 }
 
 class PlayerError extends PlayerState {

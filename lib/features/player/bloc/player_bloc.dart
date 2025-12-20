@@ -35,6 +35,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       await player.loadTracks(song);
       emit(
         PlayerLoaded(
+          isSaved: true,
           stemVolumes: {
             StemName.vocals: song.vocalsVol,
             StemName.bass: song.bassVol,
@@ -156,6 +157,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       if (currentState is PlayerLoaded) {
         await _songRepository.updateSong(song.id, event.stemVolumes);
         emit(currentState.copyWith(isSaved: true));
+        logger.i("Song volumes saved successfully.");
       }
     } catch (e) {
       logger.e("Error in SaveEvent: $e");

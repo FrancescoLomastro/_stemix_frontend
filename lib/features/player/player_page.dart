@@ -49,7 +49,9 @@ class _PlayerView extends StatelessWidget {
                 title: const Text('Player Page'),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.save_rounded),
+                    icon: state.isSaved
+                        ? const Icon(Icons.save)
+                        : const Icon(Icons.save_outlined),
                     onPressed: () {
                       context.read<PlayerBloc>().add(
                         SaveEvent(stemVolumes: state.stemVolumes),
