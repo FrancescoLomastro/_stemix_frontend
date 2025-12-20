@@ -3,7 +3,7 @@ import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/data/local/stem_names.dart';
 
 abstract class PlayerInterface {
-  Stream<Duration> get positionStream;
+  Stream<int> get positionStream;
   Stream<bool> get playingStream;
   Duration get currentPosition;
 

@@ -31,6 +31,15 @@ Widget buildProgressBar(BuildContext context, PlayerLoaded state) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [Text("0:00"), Text(durationFormatted)],
         ),
+        SizedBox(height: 8),
+        StreamBuilder(
+          stream: context.read<PlayerBloc>().player.positionStream,
+          builder: (context, snapshot) {
+            return Text(
+              "Current Position: 0:${(snapshot.data ?? 0).toString().padLeft(2, '0')}",
+            );
+          },
+        ),
       ],
     ),
   );

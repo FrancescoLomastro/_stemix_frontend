@@ -1,5 +1,6 @@
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/data/local/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/audio_interface.dart';
@@ -9,14 +10,31 @@ import 'package:stemix_frontend/main.dart';
 class SoloudImplementation implements PlayerInterface {
   final Map<StemName, AudioSource> sources = {};
   final Map<StemName, SoundHandle> handles = {};
+  int streamNum = 1;
 
   SoloudImplementation() {
     logger.f("SoloudImplementation created");
+    logger.f("Stream creato");
   }
 
   @override
   Duration get currentPosition =>
       SoLoud.instance.getPosition(handles.values.first);
+
+  @override
+  Stream<int> get positionStream {
+    streamNum++;
+    return Stream<int>.periodic(const Duration(milliseconds: 500), (count) {
+          logger.i("Position stream$streamNum tick: $count");
+          return count;
+        })
+        .doOnListen(() {
+          logger.f("Position stream$streamNum listened");
+        })
+        .doOnCancel(() {
+          logger.f("Position stream$streamNum cancelled");
+        });
+  }
 
   @override
   Future<void> ensureInitialized() async {
@@ -89,10 +107,6 @@ class SoloudImplementation implements PlayerInterface {
   @override
   // TODO: implement playingStream
   Stream<bool> get playingStream => throw UnimplementedError();
-
-  @override
-  // TODO: implement positionStream
-  Stream<Duration> get positionStream => throw UnimplementedError();
 
   @override
   void setMetronomeMultiplier(double multiplier) {
