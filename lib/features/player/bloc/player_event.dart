@@ -14,6 +14,8 @@ class PlayEvent extends PlayerEvent {}
 
 class PauseEvent extends PlayerEvent {}
 
+class SongEndedEvent extends PlayerEvent {}
+
 class SkipDurationEvent extends PlayerEvent {
   final bool absolute;
   final int amount;

@@ -15,6 +15,7 @@ abstract class PlayerInterface {
   Future<void> dispose();
   void play();
   void pause();
+  void onEnd(Null Function() callback);
 
   // Controllo volumi e metronomo
   void setVolume(StemName stemName, double volume);
@@ -22,3 +23,5 @@ abstract class PlayerInterface {
   void setMetronomeMultiplier(double multiplier);
   void setMetronomeVolume(double vol);
 }
+
+abstract class PlayerSongEndedEvent {}

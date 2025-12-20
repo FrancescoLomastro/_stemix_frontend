@@ -37,19 +37,19 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  /* await debugDeleteAllSongs(); */
+  /*  await debugDeleteAllSongs();
 
-  /* for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
-      duration: 180 + i * 30,
+      duration: 600,
       musicBeatsPositions: [0.0, 1.0 + i, 2.0 + i],
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
   } */
-  await debugLogAllSongs();
+  /* await debugLogAllSongs(); */
   // =================================================================
 
   runApp(const MyApp());

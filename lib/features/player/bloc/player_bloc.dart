@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
@@ -10,18 +12,25 @@ import 'package:stemix_frontend/main.dart';
 
 @injectable
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
-  final Song song;
-  final SoloudImplementation player;
+  final Song _song;
+  final SoloudImplementation _player;
   final SongRepository _songRepository;
+  late final Stream<int> _positionStream;
 
-  PlayerBloc(this.player, this._songRepository, @factoryParam this.song)
+  Song get song => _song;
+  Stream<int> get positionStream => _positionStream;
+
+  PlayerBloc(this._player, this._songRepository, @factoryParam this._song)
     : super(PlayerState()) {
+    _positionStream = _player.positionStream;
+
     on<LoadPlayerEvent>(_onLoadPlayerEvent);
     on<PlayEvent>(_onPlayEvent);
     on<PauseEvent>(_onPauseEvent);
     on<SkipDurationEvent>(_onSkipDurationEvent);
     on<SetVolumeEvent>(_onSetVolumeEvent);
     on<SaveEvent>(_onSaveEvent);
+    on<SongEndedEvent>(_onSongEndedEvent);
   }
 
   Future<void> _onLoadPlayerEvent(
@@ -30,24 +39,28 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   ) async {
     try {
       emit(PlayerLoading());
-      await player.ensureInitialized();
-      await player.ensureCleanedUp();
-      await player.loadTracks(song);
+      await _player.ensureInitialized();
+      await _player.ensureCleanedUp();
+      await _player.loadTracks(_song);
+      _player.onEnd(() {
+        add(SongEndedEvent());
+      });
+
       emit(
         PlayerLoaded(
           isSaved: true,
           stemVolumes: {
-            StemName.vocals: song.vocalsVol,
-            StemName.bass: song.bassVol,
-            StemName.drums: song.drumsVol,
-            StemName.other: song.otherVol,
-            StemName.piano: song.pianoVol,
-            StemName.guitar: song.guitarVol,
+            StemName.vocals: _song.vocalsVol,
+            StemName.bass: _song.bassVol,
+            StemName.drums: _song.drumsVol,
+            StemName.other: _song.otherVol,
+            StemName.piano: _song.pianoVol,
+            StemName.guitar: _song.guitarVol,
           },
         ),
       );
-    } catch (e) {
-      logger.e("Error loading player: $e");
+    } catch (e, stacktrace) {
+      logger.e("Error loading player: $e $stacktrace");
       emit(PlayerError(e.toString()));
     }
   }
@@ -57,7 +70,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       final currentState = state;
       if (currentState is PlayerLoaded) {
         if (!currentState.isPlaying) {
-          player.play();
+          _player.play();
           emit(
             PlayerLoaded(
               isPlaying: true,
@@ -66,8 +79,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
           );
         }
       }
-    } catch (e) {
-      logger.e("Error in PlayEvent: $e");
+    } catch (e, stacktrace) {
+      logger.e("Error in PlayEvent: $e $stacktrace");
       emit(PlayerError(e.toString()));
     }
   }
@@ -80,7 +93,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       final currentState = state;
       if (currentState is PlayerLoaded) {
         if (currentState.isPlaying) {
-          player.pause();
+          _player.pause();
           emit(
             PlayerLoaded(
               isPlaying: false,
@@ -89,8 +102,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
           );
         }
       }
-    } catch (e) {
-      logger.e("Error in PauseEvent: $e");
+    } catch (e, stacktrace) {
+      logger.e("Error in PauseEvent: $e $stacktrace");
       emit(PlayerError(e.toString()));
     }
   }
@@ -100,15 +113,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) async {
     try {
-      final songDuration = song.duration;
+      final songDuration = _song.duration;
       if (event.absolute) {
         // Handles absolute seek
         if (event.amount < 0) return;
         if (event.amount > songDuration) return;
-        player.seek(Duration(seconds: event.amount));
+        _player.seek(Duration(seconds: event.amount));
       } else {
         // Handles relative seek
-        final currentPosition = player.currentPosition;
+        final currentPosition = _player.currentPosition;
         Duration newPosition =
             currentPosition + Duration(seconds: event.amount);
         bool changeUi = false;
@@ -117,18 +130,18 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
           newPosition = Duration.zero;
         } else if (newPosition.inSeconds > songDuration) {
           newPosition = Duration.zero;
-          player.pause();
+          _player.pause();
           changeUi = true;
         }
-        player.seek(newPosition);
+        _player.seek(newPosition);
 
         // its important to change the UI only after seeking the player
         if (changeUi) {
           emit(PlayerLoaded(isPlaying: false));
         }
       }
-    } catch (e) {
-      logger.e("Error in SkipDurationEvent: $e");
+    } catch (e, stacktrace) {
+      logger.e("Error in SkipDurationEvent: $e $stacktrace");
       emit(PlayerError(e.toString()));
     }
   }
@@ -140,13 +153,13 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     try {
       final currentState = state;
       if (currentState is PlayerLoaded) {
-        player.setVolume(event.stemName, event.volume);
+        _player.setVolume(event.stemName, event.volume);
         final newVolumes = Map<StemName, double>.from(currentState.stemVolumes);
         newVolumes[event.stemName] = event.volume;
         emit(currentState.copyWith(stemVolumes: newVolumes, isSaved: false));
       }
-    } catch (e) {
-      logger.e("Error in SetVolumeEvent: $e");
+    } catch (e, stacktrace) {
+      logger.e("Error in SetVolumeEvent: $e $stacktrace");
       emit(PlayerError(e.toString()));
     }
   }
@@ -155,13 +168,21 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     try {
       final currentState = state;
       if (currentState is PlayerLoaded) {
-        await _songRepository.updateSong(song.id, event.stemVolumes);
+        await _songRepository.updateSong(_song.id, event.stemVolumes);
         emit(currentState.copyWith(isSaved: true));
         logger.i("Song volumes saved successfully.");
       }
-    } catch (e) {
-      logger.e("Error in SaveEvent: $e");
+    } catch (e, stacktrace) {
+      logger.e("Error in SaveEvent: $e $stacktrace");
       emit(PlayerError(e.toString()));
     }
+  }
+
+  Future<void> _onSongEndedEvent(
+    SongEndedEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    add(SkipDurationEvent(absolute: true, amount: 0));
+    add(PauseEvent());
   }
 }
