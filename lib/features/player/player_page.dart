@@ -6,6 +6,7 @@ import 'package:stemix_frontend/features/player/bloc/player_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
 import 'package:stemix_frontend/features/player/widgets/playback_control.dart';
+import 'package:stemix_frontend/features/player/widgets/progress_bar.dart';
 import 'package:stemix_frontend/features/player/widgets/stems_control.dart';
 
 class PlayerPage extends StatelessWidget {
@@ -66,6 +67,8 @@ class _PlayerView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    buildProgressBar(context, state),
+                    const SizedBox(height: 30),
                     buildPlayBackControls(context, state),
                     const SizedBox(height: 30),
                     buildStemsControls(context, state),
