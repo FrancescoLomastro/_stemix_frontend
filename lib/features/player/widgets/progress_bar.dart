@@ -12,7 +12,6 @@ String formatDuration(int seconds) {
 
 Widget buildProgressBar(BuildContext context, PlayerLoaded state) {
   final duration = context.read<PlayerBloc>().song.duration;
-  final durationFormatted = formatDuration(duration);
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 18.0),
     child: StreamBuilder(
@@ -46,7 +45,7 @@ Widget buildProgressBar(BuildContext context, PlayerLoaded state) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(formatDuration(positionValue)),
-                Text(durationFormatted),
+                Text(formatDuration(duration)),
               ],
             ),
           ],

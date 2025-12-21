@@ -170,7 +170,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       if (currentState is PlayerLoaded) {
         await _songRepository.updateSong(_song.id, event.stemVolumes);
         emit(currentState.copyWith(isSaved: true));
-        logger.i("Song volumes saved successfully.");
       }
     } catch (e, stacktrace) {
       logger.e("Error in SaveEvent: $e $stacktrace");
