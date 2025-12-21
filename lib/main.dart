@@ -38,17 +38,16 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  /* await debugDeleteAllSongs(); */
+  await debugDeleteAllSongs();
 
-  /* for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
-      musicBeatsPositions: [0.0, 1.0 + i, 2.0 + i],
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
-  } */
+  }
   /* await debugLogAllSongs(); */
   // =================================================================
 
@@ -109,7 +108,6 @@ Future<void> debugLogAllSongs() async {
 Future<void> debugCreateSong({
   required String title,
   required String artist,
-  required List<double> musicBeatsPositions,
   bool hasImage = false,
   bool hasAudio = false,
 }) async {
@@ -192,6 +190,59 @@ Future<void> debugCreateSong({
 
     duration = (await AudioTags.read(vocalPath))!.duration!;
   }
+
+  final musicBeatsPositions = [
+    0.3,
+    1.5,
+    2.7,
+    3.9,
+    5.0,
+    6.2,
+    7.4,
+    8.6,
+    9.8,
+    11.0,
+    12.2,
+    13.4,
+    14.6,
+    15.8,
+    17.0,
+    18.2,
+    19.4,
+    20.6,
+    21.8,
+    23.0,
+    24.2,
+    25.4,
+    26.6,
+    27.8,
+    29.0,
+    30.2,
+    31.4,
+    32.6,
+    33.8,
+    35.0,
+    36.2,
+    37.4,
+    38.6,
+    39.8,
+    41.0,
+    42.2,
+    43.4,
+    44.6,
+    45.8,
+    47.0,
+    48.2,
+    49.4,
+    50.6,
+    51.8,
+    53.0,
+    54.2,
+    55.4,
+    56.6,
+    57.8,
+    59.0,
+  ];
 
   // Utilizziamo i Companion per inserire i dati
   final newSong = SongsCompanion.insert(
