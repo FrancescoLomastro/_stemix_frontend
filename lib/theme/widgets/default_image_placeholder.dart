@@ -15,7 +15,6 @@ class DefaultImagePlaceholder extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: AppTheme.defaultImagePlaceholderBackground,
-        borderRadius: BorderRadius.circular(size * 0.08),
       ),
       child: Center(
         child: Icon(

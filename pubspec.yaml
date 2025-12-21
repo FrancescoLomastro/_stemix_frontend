@@ -56,10 +56,12 @@ dependencies:
 
   # Audio tracks
   flutter_soloud: ^3.4.7
+  
+  # Audio files
+  audiotags: ^1.4.5
 
   # Streams
   rxdart: ^0.28.0
-
 
 dev_dependencies:
   flutter_test:

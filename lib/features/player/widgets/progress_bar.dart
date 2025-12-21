@@ -14,7 +14,7 @@ Widget buildProgressBar(BuildContext context, PlayerLoaded state) {
   final duration = context.read<PlayerBloc>().song.duration;
   final durationFormatted = formatDuration(duration);
   return Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: const EdgeInsets.symmetric(horizontal: 18.0),
     child: StreamBuilder(
       stream: context.read<PlayerBloc>().positionStream,
       builder: (context, snapshot) {

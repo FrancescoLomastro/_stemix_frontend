@@ -30,7 +30,7 @@ class SongListTile extends StatelessWidget {
           child: Row(
             children: [
               if (isSelectionMode) _buildCheckbox(context),
-              _buildCoverImage(),
+              _buildCoverImage(60),
               const SizedBox(width: 14),
               _buildSongInfo(context),
             ],
@@ -64,15 +64,19 @@ class SongListTile extends StatelessWidget {
     );
   }
 
-  Widget _buildCoverImage() {
-    return song.coverPath != null
-        ? Image.file(
-            File(song.coverPath!),
-            width: 60,
-            height: 60,
-            fit: BoxFit.contain,
-          )
-        : const DefaultImagePlaceholder(size: 60);
+  Widget _buildCoverImage(double size) {
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
+      child: song.coverPath != null
+          ? Image.file(
+              File(song.coverPath!),
+              width: size,
+              height: size,
+              fit: BoxFit.contain,
+            )
+          : DefaultImagePlaceholder(size: size),
+    );
   }
 
   Widget _buildSongInfo(BuildContext context) {

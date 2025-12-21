@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audiotags/audiotags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,13 +38,12 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  /*  await debugDeleteAllSongs();
+  /* await debugDeleteAllSongs(); */
 
-  for (int i = 0; i < 2; i++) {
+  /* for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
-      duration: 600,
       musicBeatsPositions: [0.0, 1.0 + i, 2.0 + i],
       hasImage: i % 2 == 0,
       hasAudio: true,
@@ -109,11 +109,11 @@ Future<void> debugLogAllSongs() async {
 Future<void> debugCreateSong({
   required String title,
   required String artist,
-  required int duration,
   required List<double> musicBeatsPositions,
   bool hasImage = false,
   bool hasAudio = false,
 }) async {
+  var duration = 180; // durata di default in secondi
   final db = getIt<AppDatabase>();
 
   String? coverPath;
@@ -189,6 +189,8 @@ Future<void> debugCreateSong({
     await guitarFile.writeAsBytes(
       (await rootBundle.load(guitarAssetPath)).buffer.asUint8List(),
     );
+
+    duration = (await AudioTags.read(vocalPath))!.duration!;
   }
 
   // Utilizziamo i Companion per inserire i dati

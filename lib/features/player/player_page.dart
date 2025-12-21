@@ -7,6 +7,7 @@ import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
 import 'package:stemix_frontend/features/player/widgets/playback_control.dart';
 import 'package:stemix_frontend/features/player/widgets/progress_bar.dart';
+import 'package:stemix_frontend/features/player/widgets/song_info.dart';
 import 'package:stemix_frontend/features/player/widgets/stems_control.dart';
 
 class PlayerPage extends StatelessWidget {
@@ -18,14 +19,13 @@ class PlayerPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           getIt<PlayerBloc>(param1: song)..add(LoadPlayerEvent()),
-      child: _PlayerView(song: song),
+      child: _PlayerView(),
     );
   }
 }
 
 class _PlayerView extends StatelessWidget {
-  final Song song;
-  const _PlayerView({required this.song});
+  const _PlayerView();
 
   @override
   Widget build(BuildContext context) {
@@ -67,30 +67,12 @@ class _PlayerView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
-                    Text("data"),
+                    buildSongInfo(context, state),
+                    const SizedBox(height: 30),
                     buildProgressBar(context, state),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 5),
                     buildPlayBackControls(context, state),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 40),
                     buildStemsControls(context, state),
                   ],
                 ),
