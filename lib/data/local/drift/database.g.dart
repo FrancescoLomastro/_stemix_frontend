@@ -254,6 +254,44 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     requiredDuringInsert: false,
     defaultValue: const Constant(1.0),
   );
+  static const VerificationMeta _metronomeSpeedMeta = const VerificationMeta(
+    'metronomeSpeed',
+  );
+  @override
+  late final GeneratedColumn<int> metronomeSpeed = GeneratedColumn<int>(
+    'metronome_speed',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(2),
+  );
+  static const VerificationMeta _metronomeVolumeMeta = const VerificationMeta(
+    'metronomeVolume',
+  );
+  @override
+  late final GeneratedColumn<double> metronomeVolume = GeneratedColumn<double>(
+    'metronome_volume',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1.0),
+  );
+  static const VerificationMeta _isMetronomeEnabledMeta =
+      const VerificationMeta('isMetronomeEnabled');
+  @override
+  late final GeneratedColumn<bool> isMetronomeEnabled = GeneratedColumn<bool>(
+    'is_metronome_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_metronome_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -278,6 +316,9 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     bassVol,
     pianoVol,
     otherVol,
+    metronomeSpeed,
+    metronomeVolume,
+    isMetronomeEnabled,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -423,6 +464,33 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         otherVol.isAcceptableOrUnknown(data['other_vol']!, _otherVolMeta),
       );
     }
+    if (data.containsKey('metronome_speed')) {
+      context.handle(
+        _metronomeSpeedMeta,
+        metronomeSpeed.isAcceptableOrUnknown(
+          data['metronome_speed']!,
+          _metronomeSpeedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('metronome_volume')) {
+      context.handle(
+        _metronomeVolumeMeta,
+        metronomeVolume.isAcceptableOrUnknown(
+          data['metronome_volume']!,
+          _metronomeVolumeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_metronome_enabled')) {
+      context.handle(
+        _isMetronomeEnabledMeta,
+        isMetronomeEnabled.isAcceptableOrUnknown(
+          data['is_metronome_enabled']!,
+          _isMetronomeEnabledMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -522,6 +590,18 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         DriftSqlType.double,
         data['${effectivePrefix}other_vol'],
       )!,
+      metronomeSpeed: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}metronome_speed'],
+      )!,
+      metronomeVolume: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}metronome_volume'],
+      )!,
+      isMetronomeEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_metronome_enabled'],
+      )!,
     );
   }
 
@@ -557,6 +637,9 @@ class Song extends DataClass implements Insertable<Song> {
   final double bassVol;
   final double pianoVol;
   final double otherVol;
+  final int metronomeSpeed;
+  final double metronomeVolume;
+  final bool isMetronomeEnabled;
   const Song({
     required this.id,
     required this.title,
@@ -580,6 +663,9 @@ class Song extends DataClass implements Insertable<Song> {
     required this.bassVol,
     required this.pianoVol,
     required this.otherVol,
+    required this.metronomeSpeed,
+    required this.metronomeVolume,
+    required this.isMetronomeEnabled,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -628,6 +714,9 @@ class Song extends DataClass implements Insertable<Song> {
     map['bass_vol'] = Variable<double>(bassVol);
     map['piano_vol'] = Variable<double>(pianoVol);
     map['other_vol'] = Variable<double>(otherVol);
+    map['metronome_speed'] = Variable<int>(metronomeSpeed);
+    map['metronome_volume'] = Variable<double>(metronomeVolume);
+    map['is_metronome_enabled'] = Variable<bool>(isMetronomeEnabled);
     return map;
   }
 
@@ -673,6 +762,9 @@ class Song extends DataClass implements Insertable<Song> {
       bassVol: Value(bassVol),
       pianoVol: Value(pianoVol),
       otherVol: Value(otherVol),
+      metronomeSpeed: Value(metronomeSpeed),
+      metronomeVolume: Value(metronomeVolume),
+      isMetronomeEnabled: Value(isMetronomeEnabled),
     );
   }
 
@@ -706,6 +798,9 @@ class Song extends DataClass implements Insertable<Song> {
       bassVol: serializer.fromJson<double>(json['bassVol']),
       pianoVol: serializer.fromJson<double>(json['pianoVol']),
       otherVol: serializer.fromJson<double>(json['otherVol']),
+      metronomeSpeed: serializer.fromJson<int>(json['metronomeSpeed']),
+      metronomeVolume: serializer.fromJson<double>(json['metronomeVolume']),
+      isMetronomeEnabled: serializer.fromJson<bool>(json['isMetronomeEnabled']),
     );
   }
   @override
@@ -736,6 +831,9 @@ class Song extends DataClass implements Insertable<Song> {
       'bassVol': serializer.toJson<double>(bassVol),
       'pianoVol': serializer.toJson<double>(pianoVol),
       'otherVol': serializer.toJson<double>(otherVol),
+      'metronomeSpeed': serializer.toJson<int>(metronomeSpeed),
+      'metronomeVolume': serializer.toJson<double>(metronomeVolume),
+      'isMetronomeEnabled': serializer.toJson<bool>(isMetronomeEnabled),
     };
   }
 
@@ -762,6 +860,9 @@ class Song extends DataClass implements Insertable<Song> {
     double? bassVol,
     double? pianoVol,
     double? otherVol,
+    int? metronomeSpeed,
+    double? metronomeVolume,
+    bool? isMetronomeEnabled,
   }) => Song(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -785,6 +886,9 @@ class Song extends DataClass implements Insertable<Song> {
     bassVol: bassVol ?? this.bassVol,
     pianoVol: pianoVol ?? this.pianoVol,
     otherVol: otherVol ?? this.otherVol,
+    metronomeSpeed: metronomeSpeed ?? this.metronomeSpeed,
+    metronomeVolume: metronomeVolume ?? this.metronomeVolume,
+    isMetronomeEnabled: isMetronomeEnabled ?? this.isMetronomeEnabled,
   );
   Song copyWithCompanion(SongsCompanion data) {
     return Song(
@@ -818,6 +922,15 @@ class Song extends DataClass implements Insertable<Song> {
       bassVol: data.bassVol.present ? data.bassVol.value : this.bassVol,
       pianoVol: data.pianoVol.present ? data.pianoVol.value : this.pianoVol,
       otherVol: data.otherVol.present ? data.otherVol.value : this.otherVol,
+      metronomeSpeed: data.metronomeSpeed.present
+          ? data.metronomeSpeed.value
+          : this.metronomeSpeed,
+      metronomeVolume: data.metronomeVolume.present
+          ? data.metronomeVolume.value
+          : this.metronomeVolume,
+      isMetronomeEnabled: data.isMetronomeEnabled.present
+          ? data.isMetronomeEnabled.value
+          : this.isMetronomeEnabled,
     );
   }
 
@@ -845,7 +958,10 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('drumsVol: $drumsVol, ')
           ..write('bassVol: $bassVol, ')
           ..write('pianoVol: $pianoVol, ')
-          ..write('otherVol: $otherVol')
+          ..write('otherVol: $otherVol, ')
+          ..write('metronomeSpeed: $metronomeSpeed, ')
+          ..write('metronomeVolume: $metronomeVolume, ')
+          ..write('isMetronomeEnabled: $isMetronomeEnabled')
           ..write(')'))
         .toString();
   }
@@ -874,6 +990,9 @@ class Song extends DataClass implements Insertable<Song> {
     bassVol,
     pianoVol,
     otherVol,
+    metronomeSpeed,
+    metronomeVolume,
+    isMetronomeEnabled,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -900,7 +1019,10 @@ class Song extends DataClass implements Insertable<Song> {
           other.drumsVol == this.drumsVol &&
           other.bassVol == this.bassVol &&
           other.pianoVol == this.pianoVol &&
-          other.otherVol == this.otherVol);
+          other.otherVol == this.otherVol &&
+          other.metronomeSpeed == this.metronomeSpeed &&
+          other.metronomeVolume == this.metronomeVolume &&
+          other.isMetronomeEnabled == this.isMetronomeEnabled);
 }
 
 class SongsCompanion extends UpdateCompanion<Song> {
@@ -926,6 +1048,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<double> bassVol;
   final Value<double> pianoVol;
   final Value<double> otherVol;
+  final Value<int> metronomeSpeed;
+  final Value<double> metronomeVolume;
+  final Value<bool> isMetronomeEnabled;
   const SongsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -949,6 +1074,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.bassVol = const Value.absent(),
     this.pianoVol = const Value.absent(),
     this.otherVol = const Value.absent(),
+    this.metronomeSpeed = const Value.absent(),
+    this.metronomeVolume = const Value.absent(),
+    this.isMetronomeEnabled = const Value.absent(),
   });
   SongsCompanion.insert({
     this.id = const Value.absent(),
@@ -973,6 +1101,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.bassVol = const Value.absent(),
     this.pianoVol = const Value.absent(),
     this.otherVol = const Value.absent(),
+    this.metronomeSpeed = const Value.absent(),
+    this.metronomeVolume = const Value.absent(),
+    this.isMetronomeEnabled = const Value.absent(),
   }) : title = Value(title),
        artist = Value(artist),
        duration = Value(duration),
@@ -1000,6 +1131,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<double>? bassVol,
     Expression<double>? pianoVol,
     Expression<double>? otherVol,
+    Expression<int>? metronomeSpeed,
+    Expression<double>? metronomeVolume,
+    Expression<bool>? isMetronomeEnabled,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1025,6 +1159,10 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (bassVol != null) 'bass_vol': bassVol,
       if (pianoVol != null) 'piano_vol': pianoVol,
       if (otherVol != null) 'other_vol': otherVol,
+      if (metronomeSpeed != null) 'metronome_speed': metronomeSpeed,
+      if (metronomeVolume != null) 'metronome_volume': metronomeVolume,
+      if (isMetronomeEnabled != null)
+        'is_metronome_enabled': isMetronomeEnabled,
     });
   }
 
@@ -1051,6 +1189,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Value<double>? bassVol,
     Value<double>? pianoVol,
     Value<double>? otherVol,
+    Value<int>? metronomeSpeed,
+    Value<double>? metronomeVolume,
+    Value<bool>? isMetronomeEnabled,
   }) {
     return SongsCompanion(
       id: id ?? this.id,
@@ -1075,6 +1216,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
       bassVol: bassVol ?? this.bassVol,
       pianoVol: pianoVol ?? this.pianoVol,
       otherVol: otherVol ?? this.otherVol,
+      metronomeSpeed: metronomeSpeed ?? this.metronomeSpeed,
+      metronomeVolume: metronomeVolume ?? this.metronomeVolume,
+      isMetronomeEnabled: isMetronomeEnabled ?? this.isMetronomeEnabled,
     );
   }
 
@@ -1151,6 +1295,15 @@ class SongsCompanion extends UpdateCompanion<Song> {
     if (otherVol.present) {
       map['other_vol'] = Variable<double>(otherVol.value);
     }
+    if (metronomeSpeed.present) {
+      map['metronome_speed'] = Variable<int>(metronomeSpeed.value);
+    }
+    if (metronomeVolume.present) {
+      map['metronome_volume'] = Variable<double>(metronomeVolume.value);
+    }
+    if (isMetronomeEnabled.present) {
+      map['is_metronome_enabled'] = Variable<bool>(isMetronomeEnabled.value);
+    }
     return map;
   }
 
@@ -1178,7 +1331,10 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('drumsVol: $drumsVol, ')
           ..write('bassVol: $bassVol, ')
           ..write('pianoVol: $pianoVol, ')
-          ..write('otherVol: $otherVol')
+          ..write('otherVol: $otherVol, ')
+          ..write('metronomeSpeed: $metronomeSpeed, ')
+          ..write('metronomeVolume: $metronomeVolume, ')
+          ..write('isMetronomeEnabled: $isMetronomeEnabled')
           ..write(')'))
         .toString();
   }
@@ -1219,6 +1375,9 @@ typedef $$SongsTableCreateCompanionBuilder =
       Value<double> bassVol,
       Value<double> pianoVol,
       Value<double> otherVol,
+      Value<int> metronomeSpeed,
+      Value<double> metronomeVolume,
+      Value<bool> isMetronomeEnabled,
     });
 typedef $$SongsTableUpdateCompanionBuilder =
     SongsCompanion Function({
@@ -1244,6 +1403,9 @@ typedef $$SongsTableUpdateCompanionBuilder =
       Value<double> bassVol,
       Value<double> pianoVol,
       Value<double> otherVol,
+      Value<int> metronomeSpeed,
+      Value<double> metronomeVolume,
+      Value<bool> isMetronomeEnabled,
     });
 
 class $$SongsTableFilterComposer extends Composer<_$AppDatabase, $SongsTable> {
@@ -1362,6 +1524,21 @@ class $$SongsTableFilterComposer extends Composer<_$AppDatabase, $SongsTable> {
 
   ColumnFilters<double> get otherVol => $composableBuilder(
     column: $table.otherVol,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get metronomeSpeed => $composableBuilder(
+    column: $table.metronomeSpeed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get metronomeVolume => $composableBuilder(
+    column: $table.metronomeVolume,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isMetronomeEnabled => $composableBuilder(
+    column: $table.isMetronomeEnabled,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1484,6 +1661,21 @@ class $$SongsTableOrderingComposer
     column: $table.otherVol,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get metronomeSpeed => $composableBuilder(
+    column: $table.metronomeSpeed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get metronomeVolume => $composableBuilder(
+    column: $table.metronomeVolume,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isMetronomeEnabled => $composableBuilder(
+    column: $table.isMetronomeEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SongsTableAnnotationComposer
@@ -1569,6 +1761,21 @@ class $$SongsTableAnnotationComposer
 
   GeneratedColumn<double> get otherVol =>
       $composableBuilder(column: $table.otherVol, builder: (column) => column);
+
+  GeneratedColumn<int> get metronomeSpeed => $composableBuilder(
+    column: $table.metronomeSpeed,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get metronomeVolume => $composableBuilder(
+    column: $table.metronomeVolume,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isMetronomeEnabled => $composableBuilder(
+    column: $table.isMetronomeEnabled,
+    builder: (column) => column,
+  );
 }
 
 class $$SongsTableTableManager
@@ -1621,6 +1828,9 @@ class $$SongsTableTableManager
                 Value<double> bassVol = const Value.absent(),
                 Value<double> pianoVol = const Value.absent(),
                 Value<double> otherVol = const Value.absent(),
+                Value<int> metronomeSpeed = const Value.absent(),
+                Value<double> metronomeVolume = const Value.absent(),
+                Value<bool> isMetronomeEnabled = const Value.absent(),
               }) => SongsCompanion(
                 id: id,
                 title: title,
@@ -1644,6 +1854,9 @@ class $$SongsTableTableManager
                 bassVol: bassVol,
                 pianoVol: pianoVol,
                 otherVol: otherVol,
+                metronomeSpeed: metronomeSpeed,
+                metronomeVolume: metronomeVolume,
+                isMetronomeEnabled: isMetronomeEnabled,
               ),
           createCompanionCallback:
               ({
@@ -1669,6 +1882,9 @@ class $$SongsTableTableManager
                 Value<double> bassVol = const Value.absent(),
                 Value<double> pianoVol = const Value.absent(),
                 Value<double> otherVol = const Value.absent(),
+                Value<int> metronomeSpeed = const Value.absent(),
+                Value<double> metronomeVolume = const Value.absent(),
+                Value<bool> isMetronomeEnabled = const Value.absent(),
               }) => SongsCompanion.insert(
                 id: id,
                 title: title,
@@ -1692,6 +1908,9 @@ class $$SongsTableTableManager
                 bassVol: bassVol,
                 pianoVol: pianoVol,
                 otherVol: otherVol,
+                metronomeSpeed: metronomeSpeed,
+                metronomeVolume: metronomeVolume,
+                isMetronomeEnabled: isMetronomeEnabled,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

@@ -22,8 +22,19 @@ typedef SoLoudSubscription =
 class SoloudImplementation implements PlayerInterface {
   final Map<StemName, AudioSource> sources = {};
   final Map<StemName, SoundHandlePair> handles = {};
+
+  //to handle end of song callback
   Null Function()? endCallBack;
   SoLoudSubscription? endSubscription;
+
+  //to handle metronome
+  bool isMetronomeEnabled = false;
+  int nextTickPosition = 0;
+  int metronomeSpeed = 2;
+  List<double> musicBeatsPositionsMs = [];
+  Timer? metronomeTimer;
+  AudioSource? metronomeSource;
+  double metronomeVolume = 0.0;
 
   @override
   Duration get currentPosition =>
@@ -54,6 +65,9 @@ class SoloudImplementation implements PlayerInterface {
     endSubscription?.cancel();
     await _clearHandles();
     await _clearSources();
+
+    metronomeTimer?.cancel();
+    metronomeTimer = null;
   }
 
   @override
@@ -64,6 +78,13 @@ class SoloudImplementation implements PlayerInterface {
     await _loadTrack(StemName.guitar, song.guitarPath, song.guitarVol);
     await _loadTrack(StemName.other, song.otherPath, song.otherVol);
     await _loadTrack(StemName.piano, song.pianoPath, song.pianoVol);
+
+    await _loadMetronomeData(
+      song.musicBeatsPositions,
+      song.isMetronomeEnabled,
+      song.metronomeSpeed,
+      song.metronomeVolume,
+    );
 
     // Listen for the end of the first track to signal the end of the song
     final endStream = sources.values.first.soundEvents;
@@ -83,6 +104,9 @@ class SoloudImplementation implements PlayerInterface {
     for (final key in handles.keys) {
       SoLoud.instance.setPause(handles[key]!.handle, true);
     }
+
+    metronomeTimer?.cancel();
+    metronomeTimer = null;
   }
 
   @override
@@ -90,6 +114,11 @@ class SoloudImplementation implements PlayerInterface {
     for (final key in handles.keys) {
       SoLoud.instance.setPause(handles[key]!.handle, false);
     }
+
+    metronomeTimer ??= Timer.periodic(
+      Duration(milliseconds: 20),
+      (_) => _onMetronomeTick(),
+    );
   }
 
   @override
@@ -105,31 +134,6 @@ class SoloudImplementation implements PlayerInterface {
     if (handlePair != null) {
       SoLoud.instance.setVolume(handlePair.handle, volume);
     }
-  }
-
-  @override
-  Future<void> dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement playingStream
-  Stream<bool> get playingStream => throw UnimplementedError();
-
-  @override
-  void setMetronomeMultiplier(double multiplier) {
-    // TODO: implement setMetronomeMultiplier
-  }
-
-  @override
-  void setMetronomeVolume(double vol) {
-    // TODO: implement setMetronomeVolume
-  }
-
-  @override
-  void toggleMetronome(bool enabled) {
-    // TODO: implement toggleMetronome
   }
 
   @override
@@ -179,5 +183,52 @@ class SoloudImplementation implements PlayerInterface {
     handles
       ..clear()
       ..addAll(newHandles);
+  }
+
+  Future<void> _loadMetronomeData(
+    List<double> musicBeatsPositionsMs,
+    bool isMetronomeEnabled,
+    int metronomeSpeed,
+    double metronomeVolume,
+  ) async {
+    nextTickPosition = 0;
+    this.metronomeSpeed = metronomeSpeed;
+    this.isMetronomeEnabled = isMetronomeEnabled;
+    this.musicBeatsPositionsMs = musicBeatsPositionsMs;
+    this.metronomeVolume = metronomeVolume;
+    metronomeSource = await SoLoud.instance.loadAsset(
+      'assets/sounds/metronome_click.wav',
+      mode: LoadMode.memory,
+    );
+    metronomeTimer = null;
+  }
+
+  void _onMetronomeTick() {
+    final currentTimeMs = currentPosition.inMilliseconds.toDouble();
+    if (isMetronomeEnabled) {
+      if (musicBeatsPositionsMs[nextTickPosition] <= currentTimeMs) {
+        SoLoud.instance.play(metronomeSource!, volume: metronomeVolume);
+        nextTickPosition = nextTickPosition + metronomeSpeed;
+        if (nextTickPosition >= musicBeatsPositionsMs.length) {
+          metronomeTimer?.cancel();
+          metronomeSource!.handles.clear();
+        }
+      }
+    }
+  }
+
+  @override
+  void setMetronomeSpeed(int speed) {
+    // TODO: implement setMetronomeSpeed
+  }
+
+  @override
+  void setMetronomeVolume(double volume) {
+    // TODO: implement setMetronomeVolume
+  }
+
+  @override
+  void toggleMetronome() {
+    isMetronomeEnabled = !isMetronomeEnabled;
   }
 }

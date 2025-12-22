@@ -96,20 +96,7 @@ flutter:
   assets:
     - assets/images/sample_image1.jpg
     - assets/images/sample_image2.jpg
-    
-    - assets/audio/vocals.wav
-    - assets/audio/piano.wav
-    - assets/audio/drums.wav
-    - assets/audio/bass.wav
-    - assets/audio/other.wav
-    - assets/audio/guitar.wav
-
-    - assets/audio_long/vocals.wav
-    - assets/audio_long/piano.wav
-    - assets/audio_long/drums.wav
-    - assets/audio_long/bass.wav
-    - assets/audio_long/other.wav
-    - assets/audio_long/guitar.wav
+    - assets/sounds/metronome_click.wav
 
     - assets/audio_ogg/vocals.ogg
     - assets/audio_ogg/piano.ogg

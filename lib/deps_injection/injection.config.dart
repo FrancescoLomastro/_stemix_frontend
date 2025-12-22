@@ -35,10 +35,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i992.SongRepository(gh<_i34.AppDatabase>()),
     );
     gh.factoryParam<_i441.PlayerBloc, _i34.Song, dynamic>(
-      (song, _) => _i441.PlayerBloc(
+      (_song, _) => _i441.PlayerBloc(
         gh<_i448.SoloudImplementation>(),
         gh<_i992.SongRepository>(),
-        song,
+        _song,
       ),
     );
     gh.factory<_i62.LibraryBloc>(

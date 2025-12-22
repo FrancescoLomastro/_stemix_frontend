@@ -46,6 +46,11 @@ class Songs extends Table {
   RealColumn get bassVol => real().withDefault(const Constant(1.0))();
   RealColumn get pianoVol => real().withDefault(const Constant(1.0))();
   RealColumn get otherVol => real().withDefault(const Constant(1.0))();
+
+  IntColumn get metronomeSpeed => integer().withDefault(const Constant(1))();
+  RealColumn get metronomeVolume => real().withDefault(const Constant(1.0))();
+  BoolColumn get isMetronomeEnabled =>
+      boolean().withDefault(const Constant(false))();
 }
 
 /*
