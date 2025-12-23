@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stemix_frontend/data/local/stem_names.dart';
+import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 import 'package:stemix_frontend/features/player/bloc/player_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/data/local/repository/song_repository.dart';
-import 'package:stemix_frontend/data/local/stem_names.dart';
+import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/soloud_audio.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
@@ -31,6 +31,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<SetVolumeEvent>(_onSetVolumeEvent);
     on<SaveEvent>(_onSaveEvent);
     on<SongEndedEvent>(_onSongEndedEvent);
+    on<ToggleMetronomeEvent>(_onToggleMetronomeEvent);
+    on<SetMetronomeSpeedEvent>(_onSetMetronomeSpeedEvent);
   }
 
   Future<void> _onLoadPlayerEvent(
@@ -49,6 +51,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       emit(
         PlayerLoaded(
           isSaved: true,
+          isMetronomeEnabled: _song.isMetronomeEnabled,
+          metronomeSpeed: _song.metronomeSpeed,
           stemVolumes: {
             StemName.vocals: _song.vocalsVol,
             StemName.bass: _song.bassVol,
@@ -71,12 +75,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       if (currentState is PlayerLoaded) {
         if (!currentState.isPlaying) {
           _player.play();
-          emit(
-            PlayerLoaded(
-              isPlaying: true,
-              stemVolumes: currentState.stemVolumes,
-            ),
-          );
+          emit(currentState.copyWith(isPlaying: true));
         }
       }
     } catch (e, stacktrace) {
@@ -94,12 +93,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       if (currentState is PlayerLoaded) {
         if (currentState.isPlaying) {
           _player.pause();
-          emit(
-            PlayerLoaded(
-              isPlaying: false,
-              stemVolumes: currentState.stemVolumes,
-            ),
-          );
+          emit(currentState.copyWith(isPlaying: false));
         }
       }
     } catch (e, stacktrace) {
@@ -113,31 +107,34 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     Emitter<PlayerState> emit,
   ) async {
     try {
-      final songDuration = _song.duration;
-      if (event.absolute) {
-        // Handles absolute seek
-        if (event.amount < 0) return;
-        if (event.amount > songDuration) return;
-        _player.seek(Duration(seconds: event.amount));
-      } else {
-        // Handles relative seek
-        final currentPosition = _player.currentPosition;
-        Duration newPosition =
-            currentPosition + Duration(seconds: event.amount);
-        bool changeUi = false;
+      final currentState = state;
+      if (currentState is PlayerLoaded) {
+        final songDuration = _song.duration;
+        if (event.absolute) {
+          // Handles absolute seek
+          if (event.amount < 0) return;
+          if (event.amount > songDuration) return;
+          _player.seek(Duration(seconds: event.amount));
+        } else {
+          // Handles relative seek
+          final currentPosition = _player.currentPosition;
+          Duration newPosition =
+              currentPosition + Duration(seconds: event.amount);
+          bool changeUi = false;
 
-        if (newPosition < Duration.zero) {
-          newPosition = Duration.zero;
-        } else if (newPosition.inSeconds > songDuration) {
-          newPosition = Duration.zero;
-          _player.pause();
-          changeUi = true;
-        }
-        _player.seek(newPosition);
+          if (newPosition < Duration.zero) {
+            newPosition = Duration.zero;
+          } else if (newPosition.inSeconds > songDuration) {
+            newPosition = Duration.zero;
+            _player.pause();
+            changeUi = true;
+          }
+          _player.seek(newPosition);
 
-        // its important to change the UI only after seeking the player
-        if (changeUi) {
-          emit(PlayerLoaded(isPlaying: false));
+          // its important to change the UI only after seeking the player
+          if (changeUi) {
+            emit(currentState.copyWith(isPlaying: false));
+          }
         }
       }
     } catch (e, stacktrace) {
@@ -168,7 +165,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     try {
       final currentState = state;
       if (currentState is PlayerLoaded) {
-        await _songRepository.updateSong(_song.id, event.stemVolumes);
+        await _songRepository.updateSong(
+          _song.id,
+          currentState.stemVolumes,
+          currentState.isMetronomeEnabled,
+          currentState.metronomeSpeed,
+        );
         emit(currentState.copyWith(isSaved: true));
       }
     } catch (e, stacktrace) {
@@ -183,5 +185,42 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   ) async {
     add(SkipDurationEvent(absolute: true, amount: 0));
     add(PauseEvent());
+  }
+
+  Future<void> _onToggleMetronomeEvent(
+    ToggleMetronomeEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    try {
+      final currentState = state;
+      if (currentState is PlayerLoaded) {
+        final newValue = !currentState.isMetronomeEnabled;
+        _player.setMetronomeEnabled(newValue);
+        emit(
+          currentState.copyWith(isMetronomeEnabled: newValue, isSaved: false),
+        );
+      }
+    } catch (e, stacktrace) {
+      logger.e("Error in ToggleMetronomeEvent: $e $stacktrace");
+      emit(PlayerError(e.toString()));
+    }
+  }
+
+  Future<void> _onSetMetronomeSpeedEvent(
+    SetMetronomeSpeedEvent event,
+    Emitter<PlayerState> emit,
+  ) async {
+    try {
+      final currentState = state;
+      if (currentState is PlayerLoaded) {
+        _player.setMetronomeSpeed(event.speed);
+        emit(
+          currentState.copyWith(metronomeSpeed: event.speed, isSaved: false),
+        );
+      }
+    } catch (e, stacktrace) {
+      logger.e("Error in SetMetronomeSpeedEvent: $e $stacktrace");
+      emit(PlayerError(e.toString()));
+    }
   }
 }

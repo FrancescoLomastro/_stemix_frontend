@@ -5,6 +5,7 @@ import 'package:stemix_frontend/deps_injection/injection.dart';
 import 'package:stemix_frontend/features/player/bloc/player_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
+import 'package:stemix_frontend/features/player/widgets/metronome_control.dart';
 import 'package:stemix_frontend/features/player/widgets/playback_control.dart';
 import 'package:stemix_frontend/features/player/widgets/progress_bar.dart';
 import 'package:stemix_frontend/features/player/widgets/song_info.dart';
@@ -54,9 +55,7 @@ class _PlayerView extends StatelessWidget {
                         ? const Icon(Icons.save)
                         : const Icon(Icons.save_outlined),
                     onPressed: () {
-                      context.read<PlayerBloc>().add(
-                        SaveEvent(stemVolumes: state.stemVolumes),
-                      );
+                      context.read<PlayerBloc>().add(SaveEvent());
                     },
                   ),
                 ],
@@ -72,6 +71,8 @@ class _PlayerView extends StatelessWidget {
                     buildProgressBar(context, state),
                     const SizedBox(height: 5),
                     buildPlayBackControls(context, state),
+                    const SizedBox(height: 20),
+                    buildMetronomeControls(context, state),
                     const SizedBox(height: 40),
                     buildStemsControls(context, state),
                   ],

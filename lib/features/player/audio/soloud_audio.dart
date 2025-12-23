@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
-import 'package:stemix_frontend/data/local/stem_names.dart';
+import 'package:stemix_frontend/data/local/drift/metronome_speed_converter.dart';
+import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/audio_interface.dart';
 import 'package:stemix_frontend/main.dart';
 
@@ -30,7 +31,7 @@ class SoloudImplementation implements PlayerInterface {
   //to handle metronome
   bool isMetronomeEnabled = false;
   int nextTickPosition = 0;
-  int metronomeSpeed = 2;
+  MetronomeSpeed metronomeSpeed = MetronomeSpeed.normal;
   List<double> musicBeatsPositionsMs = [];
   Timer? metronomeTimer;
   AudioSource? metronomeSource;
@@ -126,6 +127,19 @@ class SoloudImplementation implements PlayerInterface {
     for (final key in handles.keys) {
       SoLoud.instance.seek(handles[key]!.handle, position);
     }
+
+    // Use binary search to find the next tick position
+    int left = 0;
+    int right = musicBeatsPositionsMs.length;
+    while (left < right) {
+      int mid = left + (right - left) ~/ 2;
+      if (musicBeatsPositionsMs[mid] < position.inMilliseconds) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    nextTickPosition = left;
   }
 
   @override
@@ -188,7 +202,7 @@ class SoloudImplementation implements PlayerInterface {
   Future<void> _loadMetronomeData(
     List<double> musicBeatsPositionsMs,
     bool isMetronomeEnabled,
-    int metronomeSpeed,
+    MetronomeSpeed metronomeSpeed,
     double metronomeVolume,
   ) async {
     nextTickPosition = 0;
@@ -205,21 +219,26 @@ class SoloudImplementation implements PlayerInterface {
 
   void _onMetronomeTick() {
     final currentTimeMs = currentPosition.inMilliseconds.toDouble();
-    if (isMetronomeEnabled) {
-      if (musicBeatsPositionsMs[nextTickPosition] <= currentTimeMs) {
+
+    if (nextTickPosition >= musicBeatsPositionsMs.length) {
+      metronomeTimer?.cancel();
+      metronomeTimer = null;
+      SoLoud.instance.disposeSource(metronomeSource!);
+    } else if (musicBeatsPositionsMs[nextTickPosition] <= currentTimeMs) {
+      if (isMetronomeEnabled) {
         SoLoud.instance.play(metronomeSource!, volume: metronomeVolume);
-        nextTickPosition = nextTickPosition + metronomeSpeed;
-        if (nextTickPosition >= musicBeatsPositionsMs.length) {
-          metronomeTimer?.cancel();
-          metronomeSource!.handles.clear();
-        }
       }
+      nextTickPosition = nextTickPosition + metronomeSpeed.multiplier;
     }
   }
 
   @override
-  void setMetronomeSpeed(int speed) {
-    // TODO: implement setMetronomeSpeed
+  void setMetronomeSpeed(MetronomeSpeed speed) {
+    metronomeSpeed = speed;
+    // we need to adjust nextTickPosition to be aligned with the new speed
+    while (nextTickPosition % metronomeSpeed.multiplier != 0) {
+      nextTickPosition++;
+    }
   }
 
   @override
@@ -228,7 +247,7 @@ class SoloudImplementation implements PlayerInterface {
   }
 
   @override
-  void toggleMetronome() {
-    isMetronomeEnabled = !isMetronomeEnabled;
+  void setMetronomeEnabled(bool enabled) {
+    isMetronomeEnabled = enabled;
   }
 }

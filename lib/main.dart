@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:audiotags/audiotags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:drift/drift.dart' as drift; // Alias per evitare conflitti
+import 'package:metadata_god/metadata_god.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:stemix_frontend/deps_injection/injection.dart';
@@ -27,7 +27,7 @@ final logger = Logger(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await MetadataGod.initialize();
   configureDependencies();
 
   // =================================================================
@@ -38,17 +38,17 @@ void main() async {
   // await debugUpdateSong(1);      // <-- Modifica la canzone con ID 1
   // await debugDeleteSong(99);     // <-- Elimina la canzone con ID 99
 
-  await debugDeleteAllSongs();
+  /* await debugDeleteAllSongs(); */
 
-  for (int i = 0; i < 2; i++) {
+  /* for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
-  }
-  /* await debugLogAllSongs(); */
+  } */
+  await debugLogAllSongs();
   // =================================================================
 
   runApp(const MyApp());
@@ -97,9 +97,12 @@ Future<void> debugLogAllSongs() async {
   if (songs.isEmpty) {
     logger.w("📭 IL DATABASE È VUOTO.");
   } else {
-    logger.i("🎵 ELENCO CANZONI NEL DB (${songs.length}) 🎵");
     for (var song in songs) {
-      logger.d("$song");
+      String out = "";
+      for (var field in song.toColumns(true).entries) {
+        out += " - ${field.key}: ${field.value}\n";
+      }
+      logger.i(out);
     }
   }
 }
@@ -148,12 +151,12 @@ Future<void> debugCreateSong({
     }
   }
   if (hasAudio) {
-    String vocalAssetPath = "assets/audio_ogg/vocals.ogg";
-    String pianoAssetPath = "assets/audio_ogg/piano.ogg";
-    String drumsAssetPath = "assets/audio_ogg/drums.ogg";
-    String bassAssetPath = "assets/audio_ogg/bass.ogg";
-    String otherAssetPath = "assets/audio_ogg/other.ogg";
-    String guitarAssetPath = "assets/audio_ogg/guitar.ogg";
+    String vocalAssetPath = "assets/audio/vocals.ogg";
+    String pianoAssetPath = "assets/audio/piano.ogg";
+    String drumsAssetPath = "assets/audio/drums.ogg";
+    String bassAssetPath = "assets/audio/bass.ogg";
+    String otherAssetPath = "assets/audio/other.ogg";
+    String guitarAssetPath = "assets/audio/guitar.ogg";
     vocalPath = p.join(fullSongFolderPath, "vocals.ogg");
     pianoPath = p.join(fullSongFolderPath, "piano.ogg");
     drumsPath = p.join(fullSongFolderPath, "drums.ogg");
@@ -188,61 +191,12 @@ Future<void> debugCreateSong({
       (await rootBundle.load(guitarAssetPath)).buffer.asUint8List(),
     );
 
-    duration = (await AudioTags.read(vocalPath))!.duration!;
+    duration =
+        ((await MetadataGod.readMetadata(file: vocalPath)).durationMs! / 1000)
+            .round();
   }
 
-  final musicBeatsPositions = [
-    0.3,
-    1.5,
-    2.7,
-    3.9,
-    5.0,
-    6.2,
-    7.4,
-    8.6,
-    9.8,
-    11.0,
-    12.2,
-    13.4,
-    14.6,
-    15.8,
-    17.0,
-    18.2,
-    19.4,
-    20.6,
-    21.8,
-    23.0,
-    24.2,
-    25.4,
-    26.6,
-    27.8,
-    29.0,
-    30.2,
-    31.4,
-    32.6,
-    33.8,
-    35.0,
-    36.2,
-    37.4,
-    38.6,
-    39.8,
-    41.0,
-    42.2,
-    43.4,
-    44.6,
-    45.8,
-    47.0,
-    48.2,
-    49.4,
-    50.6,
-    51.8,
-    53.0,
-    54.2,
-    55.4,
-    56.6,
-    57.8,
-    59.0,
-  ];
+  final musicBeatsPositions = [for (double i = 0; i < 600; i++) i * 500];
 
   // Utilizziamo i Companion per inserire i dati
   final newSong = SongsCompanion.insert(

@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:stemix_frontend/data/local/drift/list_converter.dart';
+import 'package:stemix_frontend/data/local/drift/metronome_speed_converter.dart';
 
 part 'database.g.dart';
 
@@ -47,10 +48,12 @@ class Songs extends Table {
   RealColumn get pianoVol => real().withDefault(const Constant(1.0))();
   RealColumn get otherVol => real().withDefault(const Constant(1.0))();
 
-  IntColumn get metronomeSpeed => integer().withDefault(const Constant(1))();
-  RealColumn get metronomeVolume => real().withDefault(const Constant(1.0))();
   BoolColumn get isMetronomeEnabled =>
       boolean().withDefault(const Constant(false))();
+  TextColumn get metronomeSpeed => text()
+      .map(const MetronomeSpeedConverter())
+      .withDefault(Constant(MetronomeSpeed.normal.name))();
+  RealColumn get metronomeVolume => real().withDefault(const Constant(1.0))();
 }
 
 /*

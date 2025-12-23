@@ -58,7 +58,7 @@ dependencies:
   flutter_soloud: ^3.4.7
   
   # Audio files
-  audiotags: ^1.4.5
+  metadata_god : ^1.1.0
 
   # Streams
   rxdart: ^0.28.0
@@ -94,16 +94,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/sample_image1.jpg
-    - assets/images/sample_image2.jpg
-    - assets/sounds/metronome_click.wav
+    - assets/images/
+    - assets/audio/
+    - assets/sounds/
 
-    - assets/audio_ogg/vocals.ogg
-    - assets/audio_ogg/piano.ogg
-    - assets/audio_ogg/drums.ogg
-    - assets/audio_ogg/bass.ogg
-    - assets/audio_ogg/other.ogg
-    - assets/audio_ogg/guitar.ogg
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

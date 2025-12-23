@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:stemix_frontend/data/local/stem_names.dart';
+import 'package:stemix_frontend/data/local/drift/metronome_speed_converter.dart';
+import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 
 class PlayerState extends Equatable {
   const PlayerState();
@@ -10,11 +11,15 @@ class PlayerState extends Equatable {
 class PlayerLoading extends PlayerState {}
 
 class PlayerLoaded extends PlayerState {
+  final MetronomeSpeed metronomeSpeed;
+  final bool isMetronomeEnabled;
   final bool isSaved;
   final bool isPlaying;
   final Map<StemName, double> stemVolumes;
 
   const PlayerLoaded({
+    this.metronomeSpeed = MetronomeSpeed.normal,
+    this.isMetronomeEnabled = false,
     this.isSaved = true,
     this.isPlaying = false,
     this.stemVolumes = const {
@@ -28,11 +33,15 @@ class PlayerLoaded extends PlayerState {
   });
 
   PlayerLoaded copyWith({
+    MetronomeSpeed? metronomeSpeed,
+    bool? isMetronomeEnabled,
     bool? isPlaying,
     Map<StemName, double>? stemVolumes,
     bool? isSaved,
   }) {
     return PlayerLoaded(
+      metronomeSpeed: metronomeSpeed ?? this.metronomeSpeed,
+      isMetronomeEnabled: isMetronomeEnabled ?? this.isMetronomeEnabled,
       isPlaying: isPlaying ?? this.isPlaying,
       stemVolumes: stemVolumes ?? this.stemVolumes,
       isSaved: isSaved ?? this.isSaved,
@@ -40,7 +49,13 @@ class PlayerLoaded extends PlayerState {
   }
 
   @override
-  List<Object?> get props => [isPlaying, stemVolumes, isSaved];
+  List<Object?> get props => [
+    metronomeSpeed,
+    isMetronomeEnabled,
+    isPlaying,
+    stemVolumes,
+    isSaved,
+  ];
 }
 
 class PlayerError extends PlayerState {

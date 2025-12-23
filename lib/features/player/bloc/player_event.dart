@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:stemix_frontend/data/local/stem_names.dart';
+import 'package:stemix_frontend/data/local/drift/metronome_speed_converter.dart';
+import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 
 class PlayerEvent extends Equatable {
   const PlayerEvent();
@@ -16,6 +17,16 @@ class PauseEvent extends PlayerEvent {}
 
 class SongEndedEvent extends PlayerEvent {}
 
+class ToggleMetronomeEvent extends PlayerEvent {}
+
+class SetMetronomeSpeedEvent extends PlayerEvent {
+  final MetronomeSpeed speed;
+  const SetMetronomeSpeedEvent(this.speed);
+
+  @override
+  List<Object?> get props => [speed];
+}
+
 class SkipDurationEvent extends PlayerEvent {
   final bool absolute;
   final int amount;
@@ -31,19 +42,4 @@ class SetVolumeEvent extends PlayerEvent {
   List<Object?> get props => [stemName, volume];
 }
 
-class SaveEvent extends PlayerEvent {
-  final Map<StemName, double> stemVolumes;
-  const SaveEvent({
-    this.stemVolumes = const {
-      StemName.vocals: 0.1,
-      StemName.bass: 0.1,
-      StemName.drums: 0.1,
-      StemName.other: 0.1,
-      StemName.piano: 0.1,
-      StemName.guitar: 0.1,
-    },
-  });
-
-  @override
-  List<Object?> get props => [stemVolumes];
-}
+class SaveEvent extends PlayerEvent {}
