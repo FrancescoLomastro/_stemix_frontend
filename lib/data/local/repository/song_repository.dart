@@ -88,8 +88,8 @@ class SongRepository {
   Future<void> updateSong(
     int songId,
     Map<StemName, double> stemVolumes,
-    bool isMetronomeEnabled,
     MetronomeSpeed metronomeSpeed,
+    double metronomeVolume,
   ) async {
     final companion = SongsCompanion(
       vocalsVol: drift.Value(stemVolumes[StemName.vocals]!),
@@ -98,8 +98,8 @@ class SongRepository {
       otherVol: drift.Value(stemVolumes[StemName.other]!),
       pianoVol: drift.Value(stemVolumes[StemName.piano]!),
       guitarVol: drift.Value(stemVolumes[StemName.guitar]!),
-      isMetronomeEnabled: drift.Value(isMetronomeEnabled),
       metronomeSpeed: drift.Value(metronomeSpeed),
+      metronomeVolume: drift.Value(metronomeVolume),
     );
     final result = await (_db.update(
       _db.songs,

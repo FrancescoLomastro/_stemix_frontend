@@ -34,7 +34,6 @@ class SoloudImplementation implements PlayerInterface {
   /// To handle metronome
   AudioSource? _metronomeSource;
   Timer? _metronomeTimer;
-  bool? _metronomeIsEnabled;
   int? _metronomeNextTick;
   MetronomeSpeed? _metronomeSpeed;
   List<double>? _metronomeBeats;
@@ -96,7 +95,6 @@ class SoloudImplementation implements PlayerInterface {
 
     await _loadMetronomeData(
       song.musicBeatsPositions,
-      song.isMetronomeEnabled,
       song.metronomeSpeed,
       song.metronomeVolume,
     );
@@ -162,23 +160,18 @@ class SoloudImplementation implements PlayerInterface {
     }
   }
 
-  /// Sets metronome enabled/disabled
-  @override
-  void setMetronomeEnabled(bool enabled) {
-    _metronomeIsEnabled = enabled;
-  }
-
-  @override
-  void setMetronomeVolume(double volume) {
-    // TODO: implement setMetronomeVolume
-  }
-
   /// Sets volume for a specific stem
   @override
-  void setVolume(StemName stemName, double volume) {
-    final handlePair = _handles![stemName];
-    if (handlePair != null) {
-      SoLoud.instance.setVolume(handlePair.handle, volume);
+  void setVolume(StemName? stemName, double volume) {
+    if (stemName == null) {
+      // metronome does not save handles
+      _metronomeVolume = volume;
+    } else {
+      final handlePair = _handles![stemName];
+      if (handlePair != null) {
+        SoLoud.instance.setVolume(handlePair.handle, volume);
+        _handles![stemName] = SoundHandlePair(handlePair.handle, volume);
+      }
     }
   }
 
@@ -236,8 +229,7 @@ class SoloudImplementation implements PlayerInterface {
 
   /// Reset metronome to the beginning
   void _resetMetronome() {
-    if (_metronomeIsEnabled == null ||
-        _metronomeSpeed == null ||
+    if (_metronomeSpeed == null ||
         _metronomeVolume == null ||
         _metronomeBeats == null ||
         _metronomeSource == null) {
@@ -277,7 +269,6 @@ class SoloudImplementation implements PlayerInterface {
     if (_metronomeTimer != null) {
       _pauseMetronome();
     }
-    _metronomeIsEnabled = null;
     _metronomeNextTick = null;
     _metronomeSpeed = null;
     _metronomeBeats = null;
@@ -304,12 +295,10 @@ class SoloudImplementation implements PlayerInterface {
   /// Load metronome data
   Future<void> _loadMetronomeData(
     List<double> musicBeatsPositionsMs,
-    bool isMetronomeEnabled,
     MetronomeSpeed metronomeSpeed,
     double metronomeVolume,
   ) async {
     _metronomeSpeed = metronomeSpeed;
-    _metronomeIsEnabled = isMetronomeEnabled;
     _metronomeBeats = musicBeatsPositionsMs;
     _metronomeVolume = metronomeVolume;
     _metronomeSource = await SoLoud.instance.loadAsset(
@@ -325,7 +314,7 @@ class SoloudImplementation implements PlayerInterface {
     if (_metronomeNextTick! >= _metronomeBeats!.length) {
       _pauseMetronome();
     } else if (_metronomeBeats![_metronomeNextTick!] <= currentTimeMs) {
-      if (_metronomeIsEnabled!) {
+      if (_metronomeVolume! > 0.0) {
         SoLoud.instance.play(_metronomeSource!, volume: _metronomeVolume!);
       }
       _metronomeNextTick = _metronomeNextTick! + _metronomeSpeed!.multiplier;

@@ -48,8 +48,6 @@ class Songs extends Table {
   RealColumn get pianoVol => real().withDefault(const Constant(1.0))();
   RealColumn get otherVol => real().withDefault(const Constant(1.0))();
 
-  BoolColumn get isMetronomeEnabled =>
-      boolean().withDefault(const Constant(false))();
   TextColumn get metronomeSpeed => text()
       .map(const MetronomeSpeedConverter())
       .withDefault(Constant(MetronomeSpeed.normal.name))();

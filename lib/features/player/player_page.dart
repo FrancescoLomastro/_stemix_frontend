@@ -9,7 +9,7 @@ import 'package:stemix_frontend/features/player/widgets/metronome_control.dart';
 import 'package:stemix_frontend/features/player/widgets/playback_control.dart';
 import 'package:stemix_frontend/features/player/widgets/progress_bar.dart';
 import 'package:stemix_frontend/features/player/widgets/song_info.dart';
-import 'package:stemix_frontend/features/player/widgets/stems_control.dart';
+import 'package:stemix_frontend/features/player/widgets/audio_control.dart';
 
 class PlayerPage extends StatelessWidget {
   final Song song;
@@ -61,7 +61,7 @@ class _PlayerView extends StatelessWidget {
                 ],
               ),
               body: SingleChildScrollView(
-                physics: const PageScrollPhysics(),
+                physics: const ScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(15, 10, 15, 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -14,10 +14,7 @@ abstract class PlayerInterface {
   void pause();
   void onEnd(Null Function() callback);
   void setVolume(StemName stemName, double volume);
-
-  void setMetronomeEnabled(bool enabled);
   void setMetronomeSpeed(MetronomeSpeed speed);
-  void setMetronomeVolume(double volume);
 }
 
 abstract class PlayerSongEndedEvent {}

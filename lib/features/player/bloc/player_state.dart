@@ -12,14 +12,13 @@ class PlayerLoading extends PlayerState {}
 
 class PlayerLoaded extends PlayerState {
   final MetronomeSpeed metronomeSpeed;
-  final bool isMetronomeEnabled;
   final bool isSaved;
   final bool isPlaying;
   final Map<StemName, double> stemVolumes;
+  final double metronomeVolume;
 
   const PlayerLoaded({
     this.metronomeSpeed = MetronomeSpeed.normal,
-    this.isMetronomeEnabled = false,
     this.isSaved = true,
     this.isPlaying = false,
     this.stemVolumes = const {
@@ -30,20 +29,21 @@ class PlayerLoaded extends PlayerState {
       StemName.piano: 0.0,
       StemName.guitar: 0.0,
     },
+    this.metronomeVolume = 0.0,
   });
 
   PlayerLoaded copyWith({
     MetronomeSpeed? metronomeSpeed,
-    bool? isMetronomeEnabled,
     bool? isPlaying,
     Map<StemName, double>? stemVolumes,
+    double? metronomeVolume,
     bool? isSaved,
   }) {
     return PlayerLoaded(
       metronomeSpeed: metronomeSpeed ?? this.metronomeSpeed,
-      isMetronomeEnabled: isMetronomeEnabled ?? this.isMetronomeEnabled,
       isPlaying: isPlaying ?? this.isPlaying,
       stemVolumes: stemVolumes ?? this.stemVolumes,
+      metronomeVolume: metronomeVolume ?? this.metronomeVolume,
       isSaved: isSaved ?? this.isSaved,
     );
   }
@@ -51,9 +51,9 @@ class PlayerLoaded extends PlayerState {
   @override
   List<Object?> get props => [
     metronomeSpeed,
-    isMetronomeEnabled,
     isPlaying,
     stemVolumes,
+    metronomeVolume,
     isSaved,
   ];
 }

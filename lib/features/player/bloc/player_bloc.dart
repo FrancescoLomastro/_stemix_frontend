@@ -31,7 +31,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     on<SetVolumeEvent>(_onSetVolumeEvent);
     on<SaveEvent>(_onSaveEvent);
     on<SongEndedEvent>(_onSongEndedEvent);
-    on<ToggleMetronomeEvent>(_onToggleMetronomeEvent);
     on<SetMetronomeSpeedEvent>(_onSetMetronomeSpeedEvent);
   }
 
@@ -51,7 +50,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       emit(
         PlayerLoaded(
           isSaved: true,
-          isMetronomeEnabled: _song.isMetronomeEnabled,
           metronomeSpeed: _song.metronomeSpeed,
           stemVolumes: {
             StemName.vocals: _song.vocalsVol,
@@ -61,6 +59,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
             StemName.piano: _song.pianoVol,
             StemName.guitar: _song.guitarVol,
           },
+          metronomeVolume: _song.metronomeVolume,
         ),
       );
     } catch (e, stacktrace) {
@@ -151,9 +150,21 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       final currentState = state;
       if (currentState is PlayerLoaded) {
         _player.setVolume(event.stemName, event.volume);
-        final newVolumes = Map<StemName, double>.from(currentState.stemVolumes);
-        newVolumes[event.stemName] = event.volume;
-        emit(currentState.copyWith(stemVolumes: newVolumes, isSaved: false));
+
+        if (event.stemName == null) {
+          emit(
+            currentState.copyWith(
+              metronomeVolume: event.volume,
+              isSaved: false,
+            ),
+          );
+        } else {
+          final newVolumes = Map<StemName, double>.from(
+            currentState.stemVolumes,
+          );
+          newVolumes[event.stemName!] = event.volume;
+          emit(currentState.copyWith(stemVolumes: newVolumes, isSaved: false));
+        }
       }
     } catch (e, stacktrace) {
       logger.e("Error in SetVolumeEvent: $e $stacktrace");
@@ -168,8 +179,8 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
         await _songRepository.updateSong(
           _song.id,
           currentState.stemVolumes,
-          currentState.isMetronomeEnabled,
           currentState.metronomeSpeed,
+          currentState.metronomeVolume,
         );
         emit(currentState.copyWith(isSaved: true));
       }
@@ -185,25 +196,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   ) async {
     add(SkipDurationEvent(absolute: true, amount: 0));
     add(PauseEvent());
-  }
-
-  Future<void> _onToggleMetronomeEvent(
-    ToggleMetronomeEvent event,
-    Emitter<PlayerState> emit,
-  ) async {
-    try {
-      final currentState = state;
-      if (currentState is PlayerLoaded) {
-        final newValue = !currentState.isMetronomeEnabled;
-        _player.setMetronomeEnabled(newValue);
-        emit(
-          currentState.copyWith(isMetronomeEnabled: newValue, isSaved: false),
-        );
-      }
-    } catch (e, stacktrace) {
-      logger.e("Error in ToggleMetronomeEvent: $e $stacktrace");
-      emit(PlayerError(e.toString()));
-    }
   }
 
   Future<void> _onSetMetronomeSpeedEvent(

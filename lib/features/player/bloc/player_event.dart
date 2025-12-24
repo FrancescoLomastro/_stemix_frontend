@@ -34,7 +34,7 @@ class SkipDurationEvent extends PlayerEvent {
 }
 
 class SetVolumeEvent extends PlayerEvent {
-  final StemName stemName;
+  final StemName? stemName;
   final double volume;
   const SetVolumeEvent(this.stemName, this.volume);
 

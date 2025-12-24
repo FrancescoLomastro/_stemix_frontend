@@ -40,15 +40,15 @@ void main() async {
 
   /* await debugDeleteAllSongs(); */
 
-  /* for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
-  } */
-  await debugLogAllSongs();
+  }
+  /* await debugLogAllSongs(); */
   // =================================================================
 
   runApp(const MyApp());
