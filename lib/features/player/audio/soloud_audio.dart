@@ -21,27 +21,35 @@ typedef SoLoudSubscription =
 
 @LazySingleton()
 class SoloudImplementation implements PlayerInterface {
-  final Map<StemName, AudioSource> sources = {};
-  final Map<StemName, SoundHandlePair> handles = {};
+  bool _isCleanedUp = true;
 
-  //to handle end of song callback
-  Null Function()? endCallBack;
-  SoLoudSubscription? endSubscription;
+  /// To handle stems
+  Map<StemName, AudioSource>? _sources;
+  Map<StemName, SoundHandlePair>? _handles;
 
-  //to handle metronome
-  bool isMetronomeEnabled = false;
-  int nextTickPosition = 0;
-  MetronomeSpeed metronomeSpeed = MetronomeSpeed.normal;
-  List<double> musicBeatsPositionsMs = [];
-  Timer? metronomeTimer;
-  AudioSource? metronomeSource;
-  double metronomeVolume = 0.0;
+  /// To handle "the end" of song callback
+  Null Function()? _endCallBack;
+  SoLoudSubscription? _endSubscription;
 
+  /// To handle metronome
+  AudioSource? _metronomeSource;
+  Timer? _metronomeTimer;
+  bool? _metronomeIsEnabled;
+  int? _metronomeNextTick;
+  MetronomeSpeed? _metronomeSpeed;
+  List<double>? _metronomeBeats;
+  double? _metronomeVolume;
+
+  /// Current position of the song
   @override
-  Duration get currentPosition =>
-      SoLoud.instance.getPosition(handles.values.first.handle);
+  Duration get currentPosition {
+    if (_handles == null || _handles!.isEmpty) {
+      throw Exception("Can't get position because handles are null or empty");
+    }
+    return SoLoud.instance.getPosition(_handles!.values.first.handle);
+  }
 
-  // A periodic stream that emits the current position of the song
+  /// Starts a periodic stream that emits the current position of the song
   @override
   Stream<int> get positionStream {
     return Stream<int>.periodic(const Duration(milliseconds: 500), (_) {
@@ -49,6 +57,7 @@ class SoloudImplementation implements PlayerInterface {
     });
   }
 
+  /// Initialize SoLoud audio engine
   @override
   Future<void> ensureInitialized() async {
     if (SoLoud.instance.isInitialized) {
@@ -57,22 +66,27 @@ class SoloudImplementation implements PlayerInterface {
     return await SoLoud.instance.init();
   }
 
+  /// Clean up SoLoud audio engine and free resources
   @override
   Future<void> ensureCleanedUp() async {
-    if (sources.isEmpty && handles.isEmpty) {
+    if (_isCleanedUp) {
       return;
     }
-    // Cancel end subscription, need to do this before clearing handles
-    endSubscription?.cancel();
-    await _clearHandles();
-    await _clearSources();
 
-    metronomeTimer?.cancel();
-    metronomeTimer = null;
+    // NOTE: always clear "the end" callback before clearing handles and sources
+    _cleanEndSong();
+    await _cleanHandles();
+    await _cleanSources();
+    await _cleanMetronome();
+    _isCleanedUp = true;
   }
 
+  /// Load tracks, metronome, set volumes, and setup "the end" handling
   @override
   Future<void> loadTracks(Song song) async {
+    _isCleanedUp = false;
+    _sources = {};
+    _handles = {};
     await _loadTrack(StemName.vocals, song.vocalsPath, song.vocalsVol);
     await _loadTrack(StemName.bass, song.bassPath, song.bassVol);
     await _loadTrack(StemName.drums, song.drumsPath, song.drumsVol);
@@ -86,75 +100,191 @@ class SoloudImplementation implements PlayerInterface {
       song.metronomeSpeed,
       song.metronomeVolume,
     );
+    _resetMetronome();
 
     // Listen for the end of the first track to signal the end of the song
-    final endStream = sources.values.first.soundEvents;
-    endSubscription = endStream.listen((eventData) async {
+    final endStream = _sources!.values.first.soundEvents;
+    _endSubscription = endStream.listen((eventData) async {
       if (eventData.event == SoundEventType.handleIsNoMoreValid) {
-        // Handles are now invalide, we need to restore them for future playback
-        await _restoreHandles();
-        if (endCallBack != null) {
-          endCallBack!();
+        await _resetsHandles();
+        _resetMetronome();
+        if (_endCallBack != null) {
+          _endCallBack!();
         }
       }
     });
   }
 
+  /// Pause playback of all stems and metronome
   @override
   void pause() async {
-    for (final key in handles.keys) {
-      SoLoud.instance.setPause(handles[key]!.handle, true);
+    for (final key in _handles!.keys) {
+      SoLoud.instance.setPause(_handles![key]!.handle, true);
     }
 
-    metronomeTimer?.cancel();
-    metronomeTimer = null;
+    _pauseMetronome();
   }
 
+  /// Play all stems and start metronome
   @override
   void play() async {
-    for (final key in handles.keys) {
-      SoLoud.instance.setPause(handles[key]!.handle, false);
+    if (_metronomeTimer != null) {
+      throw Exception("Can't play metronome, it's already playing");
     }
 
-    metronomeTimer ??= Timer.periodic(
-      Duration(milliseconds: 20),
-      (_) => _onMetronomeTick(),
-    );
+    for (final key in _handles!.keys) {
+      SoLoud.instance.setPause(_handles![key]!.handle, false);
+    }
+
+    _metronomeTimer = _playMetronomeTimer();
   }
 
+  /// Seek all stems and metronome to the given position
   @override
   void seek(Duration position) {
-    for (final key in handles.keys) {
-      SoLoud.instance.seek(handles[key]!.handle, position);
+    if (_metronomeBeats == null) {
+      throw Exception("Can't seek because metronome beats are null");
     }
 
-    // Use binary search to find the next tick position
-    int left = 0;
-    int right = musicBeatsPositionsMs.length;
-    while (left < right) {
-      int mid = left + (right - left) ~/ 2;
-      if (musicBeatsPositionsMs[mid] < position.inMilliseconds) {
-        left = mid + 1;
-      } else {
-        right = mid;
-      }
+    for (final key in _handles!.keys) {
+      SoLoud.instance.seek(_handles![key]!.handle, position);
     }
-    nextTickPosition = left;
+    _seekMetronome(position);
+  }
+
+  /// Sets metronome speed
+  @override
+  void setMetronomeSpeed(MetronomeSpeed speed) {
+    _metronomeSpeed = speed;
+    // we need to adjust nextTickPosition to be aligned with the new speed
+    while (_metronomeNextTick! % _metronomeSpeed!.multiplier != 0) {
+      _metronomeNextTick = _metronomeNextTick! + 1;
+    }
+  }
+
+  /// Sets metronome enabled/disabled
+  @override
+  void setMetronomeEnabled(bool enabled) {
+    _metronomeIsEnabled = enabled;
   }
 
   @override
+  void setMetronomeVolume(double volume) {
+    // TODO: implement setMetronomeVolume
+  }
+
+  /// Sets volume for a specific stem
+  @override
   void setVolume(StemName stemName, double volume) {
-    final handlePair = handles[stemName];
+    final handlePair = _handles![stemName];
     if (handlePair != null) {
       SoLoud.instance.setVolume(handlePair.handle, volume);
     }
   }
 
+  /// Sets the callback to be called when the song ends
   @override
   void onEnd(Null Function() callback) {
-    endCallBack = callback;
+    _endCallBack = callback;
   }
 
+  ///  Seek metronome to the given position
+  void _seekMetronome(Duration position) {
+    // Use binary search to find the next tick position
+    int left = 0;
+    int right = _metronomeBeats!.length;
+    while (left < right) {
+      int mid = left + (right - left) ~/ 2;
+      if (_metronomeBeats![mid] < position.inMilliseconds) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    _metronomeNextTick = left;
+  }
+
+  /// Play metronome timer
+  Timer _playMetronomeTimer() {
+    return Timer.periodic(
+      Duration(milliseconds: 20),
+      (_) => _onMetronomeTick(),
+    );
+  }
+
+  /// Pause (kills) metronome timer
+  void _pauseMetronome() {
+    _metronomeTimer?.cancel();
+    _metronomeTimer = null;
+  }
+
+  /// Resets handles and their volumes as they were before the song ended
+  Future<void> _resetsHandles() async {
+    final Map<StemName, SoundHandlePair> newHandles = {};
+    for (final entry in _sources!.entries) {
+      final stemName = entry.key;
+      final source = entry.value;
+      final volume = _handles![stemName]!.volume;
+      final handle = await SoLoud.instance.play(source, paused: true);
+      SoLoud.instance.setVolume(handle, volume);
+      newHandles[stemName] = SoundHandlePair(handle, volume);
+    }
+    _handles!
+      ..clear()
+      ..addAll(newHandles);
+  }
+
+  /// Reset metronome to the beginning
+  void _resetMetronome() {
+    if (_metronomeIsEnabled == null ||
+        _metronomeSpeed == null ||
+        _metronomeVolume == null ||
+        _metronomeBeats == null ||
+        _metronomeSource == null) {
+      throw Exception('Metronome data not loaded');
+    }
+
+    _pauseMetronome();
+    _metronomeNextTick = 0;
+  }
+
+  /// Clear all sound handles
+  Future<void> _cleanHandles() async {
+    for (final handlePair in _handles!.values) {
+      await SoLoud.instance.stop(handlePair.handle);
+    }
+    _handles!.clear();
+  }
+
+  /// Clear all audio sources
+  Future<void> _cleanSources() async {
+    await SoLoud.instance.disposeAllSources();
+    _sources?.clear();
+  }
+
+  /// Clear end of song callback and subscription
+  void _cleanEndSong() {
+    _endSubscription?.cancel();
+    _endCallBack = null;
+  }
+
+  /// Clear metronome resources
+  Future<void> _cleanMetronome() async {
+    if (_metronomeSource != null) {
+      await SoLoud.instance.disposeSource(_metronomeSource!);
+      _metronomeSource = null;
+    }
+    if (_metronomeTimer != null) {
+      _pauseMetronome();
+    }
+    _metronomeIsEnabled = null;
+    _metronomeNextTick = null;
+    _metronomeSpeed = null;
+    _metronomeBeats = null;
+    _metronomeVolume = null;
+  }
+
+  /// Load a track for a specific stem
   Future<void> _loadTrack(
     StemName stemName,
     String? path,
@@ -164,90 +294,41 @@ class SoloudImplementation implements PlayerInterface {
       logger.i("$stemName is null");
     } else {
       final source = await SoLoud.instance.loadFile(path, mode: LoadMode.disk);
-      sources[stemName] = source;
+      _sources![stemName] = source;
       final handle = await SoLoud.instance.play(source, paused: true);
       SoLoud.instance.setVolume(handle, volume);
-      handles[stemName] = SoundHandlePair(handle, volume);
+      _handles![stemName] = SoundHandlePair(handle, volume);
     }
   }
 
-  Future<void> _clearHandles() async {
-    for (final handlePair in handles.values) {
-      await SoLoud.instance.stop(handlePair.handle);
-    }
-    handles.clear();
-  }
-
-  Future<void> _clearSources() async {
-    await SoLoud.instance.disposeAllSources();
-    sources.clear();
-  }
-
-  // Restore handles and their volumes as they were before
-  Future<void> _restoreHandles() async {
-    final Map<StemName, SoundHandlePair> newHandles = {};
-    for (final entry in sources.entries) {
-      final stemName = entry.key;
-      final source = entry.value;
-      final volume = handles[stemName]!.volume;
-      final handle = await SoLoud.instance.play(source, paused: true);
-      SoLoud.instance.setVolume(handle, volume);
-      newHandles[stemName] = SoundHandlePair(handle, volume);
-    }
-    handles
-      ..clear()
-      ..addAll(newHandles);
-  }
-
+  /// Load metronome data
   Future<void> _loadMetronomeData(
     List<double> musicBeatsPositionsMs,
     bool isMetronomeEnabled,
     MetronomeSpeed metronomeSpeed,
     double metronomeVolume,
   ) async {
-    nextTickPosition = 0;
-    this.metronomeSpeed = metronomeSpeed;
-    this.isMetronomeEnabled = isMetronomeEnabled;
-    this.musicBeatsPositionsMs = musicBeatsPositionsMs;
-    this.metronomeVolume = metronomeVolume;
-    metronomeSource = await SoLoud.instance.loadAsset(
+    _metronomeSpeed = metronomeSpeed;
+    _metronomeIsEnabled = isMetronomeEnabled;
+    _metronomeBeats = musicBeatsPositionsMs;
+    _metronomeVolume = metronomeVolume;
+    _metronomeSource = await SoLoud.instance.loadAsset(
       'assets/sounds/metronome_click.wav',
       mode: LoadMode.memory,
     );
-    metronomeTimer = null;
   }
 
+  /// Handles metronome tick events
   void _onMetronomeTick() {
     final currentTimeMs = currentPosition.inMilliseconds.toDouble();
 
-    if (nextTickPosition >= musicBeatsPositionsMs.length) {
-      metronomeTimer?.cancel();
-      metronomeTimer = null;
-      SoLoud.instance.disposeSource(metronomeSource!);
-    } else if (musicBeatsPositionsMs[nextTickPosition] <= currentTimeMs) {
-      if (isMetronomeEnabled) {
-        SoLoud.instance.play(metronomeSource!, volume: metronomeVolume);
+    if (_metronomeNextTick! >= _metronomeBeats!.length) {
+      _pauseMetronome();
+    } else if (_metronomeBeats![_metronomeNextTick!] <= currentTimeMs) {
+      if (_metronomeIsEnabled!) {
+        SoLoud.instance.play(_metronomeSource!, volume: _metronomeVolume!);
       }
-      nextTickPosition = nextTickPosition + metronomeSpeed.multiplier;
+      _metronomeNextTick = _metronomeNextTick! + _metronomeSpeed!.multiplier;
     }
-  }
-
-  @override
-  void setMetronomeSpeed(MetronomeSpeed speed) {
-    metronomeSpeed = speed;
-    // we need to adjust nextTickPosition to be aligned with the new speed
-    while (nextTickPosition % metronomeSpeed.multiplier != 0) {
-      nextTickPosition++;
-    }
-  }
-
-  @override
-  void setMetronomeVolume(double volume) {
-    // TODO: implement setMetronomeVolume
-  }
-
-  @override
-  void setMetronomeEnabled(bool enabled) {
-    isMetronomeEnabled = enabled;
   }
 }
