@@ -8,27 +8,29 @@ import 'package:stemix_frontend/features/player/bloc/player_event.dart'; */
 import 'package:stemix_frontend/features/player/bloc/player_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
-import 'package:stemix_frontend/theme/app_theme.dart';
 
 Widget buildStemsControls(BuildContext context, PlayerLoaded state) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppTheme.defaultWhite, width: 1.5),
+      border: Border.all(
+        color: Theme.of(context).colorScheme.outline,
+        width: 1.5,
+      ),
     ),
     padding: const EdgeInsets.symmetric(vertical: 10),
     child: Column(
       children: [
         buildAudioControl(context, state, StemName.vocals),
-        Divider(color: AppTheme.defaultWhite, height: 0.5),
+        Divider(),
         buildAudioControl(context, state, StemName.drums),
-        Divider(color: AppTheme.defaultWhite, height: 0.5),
+        Divider(),
         buildAudioControl(context, state, StemName.guitar),
-        Divider(color: AppTheme.defaultWhite, height: 0.5),
+        Divider(),
         buildAudioControl(context, state, StemName.bass),
-        Divider(color: AppTheme.defaultWhite, height: 0.5),
+        Divider(),
         buildAudioControl(context, state, StemName.piano),
-        Divider(color: AppTheme.defaultWhite, height: 0.5),
+        Divider(),
         buildAudioControl(context, state, StemName.other),
       ],
     ),
@@ -55,10 +57,16 @@ Widget buildAudioControl(
             Container(
               width: 36,
               height: 36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              /* 
+              color: Theme.of(context).colorScheme.primary, */
               child: Icon(
-                Icons.volcano,
-                size: 28,
-                color: AppTheme.defaultWhite,
+                stemName != null ? getStemIcon(stemName) : Icons.timer_outlined,
+                size: 24,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             const SizedBox(width: 12),
@@ -69,7 +77,7 @@ Widget buildAudioControl(
                   volume > 0
                       ? Icons.volume_up_rounded
                       : Icons.volume_off_rounded,
-                  color: AppTheme.defaultWhite,
+                  /* color: AppTheme.defaultWhite, */
                   size: 28,
                 ),
                 onPressed: () {
@@ -137,7 +145,7 @@ Widget _buildSpeedOption(
       width: 70,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: AppTheme.defaultWhite, width: 1.5),
+        border: Border.all(/* color: AppTheme.defaultWhite,  */ width: 1.5),
         color: isSelected ? Theme.of(context).colorScheme.primary : null,
         borderRadius: BorderRadius.circular(20),
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stemix_frontend/theme/app_theme.dart';
 
 class DefaultImagePlaceholder extends StatelessWidget {
   final double size;
@@ -13,16 +12,8 @@ class DefaultImagePlaceholder extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: AppTheme.defaultImagePlaceholderBackground,
-      ),
-      child: Center(
-        child: Icon(
-          Icons.music_note,
-          size: iconSize,
-          color: AppTheme.defaultImagePlaceholderForeground,
-        ),
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
+      child: Center(child: Icon(Icons.music_note, size: iconSize)),
     );
   }
 }

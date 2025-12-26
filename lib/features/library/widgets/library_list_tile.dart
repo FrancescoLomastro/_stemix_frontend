@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/library/bloc/library_bloc.dart';
-import 'package:stemix_frontend/theme/widgets/default_image_placeholder.dart';
+import 'package:stemix_frontend/widgets/default_image_placeholder.dart';
 
 class SongListTile extends StatelessWidget {
   final Song song;
@@ -33,6 +33,7 @@ class SongListTile extends StatelessWidget {
               _buildCoverImage(60),
               const SizedBox(width: 14),
               _buildSongInfo(context),
+              _buildSongDuration(context),
             ],
           ),
         ),
@@ -86,7 +87,12 @@ class SongListTile extends StatelessWidget {
         children: [
           Text(song.title, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 4),
-          Text(song.artist, style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            song.artist,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );
@@ -97,5 +103,20 @@ class SongListTile extends StatelessWidget {
       context.read<LibraryBloc>().add(ToggleSelectionModeEvent());
       context.read<LibraryBloc>().add(ToggleSongSelectionEvent(song.id));
     }
+  }
+
+  Widget _buildSongDuration(BuildContext context) {
+    final duration = Duration(seconds: song.duration);
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    final durationStr =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
+    return Text(
+      durationStr,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
   }
 }

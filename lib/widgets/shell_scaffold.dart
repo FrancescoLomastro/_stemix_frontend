@@ -15,9 +15,7 @@ class ShellScaffold extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return Container(
-      child: Column(children: [Expanded(child: child)]),
-    );
+    return Column(children: [Expanded(child: child)]);
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
@@ -26,7 +24,7 @@ class ShellScaffold extends StatelessWidget {
         border: Border(
           top: BorderSide(
             color: Theme.of(context).colorScheme.outline,
-            width: 1.5,
+            width: 0.5,
           ),
         ),
       ),
@@ -53,7 +51,7 @@ class ShellScaffold extends StatelessWidget {
               ),
               _buildNavItem(
                 context: context,
-                icon: Icons.person,
+                icon: Icons.settings,
                 label: 'Settings',
               ),
             ],
@@ -89,7 +87,7 @@ class ShellScaffold extends StatelessWidget {
               size: 26,
               color: isSelected
                   ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurface,
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             SizedBox(height: 4),
             Text(
@@ -97,7 +95,7 @@ class ShellScaffold extends StatelessWidget {
               style: TextStyle(
                 color: isSelected
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface,
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),

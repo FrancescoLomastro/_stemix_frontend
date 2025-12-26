@@ -161,15 +161,22 @@ void _showDeleteDialog(BuildContext context, LibraryState state) {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx),
-          child: const Text("Cancel"),
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
         ),
-        TextButton(
+        FilledButton(
           onPressed: () {
             Navigator.pop(ctx);
             context.read<LibraryBloc>().add(DeleteSelectedSongsEvent());
             _showDeletingDialog(context);
           },
-          child: const Text("Delete"),
+          style: FilledButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+          child: Text("Delete"),
         ),
       ],
     ),
@@ -186,8 +193,9 @@ void _showDeletingDialog(BuildContext context) {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: const [
+          SizedBox(height: 16),
           CircularProgressIndicator(),
-          SizedBox(height: 8),
+          SizedBox(height: 32),
           Text("Deleting..."),
         ],
       ),

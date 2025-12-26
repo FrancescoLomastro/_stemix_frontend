@@ -12,7 +12,8 @@ import 'package:stemix_frontend/deps_injection/injection.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/upload/bloc/upload_bloc.dart';
 import 'package:stemix_frontend/router/app_router.dart';
-import 'package:stemix_frontend/theme/app_theme.dart';
+import 'package:stemix_frontend/theme/theme.dart';
+import 'package:stemix_frontend/theme/util.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(
@@ -40,14 +41,14 @@ void main() async {
 
   /* await debugDeleteAllSongs(); */
 
-  for (int i = 0; i < 2; i++) {
+  /* for (int i = 0; i < 2; i++) {
     await debugCreateSong(
       title: "Canzone di Test #$i",
       artist: "Artista di Test",
       hasImage: i % 2 == 0,
       hasAudio: true,
     );
-  }
+  } */
   /* await debugLogAllSongs(); */
   // =================================================================
 
@@ -61,13 +62,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final uploadBlocProvider = BlocProvider(create: (_) => getIt<UploadBloc>());
 
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    TextTheme textTheme = createTextTheme(context, "Roboto", "Roboto");
+    MaterialTheme theme = MaterialTheme(textTheme);
+
     return MultiBlocProvider(
       providers: [uploadBlocProvider],
       child: MaterialApp.router(
         title: 'SteMix',
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.dark,
+        theme: /*brightness == Brightness.light ? theme.light() : */ theme
+            .dark(),
         routerConfig: appRouter,
       ),
     );

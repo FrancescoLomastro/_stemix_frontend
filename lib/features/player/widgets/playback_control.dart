@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
-import 'package:stemix_frontend/theme/app_theme.dart';
+import 'package:stemix_frontend/theme/icons/custom_icons_icons.dart';
 
 Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
   final skipForwardAmount = 10;
@@ -15,20 +15,15 @@ Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
       Column(
         children: [
           IconButton(
-            icon: const Icon(Icons.skip_previous_rounded),
-            iconSize: 42,
-            color: AppTheme.defaultWhite,
+            icon: const Icon(CustomIcons.skip_left),
+            iconSize: 30,
             onPressed: () => context.read<PlayerBloc>().add(
               SkipDurationEvent(amount: skipBackwardAmount),
             ),
           ),
           Text(
             "${skipBackwardAmount}s",
-            style: TextStyle(
-              color: AppTheme.defaultWhite,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -46,12 +41,16 @@ Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
           height: 80,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.defaultWhite,
+            color: Theme.of(context).colorScheme.primary,
           ),
-          child: Icon(
-            state.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-            size: 42,
-            color: AppTheme.defaultBlack,
+          child: Padding(
+            padding: state.isPlaying
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(left: 3.0),
+            child: Icon(
+              state.isPlaying ? CustomIcons.pause : CustomIcons.play,
+              size: 35,
+            ),
           ),
         ),
       ),
@@ -62,20 +61,15 @@ Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.skip_next_rounded),
-            iconSize: 42,
-            color: AppTheme.defaultWhite,
+            icon: const Icon(CustomIcons.skip_right),
+            iconSize: 30,
             onPressed: () => context.read<PlayerBloc>().add(
               SkipDurationEvent(amount: skipForwardAmount),
             ),
           ),
           Text(
             "+${skipForwardAmount}s",
-            style: TextStyle(
-              color: AppTheme.defaultWhite,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
         ],
       ),

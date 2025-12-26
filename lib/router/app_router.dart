@@ -6,7 +6,7 @@ import 'package:stemix_frontend/features/player/player_page.dart';
 import 'package:stemix_frontend/features/playlists/playlists_page.dart';
 import 'package:stemix_frontend/features/settings/settings_page.dart';
 import 'package:stemix_frontend/features/upload/upload_page.dart';
-import 'package:stemix_frontend/theme/widgets/shell_scaffold.dart';
+import 'package:stemix_frontend/widgets/shell_scaffold.dart';
 
 /// The navigator key for the root navigator.
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
