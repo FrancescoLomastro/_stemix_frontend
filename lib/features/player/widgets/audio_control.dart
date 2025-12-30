@@ -61,8 +61,6 @@ Widget buildAudioControl(
                 borderRadius: BorderRadius.circular(8),
                 color: Theme.of(context).colorScheme.primary,
               ),
-              /* 
-              color: Theme.of(context).colorScheme.primary, */
               child: Icon(
                 stemName != null ? getStemIcon(stemName) : Icons.timer_outlined,
                 size: 24,
@@ -145,9 +143,12 @@ Widget _buildSpeedOption(
       width: 70,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        border: Border.all(/* color: AppTheme.defaultWhite,  */ width: 1.5),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline,
+          width: 1.5,
+        ),
         color: isSelected ? Theme.of(context).colorScheme.primary : null,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Text(label, textAlign: TextAlign.center),
     ),
