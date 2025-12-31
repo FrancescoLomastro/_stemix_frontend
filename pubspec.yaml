@@ -64,6 +64,15 @@ dependencies:
   rxdart: ^0.28.0
   google_fonts: ^6.3.3
 
+  # For storing simple preferences data  locally
+  shared_preferences: ^2.5.4
+
+  # For HTTP requests
+  dio: ^5.9.0
+
+  # For picking files from device
+  file_picker: ^10.3.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

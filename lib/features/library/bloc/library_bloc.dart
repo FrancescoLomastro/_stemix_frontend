@@ -24,17 +24,24 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     ToggleSongSelectionEvent event,
     Emitter<LibraryState> emit,
   ) {
-    if (state is LibraryLoaded) {
-      final currentState = state as LibraryLoaded;
-      final newSelection = Set<int>.from(currentState.selectedSongIds);
+    try {
+      if (state is LibraryLoaded) {
+        final currentState = state as LibraryLoaded;
+        final newSelection = Set<int>.from(currentState.selectedSongIds);
 
-      if (newSelection.contains(event.songId)) {
-        newSelection.remove(event.songId);
-      } else {
-        newSelection.add(event.songId);
+        if (newSelection.contains(event.songId)) {
+          newSelection.remove(event.songId);
+        } else {
+          newSelection.add(event.songId);
+        }
+
+        emit(currentState.copyWith(selectedSongIds: newSelection));
       }
-
-      emit(currentState.copyWith(selectedSongIds: newSelection));
+    } catch (e, stackTrace) {
+      String message =
+          "_onToggleSongSelection error: ${e.toString()}, stackTrace: $stackTrace";
+      logger.e(message);
+      emit(LibraryError(message: message));
     }
   }
 
@@ -42,14 +49,21 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     ToggleSelectionModeEvent event,
     Emitter<LibraryState> emit,
   ) {
-    if (state is LibraryLoaded) {
-      final currentState = state as LibraryLoaded;
-      emit(
-        currentState.copyWith(
-          isSelectionMode: !currentState.isSelectionMode,
-          selectedSongIds: const {},
-        ),
-      );
+    try {
+      if (state is LibraryLoaded) {
+        final currentState = state as LibraryLoaded;
+        emit(
+          currentState.copyWith(
+            isSelectionMode: !currentState.isSelectionMode,
+            selectedSongIds: const {},
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      String message =
+          "_onToggleSelectionMode error: ${e.toString()}, stackTrace: $stackTrace";
+      logger.e(message);
+      emit(LibraryError(message: message));
     }
   }
 
@@ -62,8 +76,10 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       final songs = await _songRepository.getAllSongs();
       emit(LibraryLoaded(songs: songs));
     } catch (e, stackTrace) {
-      logger.e("LibraryBloc - _onLoadSongs error: $e, $stackTrace");
-      emit(LibraryError(message: "Error loading songs: ${e.toString()}"));
+      String message =
+          "_onLoadSongs error: ${e.toString()}, stackTrace: $stackTrace";
+      logger.e(message);
+      emit(LibraryError(message: message));
     }
   }
 
@@ -81,8 +97,10 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
           currentState.selectedSongIds.toList(),
         );
       } catch (e, stackTrace) {
-        logger.e("LibraryBloc - _onDeleteSelected error: $e, $stackTrace");
-        emit(LibraryError(message: "Error deleting songs: ${e.toString()}"));
+        String message =
+            "_onDeleteSelected error: ${e.toString()}, stackTrace: $stackTrace";
+        logger.e(message);
+        emit(LibraryError(message: message));
       } finally {
         emit(LibraryDeleting(completed: true));
         add(LoadSongsEvent());
@@ -92,12 +110,19 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
 
   void _onSelectAll(SelectAllEvent event, Emitter<LibraryState> emit) {
     if (state is LibraryLoaded) {
-      final currentState = state as LibraryLoaded;
-      if (event.isSelect) {
-        final allIds = currentState.songs.map((s) => s.id).toSet();
-        emit(currentState.copyWith(selectedSongIds: allIds));
-      } else {
-        emit(currentState.copyWith(selectedSongIds: {}));
+      try {
+        final currentState = state as LibraryLoaded;
+        if (event.isSelect) {
+          final allIds = currentState.songs.map((s) => s.id).toSet();
+          emit(currentState.copyWith(selectedSongIds: allIds));
+        } else {
+          emit(currentState.copyWith(selectedSongIds: {}));
+        }
+      } catch (e, stackTrace) {
+        String message =
+            "_onSelectAll error: ${e.toString()}, stackTrace: $stackTrace";
+        logger.e(message);
+        emit(LibraryError(message: message));
       }
     }
   }

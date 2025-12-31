@@ -21,7 +21,7 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   Stream<int> get positionStream => _positionStream;
 
   PlayerBloc(this._player, this._songRepository, @factoryParam this._song)
-    : super(PlayerState()) {
+    : super(PlayerLoading()) {
     _positionStream = _player.positionStream;
 
     on<LoadPlayerEvent>(_onLoadPlayerEvent);
