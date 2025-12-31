@@ -1,50 +1,44 @@
 part of 'library_bloc.dart';
 
+enum LibraryStatus { initial, loading, success, failure, deleting }
+
 class LibraryState extends Equatable {
-  const LibraryState();
-  @override
-  List<Object?> get props => [];
-}
-
-class LibraryLoading extends LibraryState {}
-
-class LibraryLoaded extends LibraryState {
+  final LibraryStatus status;
   final List<Song> songs;
   final bool isSelectionMode;
   final Set<int> selectedSongIds;
+  final String? errorMessage;
 
-  const LibraryLoaded({
-    required this.songs,
+  const LibraryState({
+    this.status = LibraryStatus.initial,
+    this.songs = const [],
     this.isSelectionMode = false,
     this.selectedSongIds = const {},
+    this.errorMessage,
   });
 
-  LibraryLoaded copyWith({
+  LibraryState copyWith({
+    LibraryStatus? status,
     List<Song>? songs,
     bool? isSelectionMode,
     Set<int>? selectedSongIds,
+    String? errorMessage,
   }) {
-    return LibraryLoaded(
+    return LibraryState(
+      status: status ?? this.status,
       songs: songs ?? this.songs,
       isSelectionMode: isSelectionMode ?? this.isSelectionMode,
       selectedSongIds: selectedSongIds ?? this.selectedSongIds,
+      errorMessage: errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [songs, isSelectionMode, selectedSongIds];
-}
-
-class LibraryDeleting extends LibraryState {
-  final bool completed;
-  const LibraryDeleting({this.completed = false});
-  @override
-  List<Object?> get props => [completed];
-}
-
-class LibraryError extends LibraryState {
-  final String message;
-  const LibraryError({required this.message});
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [
+    status,
+    songs,
+    isSelectionMode,
+    selectedSongIds,
+    errorMessage,
+  ];
 }
