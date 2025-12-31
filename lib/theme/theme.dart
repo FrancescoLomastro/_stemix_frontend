@@ -174,7 +174,8 @@ class MaterialTheme {
   static const Color darkOnSurfaceVariant = Color(0xff909090);
 
   static const Color darkPrimary = Color(0xff4e1775);
-  static const Color darkOnPrimary = Color(0xffaf53fa);
+  static const Color darkOnPrimary = Color(0xffffffff);
+  static const Color darkOnPrimaryContainer = Color(0xffaf53fa);
 
   static const Color darkSecondary = Color(0xff8753b1);
 
@@ -203,7 +204,7 @@ class MaterialTheme {
       primary: darkPrimary,
       onPrimary: darkOnPrimary,
       primaryContainer: Color(0xff9810fa),
-      onPrimaryContainer: Color(0xfff5e2ff),
+      onPrimaryContainer: darkOnPrimaryContainer,
       primaryFixed: Color(0xfff1dbff),
       onPrimaryFixed: Color(0xff2d0050),
       primaryFixedDim: Color(0xffdeb7ff),

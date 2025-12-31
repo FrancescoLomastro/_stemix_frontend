@@ -4,6 +4,8 @@ import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/library/library_page.dart';
 import 'package:stemix_frontend/features/player/player_page.dart';
 import 'package:stemix_frontend/features/playlists/playlists_page.dart';
+import 'package:stemix_frontend/features/settings/bloc/settings_bloc.dart';
+import 'package:stemix_frontend/features/settings/server_settings_page.dart';
 import 'package:stemix_frontend/features/settings/settings_page.dart';
 import 'package:stemix_frontend/features/upload/upload_page.dart';
 import 'package:stemix_frontend/widgets/shell_scaffold.dart';
@@ -58,9 +60,18 @@ final GoRoute playerRoute = GoRoute(
   },
 );
 
+final GoRoute serverSettingsRoute = GoRoute(
+  path: '/server-settings',
+  parentNavigatorKey: rootNavigatorKey,
+  builder: (context, state) {
+    final bloc = state.extra as SettingsBloc;
+    return ServerSettingsPage(settingsBloc: bloc);
+  },
+);
+
 /// The main app router. Library is the initial location.
 final GoRouter appRouter = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: '/library',
-  routes: [shellRoute, playerRoute],
+  routes: [shellRoute, playerRoute, serverSettingsRoute],
 );

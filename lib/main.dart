@@ -29,7 +29,7 @@ final logger = Logger(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MetadataGod.initialize();
-  configureDependencies();
+  await configureDependencies();
 
   // =================================================================
   // 🛠️ ZONA MANUTENZIONE DATABASE 🛠️

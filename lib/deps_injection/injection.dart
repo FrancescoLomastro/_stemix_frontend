@@ -15,12 +15,10 @@ final getIt = GetIt.instance;
 /// 2. The function that calls the "init()" method
 ///    [At runtime]
 ///
-/// Comando per generare il file injection.config.dart:
+/// Command to generate the file injection.config.dart:
 /// flutter pub run build_runner build --delete-conflicting-outputs
 ///
-@InjectableInit(
-  initializerName: 'init',
-  preferRelativeImports: true,
-  asExtension: true,
-)
-void configureDependencies() => getIt.init();
+@InjectableInit()
+Future<void> configureDependencies() async {
+  await getIt.init();
+}

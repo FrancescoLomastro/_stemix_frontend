@@ -1,22 +1,17 @@
-import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@lazySingleton
 class PreferencesService {
-  static const _kIpKey = 'server_ip';
-  static const _kPortKey = 'server_port';
+  late final SharedPreferences _prefs;
+  final _kIpKey = 'server_ip';
+  final _kPortKey = 'server_port';
 
-  Future<void> saveConnectionSettings(String ip, String port) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_kIpKey, ip);
-    await prefs.setString(_kPortKey, port);
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  Future<(String, String)> getConnectionSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    return (
-      prefs.getString(_kIpKey) ?? '127.0.0.1',
-      prefs.getString(_kPortKey) ?? '8080',
-    );
-  }
+  String getServerIp() => _prefs.getString(_kIpKey) ?? '127.0.0.1';
+  Future<void> setServerIp(String ip) => _prefs.setString(_kIpKey, ip);
+
+  String getServerPort() => _prefs.getString(_kPortKey) ?? '8080';
+  Future<void> setServerPort(String port) => _prefs.setString(_kPortKey, port);
 }
