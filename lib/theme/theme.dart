@@ -171,6 +171,7 @@ class MaterialTheme {
   } */
   static const Color darkSurface = Color(0xff000000);
   static const Color darkSurfaceContainer = Color(0xff111111);
+  static const Color darkOnSurfaceContainer = Color(0xff909090);
 
   static const Color darkOnSurface = Color(0xffffffff);
   static const Color darkOnSurfaceVariant = Color(0xff909090);
@@ -180,6 +181,8 @@ class MaterialTheme {
   static const Color darkOnPrimaryContainer = Color(0xffaf53fa);
 
   static const Color darkSecondary = Color(0xff8753b1);
+
+  static const Color darkTertiary = Color(0xff06402b);
 
   static const Color darkError = Color(0xfffe028d);
   static const Color darkOnError = Color(0xffffffff);
@@ -223,7 +226,7 @@ class MaterialTheme {
       secondaryFixedDim: Color(0xffdeb7ff),
       onSecondaryFixedVariant: Color(0xff612894),
 
-      tertiary: Color(0xffffaed9),
+      tertiary: darkTertiary,
       onTertiary: Color(0xff610046),
       tertiaryContainer: Color(0xffc50092),
       onTertiaryContainer: Color(0xffffe1ee),
@@ -233,6 +236,7 @@ class MaterialTheme {
       onTertiaryFixedVariant: Color(0xff890064),
 
       error: darkError,
+
       onError: darkOnError,
 
       errorContainer: Color(0xff93000a),
@@ -287,6 +291,28 @@ class MaterialTheme {
     return DividerThemeData(color: darkOnSurface, thickness: 1, space: 0.5);
   }
 
+  static InputDecorationThemeData darkInputDecorationTheme() {
+    return InputDecorationThemeData(
+      filled: true,
+      fillColor: darkSurfaceContainer,
+      labelStyle: TextStyle(color: darkOnSurfaceVariant),
+      floatingLabelStyle: TextStyle(color: darkOnPrimary),
+
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: darkOnSurface, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
+  }
+
   ThemeData dark() {
     return theme(
       darkColorScheme(),
@@ -295,6 +321,7 @@ class MaterialTheme {
       darkProgressIndicatorTheme(),
       darkSliderTheme(),
       darkDividerTheme(),
+      darkInputDecorationTheme(),
     );
   }
 
@@ -415,8 +442,18 @@ class MaterialTheme {
     ProgressIndicatorThemeData progressIndicatorTheme,
     SliderThemeData sliderTheme,
     DividerThemeData? dividerTheme,
+    InputDecorationThemeData inputDecorationTheme,
   ) => ThemeData(
     useMaterial3: true,
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: colorScheme.onSurface,
+      selectionHandleColor: colorScheme.primary,
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      ),
+    ),
     brightness: colorScheme.brightness,
     colorScheme: colorScheme,
     checkboxTheme: checkboxTheme,
@@ -424,6 +461,7 @@ class MaterialTheme {
     progressIndicatorTheme: progressIndicatorTheme,
     sliderTheme: sliderTheme,
     dividerTheme: dividerTheme,
+    inputDecorationTheme: inputDecorationTheme,
     textTheme: textTheme.apply(
       bodyColor: colorScheme.onSurface,
       displayColor: colorScheme.onSurface,

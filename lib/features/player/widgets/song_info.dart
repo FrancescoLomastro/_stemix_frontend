@@ -12,13 +12,11 @@ Widget buildSongInfo(BuildContext context, PlayerLoaded state) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      _buildSongCover(400, song.coverPath),
+      _buildSongCover(370, song.coverPath),
       const SizedBox(height: 30),
       Text(
         song.title,
-        style: Theme.of(
-          context,
-        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.titleLarge,
         overflow: TextOverflow.ellipsis,
       ),
       const SizedBox(height: 4),

@@ -8,7 +8,11 @@ Future<void> showErrorDialog(BuildContext context, String message) {
       title: const Text("Error"),
       content: Text(message),
       actions: [
-        TextButton(
+        FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+            foregroundColor: Theme.of(context).colorScheme.onError,
+          ),
           onPressed: () => Navigator.of(ctx).pop(),
           child: const Text("Ok"),
         ),
