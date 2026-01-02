@@ -51,9 +51,10 @@ class _PlayerView extends StatelessWidget {
                 title: const Text('Player Page'),
                 actions: [
                   IconButton(
-                    icon: state.isSaved
-                        ? const Icon(Icons.save)
-                        : const Icon(Icons.save_outlined),
+                    icon: const Icon(Icons.save),
+                    color: state.isSaved
+                        ? Theme.of(context).colorScheme.onSurfaceVariant
+                        : Theme.of(context).colorScheme.onSurface,
                     onPressed: () {
                       context.read<PlayerBloc>().add(SaveEvent());
                     },
@@ -62,7 +63,7 @@ class _PlayerView extends StatelessWidget {
               ),
               body: SingleChildScrollView(
                 physics: const ScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(15, 10, 15, 40),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

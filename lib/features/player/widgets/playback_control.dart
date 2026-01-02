@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_bloc.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
-import 'package:stemix_frontend/theme/icons/custom_icons_icons.dart';
 
 Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
   final skipForwardAmount = 10;
@@ -12,20 +11,13 @@ Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Column(
-        children: [
-          IconButton(
-            icon: const Icon(CustomIcons.skip_left),
-            iconSize: 30,
-            onPressed: () => context.read<PlayerBloc>().add(
-              SkipDurationEvent(amount: skipBackwardAmount),
-            ),
-          ),
-          Text(
-            "${skipBackwardAmount}s",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-          ),
-        ],
+      IconButton(
+        icon: const Icon(Icons.replay_10),
+        iconSize: 40,
+        onPressed: () => context.read<PlayerBloc>().add(
+          SkipDurationEvent(amount: skipBackwardAmount),
+        ),
+        color: Theme.of(context).colorScheme.onSurface,
       ),
 
       SizedBox(width: 20),
@@ -41,37 +33,25 @@ Widget buildPlayBackControls(BuildContext context, PlayerLoaded state) {
           height: 80,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          child: Padding(
-            padding: state.isPlaying
-                ? EdgeInsets.zero
-                : const EdgeInsets.only(left: 3.0),
-            child: Icon(
-              state.isPlaying ? CustomIcons.pause : CustomIcons.play,
-              size: 35,
-            ),
+          child: Icon(
+            state.isPlaying ? Icons.pause : Icons.play_arrow,
+            size: state.isPlaying ? 50 : 60,
+            color: Theme.of(context).colorScheme.surface,
           ),
         ),
       ),
 
       SizedBox(width: 20),
 
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: const Icon(CustomIcons.skip_right),
-            iconSize: 30,
-            onPressed: () => context.read<PlayerBloc>().add(
-              SkipDurationEvent(amount: skipForwardAmount),
-            ),
-          ),
-          Text(
-            "+${skipForwardAmount}s",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-          ),
-        ],
+      IconButton(
+        icon: const Icon(Icons.forward_10),
+        iconSize: 40,
+        onPressed: () => context.read<PlayerBloc>().add(
+          SkipDurationEvent(amount: skipForwardAmount),
+        ),
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     ],
   );

@@ -27,7 +27,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   ) async {
     await _preferences.setServerIp(event.ip);
     await _preferences.setServerPort(event.port);
-
     emit(state.copyWith(serverIp: event.ip, serverPort: event.port));
   }
 }

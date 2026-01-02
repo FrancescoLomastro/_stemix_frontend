@@ -169,11 +169,13 @@ class MaterialTheme {
   /* ThemeData lightHighContrast() {
     return theme(lightHighContrastScheme());
   } */
-  static const Color darkSurface = Color(0xff131313);
+  static const Color darkSurface = Color(0xff000000);
+  static const Color darkSurfaceContainer = Color(0xff111111);
+
   static const Color darkOnSurface = Color(0xffffffff);
   static const Color darkOnSurfaceVariant = Color(0xff909090);
 
-  static const Color darkPrimary = Color(0xff4e1775);
+  static const Color darkPrimary = Color(0xffff0000);
   static const Color darkOnPrimary = Color(0xffffffff);
   static const Color darkOnPrimaryContainer = Color(0xffaf53fa);
 
@@ -189,6 +191,8 @@ class MaterialTheme {
       brightness: Brightness.dark,
 
       surface: darkSurface,
+      surfaceContainer: darkSurfaceContainer,
+
       onSurface: darkOnSurface,
       onSurfaceVariant: darkOnSurfaceVariant,
       /* surfaceTint: Color(0xffdeb7ff), */
@@ -196,7 +200,6 @@ class MaterialTheme {
       surfaceBright: Color(0xff3e3643), */
       /* surfaceContainerLowest: Color(0xff120c17),
       surfaceContainerLow: Color(0xff1f1925), */
-      surfaceContainer: Color(0xff241d29),
       /* surfaceContainerHigh: Color(0xff2e2733),
       surfaceContainerHighest: Color(0xff39323f), */
       inverseSurface: Color(0xffebdeef),
@@ -251,6 +254,7 @@ class MaterialTheme {
 
   static DialogThemeData darkDialogTheme() {
     return DialogThemeData(
+      backgroundColor: darkSurfaceContainer,
       titleTextStyle: TextStyle(
         color: darkOnSurface,
         fontSize: 20,
@@ -265,8 +269,8 @@ class MaterialTheme {
 
   static SliderThemeData darkSliderTheme() {
     const thumbShape = RoundSliderThumbShape(
-      enabledThumbRadius: 10,
-      disabledThumbRadius: 10,
+      enabledThumbRadius: 6,
+      disabledThumbRadius: 6,
     );
 
     return SliderThemeData(

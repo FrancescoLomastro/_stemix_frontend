@@ -29,12 +29,12 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (isSelectionMode)
               IconButton(
                 icon: const Icon(Icons.delete),
-                // Disabilita il bottone se stiamo già cancellando o se selezione è vuota
                 onPressed:
                     (selectedCount > 0 &&
                         state.status != LibraryStatus.deleting)
                     ? () => showLibraryDeleteConfirm(context, selectedCount)
                     : null,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
           ],
         );

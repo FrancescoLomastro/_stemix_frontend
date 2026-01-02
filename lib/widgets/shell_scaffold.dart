@@ -21,12 +21,7 @@ class ShellScaffold extends StatelessWidget {
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).colorScheme.outline,
-            width: 0.5,
-          ),
-        ),
+        color: Theme.of(context).colorScheme.surfaceContainer,
       ),
       child: SafeArea(
         child: Padding(
@@ -86,7 +81,7 @@ class ShellScaffold extends StatelessWidget {
               icon,
               size: 26,
               color: isSelected
-                  ? Theme.of(context).colorScheme.primary
+                  ? Theme.of(context).colorScheme.onSurface
                   : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             SizedBox(height: 4),
@@ -94,7 +89,7 @@ class ShellScaffold extends StatelessWidget {
               label,
               style: TextStyle(
                 color: isSelected
-                    ? Theme.of(context).colorScheme.primary
+                    ? Theme.of(context).colorScheme.onSurface
                     : Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,

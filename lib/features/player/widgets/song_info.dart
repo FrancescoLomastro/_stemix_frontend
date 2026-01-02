@@ -10,22 +10,23 @@ Widget buildSongInfo(BuildContext context, PlayerLoaded state) {
   final song = context.read<PlayerBloc>().song;
 
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      _buildSongCover(300, song.coverPath),
-      const SizedBox(height: 20),
+      _buildSongCover(400, song.coverPath),
+      const SizedBox(height: 30),
       Text(
         song.title,
-        style: Theme.of(context).textTheme.titleLarge,
-        textAlign: TextAlign.center,
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         overflow: TextOverflow.ellipsis,
       ),
-      const SizedBox(height: 2),
+      const SizedBox(height: 4),
       Text(
         song.artist,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
-        textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
       ),
     ],

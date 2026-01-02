@@ -7,15 +7,5 @@ import 'package:stemix_frontend/features/player/bloc/player_state.dart';
 import 'package:stemix_frontend/features/player/widgets/audio_control.dart';
 
 Widget buildMetronomeControls(BuildContext context, PlayerLoaded state) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: Theme.of(context).colorScheme.outline,
-        width: 1.5,
-      ),
-    ),
-    padding: const EdgeInsets.symmetric(vertical: 10),
-    child: buildAudioControl(context, state, null),
-  );
+  return buildAudioControl(context, state, null);
 }
