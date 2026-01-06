@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:metadata_god/metadata_god.dart';
+import 'package:stemix_frontend/data/remote/song_repository.dart';
+import 'package:stemix_frontend/data/remote/upload_step.dart';
 import 'package:stemix_frontend/main.dart';
 
 part 'upload_event.dart';
@@ -13,15 +17,16 @@ part 'upload_state.dart';
 
 @injectable
 class UploadBloc extends Bloc<UploadEvent, UploadState> {
-  /* final PreferencesService _preferences; */
+  final SongRepository _repository;
 
-  UploadBloc(/* this._preferences */) : super(const UploadState()) {
+  UploadBloc(this._repository) : super(const UploadState()) {
     on<PickFileEvent>(_onPickFile);
     on<TitleChangedEvent>(_onTitleChanged);
     on<ArtistChangedEvent>(_onArtistChanged);
     on<SubmitUploadEvent>(_onSubmit);
     on<ResetUploadEvent>(_onReset);
     on<ErrorOccurredEvent>(_onErrorOccurredEvent);
+    on<PickCoverImageEvent>(_onPickCoverImage);
   }
 
   Future<void> _onTitleChanged(
@@ -58,7 +63,8 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
   ) async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.audio,
+        type: FileType.custom,
+        allowedExtensions: ['mp3', 'wav'],
       );
 
       if (result != null && result.files.single.path != null) {
@@ -94,17 +100,6 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     SubmitUploadEvent event,
     Emitter<UploadState> emit,
   ) async {
-    /* // Validazione
-    if (state.filePath == null) {
-      emit(state.copyWith(errorMessage: "Devi selezionare un file MP3."));
-      return;
-    }
-    if (state.title.isEmpty) {
-      emit(state.copyWith(errorMessage: "Il titolo è obbligatorio."));
-      return;
-    }
-
-    // Inizio Processo
     emit(
       state.copyWith(
         isProcessing: true,
@@ -114,171 +109,72 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
       ),
     );
 
-    final ip = _preferences.getServerIp();
-    final port = _preferences.getServerPort();
-    final baseUrl = 'http://$ip:$port';
-
     try {
-      // 1. UPLOAD
       String fileName = state.filePath!.split(Platform.pathSeparator).last;
       FormData formData = FormData.fromMap({
         "file": await MultipartFile.fromFile(
           state.filePath!,
           filename: fileName,
         ),
-        "title": state.title,
-        "artist": state.artist,
-        // Opzionale: se il backend accetta la cover image caricata manualmente, aggiungila qui
       });
 
-      final response = await _dio.post(
-        '$baseUrl/upload',
-        data: formData,
-        onSendProgress: (count, total) {
-          // Aggiorna progresso upload (0-100 per la fase upload)
-          final percent = ((count / total) * 100).toInt();
-          // Poiché siamo dentro un callback asincrono di Dio, non possiamo usare emit direttamente se il bloc è chiuso,
-          // ma in questo contesto semplice assumiamo di sì.
-          // Nota: per fare un emit qui servirebbe un meccanismo diverso,
-          // per ora simuliamo il progresso 'uploading' come statico o gestito a step.
+      final jobId = await _repository.uploadSong(formData);
+
+      await _repository.monitorJobProgress(
+        pollInterval: Duration(seconds: 5),
+        jobId: jobId,
+        onProgress: (step, progress) {
+          emit(state.copyWith(currentStep: step, progress: progress));
         },
       );
 
-      if (response.statusCode == 200) {
-        final jobId =
-            response.data['id']; // Assumo il server restituisca { "id": "123" }
-        await _pollStatus(jobId, baseUrl, emit);
-      } else {
-        throw Exception("Server upload failed: ${response.statusCode}");
-      }
-    } catch (e) {
-      _logger.e(e);
+      emit(state.copyWith(currentStep: UploadStep.downloading, progress: 0));
+
+      await _repository.download(
+        jobId,
+        state.title,
+        state.artist,
+        onProgress: (p) {
+          emit(state.copyWith(progress: p));
+        },
+      );
+
+      emit(
+        state.copyWith(currentStep: UploadStep.success, isProcessing: false),
+      );
+    } catch (e, stacktrace) {
+      String message = "Error during upload: $e $stacktrace";
+      logger.e(message);
       emit(
         state.copyWith(
           currentStep: UploadStep.failed,
-          errorMessage: "Errore durante l'upload: $e",
+          errorMessage: e.toString(),
           isProcessing: false,
         ),
       );
-    } */
+    }
   }
 
-  /* Future<void> _pollStatus(
-    String jobId,
-    String baseUrl,
+  Future<void> _onPickCoverImage(
+    PickCoverImageEvent event,
     Emitter<UploadState> emit,
   ) async {
-    bool isJobDone = false;
-
-    while (!isJobDone) {
-      try {
-        await Future.delayed(
-          const Duration(seconds: 1),
-        ); // Polling ogni secondo
-
-        final response = await _dio.get('$baseUrl/status/$jobId');
-        final statusStr =
-            response.data['status'] as String; // "Analyzing", "Completed", etc.
-        final progress = response.data['progress'] as int? ?? 0;
-
-        UploadStep step = _mapStatusToStep(statusStr);
-
-        if (step == UploadStep.failed) {
-          emit(
-            state.copyWith(
-              currentStep: UploadStep.failed,
-              errorMessage: "Il server ha segnalato un errore.",
-              isProcessing: false,
-            ),
-          );
-          return;
-        }
-
-        if (step == UploadStep.completed) {
-          isJobDone = true;
-          // Passiamo al download
-          await _downloadAndExtract(jobId, baseUrl, emit);
-        } else {
-          emit(state.copyWith(currentStep: step, progress: progress));
-        }
-      } catch (e) {
-        // Se il polling fallisce (es. rete persa momentaneamente), potremmo riprovare o fallire
-        emit(
-          state.copyWith(
-            currentStep: UploadStep.failed,
-            errorMessage: "Errore durante il controllo stato: $e",
-            isProcessing: false,
-          ),
-        );
-        return;
-      }
-    }
-  } */
-
-  /* Future<void> _downloadAndExtract(
-    String jobId,
-    String baseUrl,
-    Emitter<UploadState> emit,
-  ) async {
-    emit(state.copyWith(currentStep: UploadStep.downloading, progress: 0));
-
     try {
-      final response = await _dio.get(
-        '$baseUrl/download/$jobId',
-        options: Options(responseType: ResponseType.bytes),
-        onReceiveProgress: (count, total) {
-          if (total != -1) {
-            final percent = ((count / total) * 100).toInt();
-            // Nota: attenzione all'emit dentro callback, qui semplifichiamo
-          }
-        },
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png', 'jpeg'],
       );
 
-      // Decomprimi in memoria
-      final archive = ZipDecoder().decodeBytes(response.data);
+      if (result != null && result.files.single.path != null) {
+        final path = result.files.single.path!;
+        final imageBytes = await File(path).readAsBytes();
 
-      _logger.i("Contenuto dello ZIP scaricato:");
-      for (final file in archive) {
-        if (file.isFile) {
-          _logger.i("- ${file.name}");
-        }
+        emit(state.copyWith(coverImageBytes: imageBytes));
       }
-
-      // Tutto finito!
-      emit(
-        state.copyWith(
-          currentStep: UploadStep.success,
-          isProcessing: false,
-          progress: 100,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(
-          currentStep: UploadStep.failed,
-          errorMessage: "Errore download/unzip: $e",
-          isProcessing: false,
-        ),
-      );
+    } catch (e, stackTrace) {
+      String message = "Error selecting cover image: $e $stackTrace";
+      logger.e(message);
+      emit(state.copyWith(errorMessage: message));
     }
-  } */
-
-  /* UploadStep _mapStatusToStep(String serverStatus) {
-    switch (serverStatus.toLowerCase()) {
-      case 'analyzing':
-        return UploadStep.analyzing;
-      case 'separating':
-        return UploadStep.separating;
-      case 'converting':
-        return UploadStep.converting;
-      case 'zipping':
-        return UploadStep.zipping;
-      case 'completed':
-        return UploadStep.completed;
-      case 'failed':
-        return UploadStep.failed;
-      default:
-        return UploadStep.uploading;
-    }
-  } */
+  }
 }

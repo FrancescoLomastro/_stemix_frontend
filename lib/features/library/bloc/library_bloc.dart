@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
-import 'package:stemix_frontend/data/local/repository/song_repository.dart';
+import 'package:stemix_frontend/data/remote/song_repository.dart';
 import 'package:stemix_frontend/main.dart';
 
 part 'library_event.dart';

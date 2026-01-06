@@ -18,7 +18,7 @@ class LibraryBody extends StatelessWidget {
           return _buildLibrary(context, state);
         }
 
-        return _buildEmptyLibrary();
+        return _buildEmptyLibrary(context);
       },
     );
   }
@@ -53,8 +53,31 @@ class LibraryBody extends StatelessWidget {
   }
 
   // Build empty library view
-  Widget _buildEmptyLibrary() {
-    return Center(child: Text("Empty Library"));
+  Widget _buildEmptyLibrary(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.playlist_play,
+              size: 100,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+            SizedBox(height: 15),
+            Text(
+              "No songs in the library.",
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // Build "Select All" checkbox widget

@@ -18,6 +18,8 @@ class SubmitUploadEvent extends UploadEvent {}
 
 class ResetUploadEvent extends UploadEvent {}
 
+class PickCoverImageEvent extends UploadEvent {}
+
 class ErrorOccurredEvent extends UploadEvent {
   final String message;
   ErrorOccurredEvent(this.message);

@@ -14,9 +14,10 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
         final selectedCount = state.selectedSongIds.length;
 
         return AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
           title: isSelectionMode
-              ? Text('$selectedCount selezionati')
-              : const Text('Libreria'),
+              ? Text('$selectedCount selected')
+              : const Text('Library'),
           leading: isSelectionMode
               ? IconButton(
                   icon: const Icon(Icons.close),

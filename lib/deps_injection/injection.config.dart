@@ -9,13 +9,13 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:stemix_frontend/data/local/drift/database.dart' as _i249;
 import 'package:stemix_frontend/data/local/preferences/preferences.dart'
     as _i198;
-import 'package:stemix_frontend/data/local/repository/song_repository.dart'
-    as _i1053;
+import 'package:stemix_frontend/data/remote/song_repository.dart' as _i409;
 import 'package:stemix_frontend/deps_injection/register_module.dart' as _i289;
 import 'package:stemix_frontend/features/library/bloc/library_bloc.dart'
     as _i62;
@@ -34,7 +34,6 @@ extension GetItInjectableX on _i174.GetIt {
   }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
-    gh.factory<_i656.UploadBloc>(() => _i656.UploadBloc());
     await gh.singletonAsync<_i198.PreferencesService>(
       () => registerModule.preferencesService,
       preResolve: true,
@@ -46,18 +45,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i178.SettingsBloc>(
       () => _i178.SettingsBloc(gh<_i198.PreferencesService>()),
     );
-    gh.lazySingleton<_i1053.SongRepository>(
-      () => _i1053.SongRepository(gh<_i249.AppDatabase>()),
+    gh.lazySingleton<_i361.Dio>(
+      () => registerModule.dio(gh<_i198.PreferencesService>()),
+    );
+    gh.lazySingleton<_i409.SongRepository>(
+      () => _i409.SongRepository(gh<_i249.AppDatabase>(), gh<_i361.Dio>()),
+    );
+    gh.factory<_i656.UploadBloc>(
+      () => _i656.UploadBloc(gh<_i409.SongRepository>()),
     );
     gh.factoryParam<_i528.PlayerBloc, _i249.Song, dynamic>(
       (_song, _) => _i528.PlayerBloc(
         gh<_i681.SoloudImplementation>(),
-        gh<_i1053.SongRepository>(),
+        gh<_i409.SongRepository>(),
         _song,
       ),
     );
     gh.factory<_i62.LibraryBloc>(
-      () => _i62.LibraryBloc(gh<_i1053.SongRepository>()),
+      () => _i62.LibraryBloc(gh<_i409.SongRepository>()),
     );
     return this;
   }

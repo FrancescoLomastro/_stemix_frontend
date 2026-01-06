@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:stemix_frontend/data/remote/upload_step.dart';
 import 'package:stemix_frontend/features/upload/bloc/upload_bloc.dart';
+import 'package:stemix_frontend/features/upload/widgets/upload_file_picker.dart';
+import 'package:stemix_frontend/features/upload/widgets/upload_overlay.dart';
 import 'package:stemix_frontend/widgets/error_dialog.dart';
 
 class UploadPage extends StatelessWidget {
@@ -10,10 +11,7 @@ class UploadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.I<UploadBloc>(),
-      child: const _UploadPageView(),
-    );
+    return const _UploadPageView();
   }
 }
 
@@ -25,12 +23,17 @@ class _UploadPageView extends StatefulWidget {
 }
 
 class _UploadPageViewState extends State<_UploadPageView> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _artistController = TextEditingController();
 
-  // Colori per la UI
-  final Color _primaryColor = const Color(0xFF6C63FF); // Un viola moderno
-  final Color _inputFillColor = const Color(0xFFEDF2F7);
+  @override
+  void initState() {
+    super.initState();
+    final currentState = context.read<UploadBloc>().state;
+    _titleController.text = currentState.title;
+    _artistController.text = currentState.artist;
+  }
 
   @override
   void dispose() {
@@ -42,11 +45,6 @@ class _UploadPageViewState extends State<_UploadPageView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UploadBloc, UploadState>(
-      listenWhen: (previous, current) =>
-          previous.errorMessage != current.errorMessage ||
-          previous.title != current.title ||
-          previous.artist != current.artist ||
-          previous.currentStep != current.currentStep,
       listener: (context, state) {
         if (state.errorMessage != null) {
           showErrorDialog(context, state.errorMessage!);
@@ -61,212 +59,172 @@ class _UploadPageViewState extends State<_UploadPageView> {
 
         if (state.currentStep == UploadStep.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Elaborazione completata!"),
-              backgroundColor: Colors.green,
-            ),
+            const SnackBar(content: Text("Song downloaded successfully!")),
           );
           context.read<UploadBloc>().add(ResetUploadEvent());
-          _titleController.clear();
-          _artistController.clear();
         }
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text("Upload New Song")),
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+            title: const Text("Upload New Song"),
+          ),
           body: Stack(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildFilePickerArea(context, state),
-                    const SizedBox(height: 32),
-                    TextField(
-                      controller: _titleController,
-                      enabled: state.filePath != null,
-                      onChanged: (value) {
-                        context.read<UploadBloc>().add(
-                          TitleChangedEvent(value),
-                        );
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "Title",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _artistController,
-                      enabled: state.filePath != null,
-                      onChanged: (value) {
-                        context.read<UploadBloc>().add(
-                          ArtistChangedEvent(value),
-                        );
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "Artist",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: () {},
-                            child: const Text("Upload & Process"),
-                          ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      buildFilePickerArea(context, state),
+                      const SizedBox(height: 32),
+                      TextFormField(
+                        controller: _titleController,
+                        enabled: state.filePath != null,
+                        onChanged: (value) {
+                          context.read<UploadBloc>().add(
+                            TitleChangedEvent(value),
+                          );
+                        },
+                        decoration: const InputDecoration(
+                          labelText: "Title",
+                          border: OutlineInputBorder(),
                         ),
-                      ],
-                    ),
-                  ],
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Title is required.";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: _artistController,
+                        enabled: state.filePath != null,
+                        onChanged: (value) {
+                          context.read<UploadBloc>().add(
+                            ArtistChangedEvent(value),
+                          );
+                        },
+                        decoration: const InputDecoration(
+                          labelText: "Artist",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      buildCoverImage(context, state),
+                      const SizedBox(height: 40),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainer,
+                              ),
+                              onPressed: () {
+                                context.read<UploadBloc>().add(
+                                  ResetUploadEvent(),
+                                );
+                              },
+                              child: const Text("Reset"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: state.filePath != null
+                                  ? () {
+                                      final isValid =
+                                          _formKey.currentState?.validate() ??
+                                          false;
+                                      if (!isValid) return;
+
+                                      context.read<UploadBloc>().add(
+                                        SubmitUploadEvent(),
+                                      );
+                                    }
+                                  : null,
+                              child: const Text("Upload"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              if (state.isProcessing) _buildLoadingOverlay(state),
+              if (state.isProcessing) buildLoadingOverlay(context, state),
             ],
           ),
         );
       },
     );
   }
+}
 
-  Widget _buildFilePickerArea(BuildContext context, UploadState state) {
-    return GestureDetector(
-      onTap: () => context.read<UploadBloc>().add(PickFileEvent()),
-      child: DottedBorder(
-        options: RoundedRectDottedBorderOptions(
-          radius: Radius.circular(12),
-          dashPattern: [8, 4],
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          strokeWidth: 1.5,
+Widget buildCoverImage(BuildContext context, UploadState state) {
+  return GestureDetector(
+    onTap: () {
+      if (state.filePath != null) {
+        context.read<UploadBloc>().add(PickCoverImageEvent());
+      }
+    },
+    child: Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: state.filePath != null ? 1 : 3,
+          color: state.filePath != null
+              ? Theme.of(context).colorScheme.outline
+              : Theme.of(context).colorScheme.surfaceContainer,
         ),
-        child: SizedBox(
-          height: 180,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            height: 96,
+            width: 96,
+            clipBehavior: Clip.antiAlias,
+            child: state.coverImageBytes != null
+                ? Image.memory(state.coverImageBytes!, fit: BoxFit.cover)
+                : Padding(
+                    padding: const EdgeInsets.all(22),
+                    child: Icon(Icons.image_rounded),
+                  ),
+          ),
+          const SizedBox(width: 30),
+          Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: state.filePath != null
-                      ? Theme.of(context).colorScheme.tertiary
-                      : Theme.of(context).colorScheme.surfaceContainer,
-                ),
-                height: 80,
-                width: 80,
-                child: state.filePath != null
-                    ? Icon(
-                        Icons.check,
-                        size: 40,
-                        color: Theme.of(context).colorScheme.outline,
-                      )
-                    : Icon(
-                        Icons.cloud_upload_outlined,
-                        size: 40,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-              ),
-              const SizedBox(height: 16),
               Text(
-                state.filePath != null
-                    ? state.filePath!.split('/').last
-                    : "Select an audio file to upload",
+                "Tap to select a cover image",
                 style: Theme.of(context).textTheme.bodyLarge,
-                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                "JPG, PNG",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.start,
               ),
             ],
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildLoadingOverlay(UploadState state) {
-    return Container(
-      color: Colors.black.withOpacity(0.6),
-      child: Center(
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 10,
-          margin: const EdgeInsets.symmetric(horizontal: 32),
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                    strokeWidth: 6,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  _getStatusMessage(state.currentStep),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "${state.progress}%",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: LinearProgressIndicator(
-                    value: state.progress / 100,
-                    backgroundColor: _inputFillColor,
-                    valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                    minHeight: 8,
-                  ),
-                ),
-                if (state.currentStep == UploadStep.downloading)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Text(
-                      "Finalizing & Downloading...",
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _getStatusMessage(UploadStep step) {
-    switch (step) {
-      case UploadStep.uploading:
-        return "Uploading file...";
-      case UploadStep.analyzing:
-        return "Analyzing audio...";
-      case UploadStep.separating:
-        return "Separating stems...";
-      case UploadStep.converting:
-        return "Converting formats...";
-      case UploadStep.zipping:
-        return "Packing files...";
-      case UploadStep.downloading:
-        return "Downloading results...";
-      default:
-        return "Please wait...";
-    }
-  }
+    ),
+  );
 }

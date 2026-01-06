@@ -1,18 +1,5 @@
 part of 'upload_bloc.dart';
 
-enum UploadStep {
-  idle,
-  uploading,
-  analyzing,
-  separating,
-  converting,
-  zipping,
-  completed,
-  downloading,
-  success,
-  failed,
-}
-
 class UploadState extends Equatable {
   final String? filePath;
   final Uint8List? coverImageBytes;

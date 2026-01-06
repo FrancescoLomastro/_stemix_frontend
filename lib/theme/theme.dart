@@ -187,7 +187,7 @@ class MaterialTheme {
   static const Color darkError = Color(0xfffe028d);
   static const Color darkOnError = Color(0xffffffff);
 
-  static const Color darkOutline = Color(0xffffb4ab);
+  static const Color darkOutline = Color(0xff636363);
 
   static ColorScheme darkColorScheme() {
     return const ColorScheme(
@@ -268,7 +268,11 @@ class MaterialTheme {
   }
 
   static ProgressIndicatorThemeData darkProgressIndicatorTheme() {
-    return ProgressIndicatorThemeData(color: darkSecondary);
+    return ProgressIndicatorThemeData(
+      linearTrackColor: darkOnSurfaceContainer,
+      color: darkPrimary,
+      circularTrackColor: darkOnSurfaceContainer,
+    );
   }
 
   static SliderThemeData darkSliderTheme() {

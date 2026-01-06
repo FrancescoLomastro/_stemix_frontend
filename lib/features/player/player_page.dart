@@ -48,6 +48,7 @@ class _PlayerView extends StatelessWidget {
           } else if (state is PlayerLoaded) {
             return Scaffold(
               appBar: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
                 title: const Text('Player Page'),
                 actions: [
                   IconButton(

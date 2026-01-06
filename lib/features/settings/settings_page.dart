@@ -12,7 +12,10 @@ class SettingsPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => getIt<SettingsBloc>()..add(LoadSettingsEvent()),
       child: Scaffold(
-        appBar: AppBar(title: const Text("Impostazioni")),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          title: const Text("Settings"),
+        ),
         body: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, state) {
             return ListView(

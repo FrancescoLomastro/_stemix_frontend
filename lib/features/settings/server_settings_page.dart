@@ -73,7 +73,10 @@ class _ServerSettingsPageState extends State<ServerSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Server Address")),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+        title: const Text("Server Address"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
