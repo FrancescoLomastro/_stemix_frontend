@@ -134,6 +134,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
         jobId,
         state.title,
         state.artist,
+        state.coverImageBytes,
         onProgress: (p) {
           emit(state.copyWith(progress: p));
         },

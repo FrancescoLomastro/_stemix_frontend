@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
@@ -68,7 +69,8 @@ class SongRepository {
   Future<void> download(
     String jobId,
     String title,
-    String artist, {
+    String artist,
+    Uint8List? coverImageBytes, {
     required void Function(int) onProgress,
   }) async {
     String? zipPath;
@@ -86,7 +88,7 @@ class SongRepository {
         },
       );
 
-      await _unZipAndStore(title, artist, zipPath);
+      await _unZipAndStore(title, artist, coverImageBytes, zipPath);
     } catch (e) {
       rethrow;
     } finally {
@@ -102,6 +104,7 @@ class SongRepository {
   Future<void> _unZipAndStore(
     String title,
     String artist,
+    Uint8List? coverImageBytes,
     String zipFilePath,
   ) async {
     final songId = await _db
@@ -133,9 +136,15 @@ class SongRepository {
       }
     }
 
+    String? coverImagePath;
+    if (coverImageBytes != null) {
+      coverImagePath = p.join(songDirectory, 'cover.jpg');
+      final coverImageFile = File(coverImagePath);
+      await coverImageFile.writeAsBytes(coverImageBytes);
+    }
+
     final Map<String, dynamic> metadata = jsonDecode(metadataContent!);
 
-    String? coverPath;
     String? vocalsPath;
     String? guitarPath;
     String? drumsPath;
@@ -146,9 +155,7 @@ class SongRepository {
     // Cercare i file nello zip estratto
     for (final entry in filePaths.entries) {
       final fileName = p.basename(entry.key).toLowerCase();
-      if (fileName.startsWith('cover')) {
-        coverPath = entry.value;
-      } else if (fileName.startsWith('vocals')) {
+      if (fileName.startsWith('vocals')) {
         vocalsPath = entry.value;
       } else if (fileName.startsWith('guitar')) {
         guitarPath = entry.value;
@@ -171,7 +178,7 @@ class SongRepository {
       title: title,
       artist: artist,
       duration: duration,
-      coverPath: drift.Value(coverPath),
+      coverPath: drift.Value(coverImagePath),
       vocalsPath: drift.Value(vocalsPath),
       guitarPath: drift.Value(guitarPath),
       drumsPath: drift.Value(drumsPath),

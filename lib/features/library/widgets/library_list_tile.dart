@@ -74,7 +74,7 @@ class SongListTile extends StatelessWidget {
               File(song.coverPath!),
               width: size,
               height: size,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             )
           : DefaultImagePlaceholder(size: size),
     );
