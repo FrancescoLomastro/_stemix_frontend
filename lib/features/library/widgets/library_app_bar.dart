@@ -51,6 +51,10 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget buildPopupMenu(BuildContext context, LibraryState state) {
     return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_vert,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
       onSelected: (value) {
         if (value == 'Select') {
           if (!state.isSelectionMode) {
