@@ -28,3 +28,17 @@ class SelectAllEvent extends LibraryEvent {
 }
 
 class DeleteSelectedSongsEvent extends LibraryEvent {}
+
+// Nuovo evento
+class ChangeSortOrderEvent extends LibraryEvent {
+  final SortOption sortOption;
+  final SortDirection sortDirection;
+
+  const ChangeSortOrderEvent({
+    required this.sortOption,
+    required this.sortDirection,
+  });
+
+  @override
+  List<Object> get props => [sortOption, sortDirection];
+}

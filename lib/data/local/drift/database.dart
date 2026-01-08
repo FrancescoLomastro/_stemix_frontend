@@ -54,29 +54,6 @@ class Songs extends Table {
   RealColumn get metronomeVolume => real().withDefault(const Constant(1.0))();
 }
 
-/*
-PER IL FUTURO, PER LA GESTIONE DELLE PLAYLIST
-
-// Tabella Playlist (Nome e ID)
-class Playlists extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text().withLength(min: 1, max: 50)();
-}
-
-// Tabella di Giunzione (Collega Songs <-> Playlists)
-class PlaylistEntries extends Table {
-  IntColumn get playlistId => integer().references(Playlists, #id)();
-  IntColumn get songId => integer().references(Songs, #id)();
-  
-  // Utile per ordinare le canzoni nella playlist
-  IntColumn get trackOrder => integer()(); 
-
-  @override
-  Set<Column> get primaryKey => {playlistId, songId};
-}
-
- */
-
 /// This is the main database class which manages the connection and provides
 /// access to the tables.
 @LazySingleton()

@@ -85,7 +85,11 @@ class SongListTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(song.title, style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            song.title,
+            style: Theme.of(context).textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 4),
           Text(
             song.artist,

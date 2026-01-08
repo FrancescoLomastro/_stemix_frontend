@@ -18,6 +18,27 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     on<ToggleSongSelectionEvent>(_onToggleSongSelection);
     on<DeleteSelectedSongsEvent>(_onDeleteSelected);
     on<SelectAllEvent>(_onSelectAll);
+    on<ChangeSortOrderEvent>(_onChangeSortOrder);
+  }
+
+  // Nuovo Handler per il cambio ordine
+  void _onChangeSortOrder(
+    ChangeSortOrderEvent event,
+    Emitter<LibraryState> emit,
+  ) {
+    final sortedSongs = _sortSongs(
+      state.songs,
+      event.sortOption,
+      event.sortDirection,
+    );
+
+    emit(
+      state.copyWith(
+        sortOption: event.sortOption,
+        sortDirection: event.sortDirection,
+        songs: sortedSongs,
+      ),
+    );
   }
 
   void _onToggleSongSelection(
@@ -72,7 +93,13 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     emit(state.copyWith(status: LibraryStatus.loading));
     try {
       final songs = await _songRepository.getAllSongs();
-      emit(LibraryState(status: LibraryStatus.success, songs: songs));
+      final sortedSongs = _sortSongs(
+        songs,
+        state.sortOption,
+        state.sortDirection,
+      );
+
+      emit(LibraryState(status: LibraryStatus.success, songs: sortedSongs));
     } catch (e, stackTrace) {
       String message =
           "_onLoadSongs error: ${e.toString()}, stackTrace: $stackTrace";
@@ -118,5 +145,38 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
         state.copyWith(status: LibraryStatus.failure, errorMessage: message),
       );
     }
+  }
+
+  List<Song> _sortSongs(
+    List<Song> songs,
+    SortOption option,
+    SortDirection direction,
+  ) {
+    // Creiamo una copia modificabile della lista
+    final List<Song> sorted = List.from(songs);
+
+    int compareResult;
+    sorted.sort((a, b) {
+      switch (option) {
+        case SortOption.title:
+          compareResult = a.title.toLowerCase().compareTo(
+            b.title.toLowerCase(),
+          );
+          break;
+        case SortOption.artist:
+          compareResult = a.artist.toLowerCase().compareTo(
+            b.artist.toLowerCase(),
+          );
+          break;
+        case SortOption.date:
+          compareResult = a.createdAt.compareTo(b.createdAt);
+          break;
+      }
+      return direction == SortDirection.ascending
+          ? compareResult
+          : -compareResult;
+    });
+
+    return sorted;
   }
 }

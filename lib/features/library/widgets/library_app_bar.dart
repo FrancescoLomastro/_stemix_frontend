@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stemix_frontend/features/library/bloc/library_bloc.dart';
 import 'package:stemix_frontend/features/library/widgets/library_delete_confirm.dart';
+import 'package:stemix_frontend/features/library/widgets/library_order_dialog.dart';
 
 class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
   const LibraryAppBar({super.key});
@@ -37,6 +38,8 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
                     : null,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
+
+            buildPopupMenu(context, state),
           ],
         );
       },
@@ -45,4 +48,25 @@ class LibraryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  Widget buildPopupMenu(BuildContext context, LibraryState state) {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        if (value == 'Select') {
+          if (!state.isSelectionMode) {
+            context.read<LibraryBloc>().add(ToggleSelectionModeEvent());
+          }
+        } else if (value == 'Order') {
+          showOrderDialog(context, state);
+        }
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          if (!state.isSelectionMode)
+            const PopupMenuItem<String>(value: 'Select', child: Text('Select')),
+          const PopupMenuItem<String>(value: 'Order', child: Text('Order')),
+        ];
+      },
+    );
+  }
 }

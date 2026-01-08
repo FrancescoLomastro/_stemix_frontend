@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/features/library/library_page.dart';
 import 'package:stemix_frontend/features/player/player_page.dart';
-import 'package:stemix_frontend/features/playlists/playlists_page.dart';
 import 'package:stemix_frontend/features/settings/bloc/settings_bloc.dart';
 import 'package:stemix_frontend/features/settings/server_settings_page.dart';
 import 'package:stemix_frontend/features/settings/settings_page.dart';
@@ -36,11 +35,6 @@ final ShellRoute shellRoute = ShellRoute(
       path: '/upload',
       pageBuilder: (context, state) =>
           NoTransitionPage(child: const UploadPage()),
-    ),
-    GoRoute(
-      path: '/playlists',
-      pageBuilder: (context, state) =>
-          NoTransitionPage(child: const PlaylistsPage()),
     ),
     GoRoute(
       path: '/settings',

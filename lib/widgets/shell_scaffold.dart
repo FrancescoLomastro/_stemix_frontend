@@ -36,11 +36,6 @@ class ShellScaffold extends StatelessWidget {
               ),
               _buildNavItem(
                 context: context,
-                icon: Icons.library_music,
-                label: 'Playlists',
-              ),
-              _buildNavItem(
-                context: context,
                 icon: Icons.file_upload_outlined,
                 label: 'Upload',
               ),
