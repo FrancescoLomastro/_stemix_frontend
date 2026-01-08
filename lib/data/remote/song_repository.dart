@@ -13,7 +13,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:stemix_frontend/data/local/drift/metronome_speed_converter.dart';
 import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 import 'package:stemix_frontend/data/remote/upload_step.dart';
-import 'package:stemix_frontend/main.dart';
+import 'package:stemix_frontend/logger.dart';
 
 @lazySingleton
 class SongRepository {

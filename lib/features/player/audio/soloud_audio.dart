@@ -6,7 +6,7 @@ import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/data/local/drift/metronome_speed_converter.dart';
 import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/audio_interface.dart';
-import 'package:stemix_frontend/main.dart';
+import 'package:stemix_frontend/logger.dart';
 
 class SoundHandlePair {
   final SoundHandle handle;

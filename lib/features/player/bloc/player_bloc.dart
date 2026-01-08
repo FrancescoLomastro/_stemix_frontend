@@ -8,7 +8,7 @@ import 'package:stemix_frontend/data/local/drift/stem_names.dart';
 import 'package:stemix_frontend/features/player/audio/soloud_audio.dart';
 import 'package:stemix_frontend/features/player/bloc/player_event.dart';
 import 'package:stemix_frontend/features/player/bloc/player_state.dart';
-import 'package:stemix_frontend/main.dart';
+import 'package:stemix_frontend/logger.dart';
 
 @injectable
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {

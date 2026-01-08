@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:stemix_frontend/data/local/drift/database.dart';
 import 'package:stemix_frontend/data/remote/song_repository.dart';
-import 'package:stemix_frontend/main.dart';
+import 'package:stemix_frontend/logger.dart';
 
 part 'library_event.dart';
 part 'library_state.dart';

@@ -10,7 +10,7 @@ import 'package:injectable/injectable.dart';
 import 'package:metadata_god/metadata_god.dart';
 import 'package:stemix_frontend/data/remote/song_repository.dart';
 import 'package:stemix_frontend/data/remote/upload_step.dart';
-import 'package:stemix_frontend/main.dart';
+import 'package:stemix_frontend/logger.dart';
 
 part 'upload_event.dart';
 part 'upload_state.dart';
