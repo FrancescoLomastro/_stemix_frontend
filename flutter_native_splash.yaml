@@ -1,0 +1,10 @@
+# dart run flutter_native_splash:create --path=flutter_native_splash.yaml
+flutter_native_splash:
+  color: "#000000"  
+  icon_background_color: "#212121"
+  fullscreen: true
+  
+  #! ANDROID 12+ configuration:
+  android_12:
+    color: "#000000"
+    icon_background_color: "#212121"
