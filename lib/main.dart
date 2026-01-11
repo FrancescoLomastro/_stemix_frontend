@@ -6,9 +6,13 @@ import 'package:stemix_frontend/features/upload/bloc/upload_bloc.dart';
 import 'package:stemix_frontend/router/app_router.dart';
 import 'package:stemix_frontend/theme/theme.dart';
 import 'package:stemix_frontend/theme/util.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   await MetadataGod.initialize();
   await configureDependencies();
 
@@ -50,6 +54,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [uploadBlocProvider],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         title: 'SteMix',
         theme: /*brightness == Brightness.light ? theme.light() : */ theme
             .dark(),

@@ -72,94 +72,96 @@ class _UploadPageViewState extends State<_UploadPageView> {
           ),
           body: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      buildFilePickerArea(context, state),
-                      const SizedBox(height: 32),
-                      TextFormField(
-                        controller: _titleController,
-                        enabled: state.filePath != null,
-                        onChanged: (value) {
-                          context.read<UploadBloc>().add(
-                            TitleChangedEvent(value),
-                          );
-                        },
-                        decoration: const InputDecoration(
-                          labelText: "Title",
-                          border: OutlineInputBorder(),
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        buildFilePickerArea(context, state),
+                        const SizedBox(height: 32),
+                        TextFormField(
+                          controller: _titleController,
+                          enabled: state.filePath != null,
+                          onChanged: (value) {
+                            context.read<UploadBloc>().add(
+                              TitleChangedEvent(value),
+                            );
+                          },
+                          decoration: const InputDecoration(
+                            labelText: "Title",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Title is required.";
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Title is required.";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _artistController,
-                        enabled: state.filePath != null,
-                        onChanged: (value) {
-                          context.read<UploadBloc>().add(
-                            ArtistChangedEvent(value),
-                          );
-                        },
-                        decoration: const InputDecoration(
-                          labelText: "Artist",
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _artistController,
+                          enabled: state.filePath != null,
+                          onChanged: (value) {
+                            context.read<UploadBloc>().add(
+                              ArtistChangedEvent(value),
+                            );
+                          },
+                          decoration: const InputDecoration(
+                            labelText: "Artist",
+                            border: OutlineInputBorder(),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      buildCoverImage(context, state),
-                      const SizedBox(height: 40),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.surfaceContainer,
+                        const SizedBox(height: 16),
+                        buildCoverImage(context, state),
+                        const SizedBox(height: 40),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceContainer,
+                                ),
+                                onPressed: () {
+                                  context.read<UploadBloc>().add(
+                                    ResetUploadEvent(),
+                                  );
+                                },
+                                child: const Text("Reset"),
                               ),
-                              onPressed: () {
-                                context.read<UploadBloc>().add(
-                                  ResetUploadEvent(),
-                                );
-                              },
-                              child: const Text("Reset"),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FilledButton(
-                              onPressed: state.filePath != null
-                                  ? () {
-                                      final isValid =
-                                          _formKey.currentState?.validate() ??
-                                          false;
-                                      if (!isValid) return;
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FilledButton(
+                                onPressed: state.filePath != null
+                                    ? () {
+                                        final isValid =
+                                            _formKey.currentState?.validate() ??
+                                            false;
+                                        if (!isValid) return;
 
-                                      context.read<UploadBloc>().add(
-                                        SubmitUploadEvent(),
-                                      );
-                                    }
-                                  : null,
-                              child: const Text("Upload"),
+                                        context.read<UploadBloc>().add(
+                                          SubmitUploadEvent(),
+                                        );
+                                      }
+                                    : null,
+                                child: const Text("Upload"),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
