@@ -68,7 +68,7 @@ class _UploadPageViewState extends State<_UploadPageView> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-            title: const Text("Upload New Song"),
+            title: const Text("Upload Song"),
           ),
           body: Stack(
             children: [

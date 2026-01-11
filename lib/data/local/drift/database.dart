@@ -40,7 +40,7 @@ class Songs extends Table {
   TextColumn get otherPath => text().nullable()();
 
   // Volume levels for each stem, defaulting to 1.0
-  RealColumn get volMetronome => real().withDefault(const Constant(1.0))();
+  RealColumn get volMetronome => real().withDefault(const Constant(0.0))();
   RealColumn get vocalsVol => real().withDefault(const Constant(1.0))();
   RealColumn get guitarVol => real().withDefault(const Constant(1.0))();
   RealColumn get drumsVol => real().withDefault(const Constant(1.0))();

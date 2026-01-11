@@ -35,9 +35,10 @@ Widget buildAudioControl(
   PlayerLoaded state,
   StemName? stemName,
 ) {
+  final song = context.read<PlayerBloc>().song;
   final label = stemName != null
       ? "${stemName.name[0].toUpperCase()}${stemName.name.substring(1)}"
-      : "Metronome";
+      : "Metronome${song.musicBpm != null ? "       ${song.musicBpm?.round()} BPM" : ""}";
   final volume = stemName != null
       ? state.stemVolumes[stemName]!
       : state.metronomeVolume;

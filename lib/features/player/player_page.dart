@@ -41,6 +41,7 @@ class _PlayerView extends StatelessWidget {
       },
       child: BlocBuilder<PlayerBloc, PlayerState>(
         builder: (BuildContext context, PlayerState state) {
+          final musicalKey = context.read<PlayerBloc>().song.musicKey;
           if (state is PlayerLoading) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
@@ -49,7 +50,6 @@ class _PlayerView extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                title: const Text('Player Page'),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.save),
@@ -75,6 +75,16 @@ class _PlayerView extends StatelessWidget {
                     buildPlayBackControls(context, state),
                     const SizedBox(height: 30),
                     buildMetronomeControls(context, state),
+                    const SizedBox(height: 20),
+
+                    if (musicalKey != null && musicalKey.isNotEmpty)
+                      Text(
+                        "Musical Key: ${context.read<PlayerBloc>().song.musicKey}",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
                     const SizedBox(height: 20),
                     buildStemsControls(context, state),
                   ],

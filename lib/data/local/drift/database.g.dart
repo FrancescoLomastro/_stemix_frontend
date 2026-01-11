@@ -180,7 +180,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     false,
     type: DriftSqlType.double,
     requiredDuringInsert: false,
-    defaultValue: const Constant(1.0),
+    defaultValue: const Constant(0.0),
   );
   static const VerificationMeta _vocalsVolMeta = const VerificationMeta(
     'vocalsVol',
